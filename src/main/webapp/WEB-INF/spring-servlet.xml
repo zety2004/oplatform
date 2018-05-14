@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/task    
+	http://www.springframework.org/schema/task/spring-task-3.2.xsd ">
+
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+            p:viewClass="org.springframework.web.servlet.view.JstlView"
+            p:prefix="/"
+            p:suffix=".jsp" />
+
+    <!-- HandlerMapping -->
+    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+
+    <!-- 配置SpringMVC -->
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJackson2HttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="mappingJackson2HttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>text/json;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="2097152"/> <!-- 文件最大 2M -->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="resolveLazily" value="true"/>
+    </bean>
+
+    <!-- 注解定时任务 -->
+    <task:annotation-driven/>
+
+    <mvc:annotation-driven/>
+    <!--<mvc:resources mapping="/resources/**" location="/resources/" />-->
+
+    <mvc:resources location="/" mapping="**/*.js"/>
+    <mvc:resources location="/" mapping="**/*.html"/>
+    <mvc:resources location="/" mapping="**/*.css"/>
+    <mvc:resources location="/" mapping="**/*.xml"/>
+    <mvc:resources location="/" mapping="**/*.png"/>
+    <mvc:resources location="/" mapping="**/*.gif"/>
+    <mvc:resources location="/" mapping="**/*.jpg"/>
+<!--    <mvc:resources location="/css/" mapping="/css/**" />
+    <mvc:resources location="/images/" mapping="/images/**" />-->
+    <import resource="classpath*:/applicationContext_core.xml"/>
+
+</beans>
