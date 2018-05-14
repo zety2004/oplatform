@@ -6,6 +6,14 @@
     <result column="page_id" property="pageId" jdbcType="INTEGER" />
     <result column="role_id" property="roleId" jdbcType="INTEGER" />
   </resultMap>
+
+  <resultMap id="PageMap" type="com.hklk.oplatform.entity.table.Page" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="page_name" property="pageName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="page_src" property="pageSrc" jdbcType="VARCHAR" />
+  </resultMap>
+
   <sql id="Base_Column_List" >
     id, page_id, role_id
   </sql>
@@ -68,4 +76,10 @@
       role_id = #{roleId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectPageByRoleId" resultMap="PageMap" parameterType="java.lang.Integer" >
+    select * from hklk_role_page left join hklk_page h on hklk_role_page.page_id = h.id
+    where hklk_role_page.role_id = #{id,jdbcType=INTEGER}
+  </select>
+
 </mapper>

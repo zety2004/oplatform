@@ -68,4 +68,10 @@
       des = #{des,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectRoles" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from hklk_role
+  </select>
 </mapper>

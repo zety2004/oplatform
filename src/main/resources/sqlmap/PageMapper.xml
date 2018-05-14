@@ -79,4 +79,10 @@
       page_src = #{pageSrc,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="queryPages" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from hklk_page
+  </select>
 </mapper>

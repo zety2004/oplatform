@@ -63,10 +63,9 @@ public class LoginUserController {
     @ResponseBody
     @RequestMapping("/loginOut")
     public String loginOut(HttpServletRequest request,
-                           HttpServletResponse response, HttpSession session, Model model) {
-
+                           HttpServletResponse response, HttpSession session) {
         session.setAttribute("user", null);
-        return "/jsp/login";
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
 }

@@ -2,6 +2,8 @@ package com.hklk.oplatform.service;
 
 import com.hklk.oplatform.entity.table.User;
 
+import java.util.List;
+
 public interface UserService {
     User loginUser(String username,String pwd);
 
@@ -10,4 +12,6 @@ public interface UserService {
     int updateUser(User user);
 
     int deleteUser(Integer id);
+
+    List<User> queryUsers();
 }

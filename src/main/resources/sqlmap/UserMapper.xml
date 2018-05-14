@@ -147,4 +147,10 @@
     where username =#{username} and password = #{password}
   </select>
 
+  <select id="selectUsers" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from hklk_user
+  </select>
+
 </mapper>

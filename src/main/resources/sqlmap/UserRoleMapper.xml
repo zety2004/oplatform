@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hklk.oplatform.dao.inter.UserRoleMapper" >
-  <resultMap id="BaseResultMap" type="com.hklk.oplatform.entity.table.UserRoleKey" >
-    <id column="user_id" property="userId" jdbcType="INTEGER" />
-    <id column="role_id" property="roleId" jdbcType="INTEGER" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.UserRoleKey" >
+<mapper namespace="com.hklk.oplatform.dao.inter.UserRoleMapper">
+    <resultMap id="BaseResultMap" type="com.hklk.oplatform.entity.table.UserRoleKey">
+        <id column="user_id" property="userId" jdbcType="INTEGER"/>
+        <id column="role_id" property="roleId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="UserMap" type="com.hklk.oplatform.entity.table.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="createtime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="des" property="des" jdbcType="VARCHAR"/>
+        <result column="user_ico" property="userIco" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="RoleMap" type="com.hklk.oplatform.entity.table.Role">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="des" property="des" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <delete id="deleteByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.UserRoleKey">
     delete from hklk_user_role
     where user_id = #{userId,jdbcType=INTEGER}
       and role_id = #{roleId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.hklk.oplatform.entity.table.UserRoleKey" >
+    <insert id="insert" parameterType="com.hklk.oplatform.entity.table.UserRoleKey">
     insert into hklk_user_role (user_id, role_id)
     values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.UserRoleKey" >
-    insert into hklk_user_role
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="roleId != null" >
-        role_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="roleId != null" >
-        #{roleId,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
+    <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.UserRoleKey">
+        insert into hklk_user_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="roleId != null">
+                role_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectUserByRoleId" resultMap="UserMap" parameterType="java.lang.Integer">
+    select * from hklk_user_role t left join hklk_user t1 on t.user_id = t1.id where t.role_id =  #{roleId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectRoleByUserId" resultMap="RoleMap" parameterType="java.lang.Integer">
+    select * from hklk_user_role t left join hklk_role t1 on t.role_id = t1.id where t.user_id =  #{roleId,jdbcType=INTEGER}
+    </select>
+
 </mapper>
