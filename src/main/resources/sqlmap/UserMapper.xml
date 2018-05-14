@@ -12,6 +12,7 @@
     <result column="des" property="des" jdbcType="VARCHAR" />
     <result column="user_ico" property="userIco" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, username, password, createtime, nickname, remark, state, des, user_ico
   </sql>
@@ -138,4 +139,12 @@
       user_ico = #{userIco,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByNameAndPassword" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from hklk_user
+    where username =#{username} and password = #{password}
+  </select>
+
 </mapper>

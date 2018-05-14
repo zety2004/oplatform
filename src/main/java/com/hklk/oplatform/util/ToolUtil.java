@@ -23,6 +23,13 @@ public final class ToolUtil {
 
         return (ArrayList<Entry<String, Integer>>) entries;
     }
+
+    public static String buildResultStr(String statusCode,String statusMessage) {
+        Map<String, Object> map=new HashMap<String,Object>();
+        map.put("resultCode", statusCode);
+        map.put("resultMsg", statusMessage);
+        return JsonUtil.toJson(map,dateFormate);
+    }
     
     public static String buildResultStr(String statusCode,String statusMessage,Object obj) {
     		Map<String, Object> map=new HashMap<String,Object>();
@@ -36,47 +43,6 @@ public final class ToolUtil {
         Map<String, Object> map=new HashMap<String,Object>();
         map.put("err", statusCode);
         map.put("msg", url);
-        return JsonUtil.toJson(map,dateFormate);
-    }
-
-    public static String buildDWZResultStr(String statusCode,String statusMessage,String callbackType,String navTabId,String rel,String forwardUrl,String confirmMsg) {
-        Map<String, Object> map=new HashMap<String,Object>();
-        map.put("statusCode", statusCode);
-        map.put("message", statusMessage);
-        map.put("callbackType", callbackType);
-        map.put("navTabId", navTabId);
-        map.put("rel", rel);
-        map.put("forwardUrl", forwardUrl);
-        map.put("confirmMsg", confirmMsg);
-        return JsonUtil.toJson(map,dateFormate);
-    }
-
-    public static String buildDWZResultStr(String statusCode,String statusMessage,String callbackType,String navTabId) {
-        Map<String, Object> map=new HashMap<String,Object>();
-        map.put("statusCode", statusCode);
-        map.put("message", statusMessage);
-        map.put("callbackType", callbackType);
-        map.put("navTabId", navTabId);
-        return JsonUtil.toJson(map,dateFormate);
-    }
-
-    public static String buildDWZResultStr(String statusCode,String statusMessage,String callbackType,String navTabId,String rel) {
-        Map<String, Object> map=new HashMap<String,Object>();
-        map.put("statusCode", statusCode);
-        map.put("message", statusMessage);
-        map.put("callbackType", callbackType);
-        map.put("navTabId", navTabId);
-        map.put("rel", rel);
-        return JsonUtil.toJson(map,dateFormate);
-    }
-
-    public static String buildDWZResultStr(String statusCode,String statusMessage,String callbackType,String navTabId,Object obj) {
-        Map<String, Object> map=new HashMap<String,Object>();
-        map.put("statusCode", statusCode);
-        map.put("message", statusMessage);
-        map.put("callbackType", callbackType);
-        map.put("navTabId", navTabId);
-        map.put("resultData", obj);
         return JsonUtil.toJson(map,dateFormate);
     }
 
