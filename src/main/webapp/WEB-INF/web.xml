@@ -32,19 +32,27 @@
     <filter-class>
         com.hklk.oplatform.filter.SessionValidateFilter
     </filter-class>
+    <init-param>
+      <param-name>excludedPages</param-name>
+      <param-value>/loginUser/login,/,/jsp/index.html</param-value><!-- 匹配不做拦截的请求声明-->
+    </init-param>
   </filter>
   <filter-mapping>
     <filter-name>sessionValidate</filter-name>
-    <url-pattern>/homePage/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <filter>
+    <filter-name>AddHead</filter-name>
+    <filter-class>
+      com.hklk.oplatform.filter.AddHeadFilter
+    </filter-class>
+  </filter>
   <filter-mapping>
-    <filter-name>sessionValidate</filter-name>
-    <url-pattern>/</url-pattern>
+    <filter-name>AddHead</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <filter-mapping>
-    <filter-name>sessionValidate</filter-name>
-    <url-pattern>/jsp/index.jsp</url-pattern>
-  </filter-mapping>
+
 
   <filter>
     <filter-name>encodingFilter</filter-name>
@@ -61,6 +69,6 @@
     <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
   <welcome-file-list>
-    <welcome-file>jsp/index.jsp</welcome-file>
+    <welcome-file>jsp/index.html</welcome-file>
   </welcome-file-list>
 </web-app>

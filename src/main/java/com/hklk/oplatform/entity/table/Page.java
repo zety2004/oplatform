@@ -11,6 +11,8 @@ public class Page implements Serializable {
 
     private String pageSrc;
 
+    private String pageRemark;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -43,5 +45,13 @@ public class Page implements Serializable {
 
     public void setPageSrc(String pageSrc) {
         this.pageSrc = pageSrc == null ? null : pageSrc.trim();
+    }
+
+    public String getPageRemark() {
+        return pageRemark;
+    }
+
+    public void setPageRemark(String pageRemark) {
+        this.pageRemark = pageRemark;
     }
 }

@@ -1,12 +1,15 @@
 package com.hklk.oplatform.service.impl;
 
 import com.hklk.oplatform.dao.inter.UserMapper;
+import com.hklk.oplatform.entity.table.Page;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -17,7 +20,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loginUser(String username, String pwd) {
-        return userMapper.selectByNameAndPassword(username, pwd);
+        Map<String, String> params = new HashMap<>();
+        params.put("username", username);
+        params.put("password", pwd);
+        return userMapper.selectByNameAndPassword(params);
     }
 
     @Override
@@ -38,5 +44,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> queryUsers() {
         return userMapper.selectUsers();
+    }
+
+    @Override
+    public List<Page> queryUserPages(Integer id) {
+        return userMapper.selectPageForUser(id);
     }
 }

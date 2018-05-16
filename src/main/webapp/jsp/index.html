@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>好课乐课官网</title>
+    <script type="text/javascript" src="http://192.168.0.129:8080/js/jquery-2.1.4.js"></script>
+
+</head>
+<script>
+    var data = {'username': 'admin', 'password': 'hklk123456'}
+
+    function setCookie(name, value) {
+        var Days = 30;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+    }
+
+var token;
+    $.ajax({
+        url: "http://192.168.0.129:8080/loginUser/login",
+        type: 'POST',
+        traditional: true,
+        data: data,
+        dataType: "json",
+        success: function (data) {
+            console.log(data.resultData);
+            token = data.resultData;
+            setCookie("token", data.resultData);
+            $('body').append('<td>' + JSON.stringify(data) + '</td>')
+        },
+        error: function (returndata) {
+            console.log(returndata);
+        }
+    })
+
+    var addUser = function () {
+
+        var data = {'username': '测试'}
+        console.log(token)
+        $.ajax({
+            url: "http://192.168.0.129:8080/editUser/updateUser",
+            type: 'POST',
+            headers: {
+                Accept: "application/json; charset=utf-8",
+                "Access-Toke": "" + token
+            },
+            traditional: true,
+            data: data,
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+            },
+            error: function (returndata) {
+                console.log(returndata);
+            }
+        })
+
+    }
+
+
+</script>
+<body>
+<button onclick="addUser()">添加用户</button>
+</body>
+</html>

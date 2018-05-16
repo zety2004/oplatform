@@ -120,7 +120,7 @@ public final class ToolUtil {
 
 		Map<String, Integer> map=new HashMap<String, Integer>();
 
-		if (StringUtil.isBlank(pageSizeStr) || StringUtil.isBlank(pageNumStr)) {
+		if (StringUtils.isBlank(pageSizeStr) || StringUtils.isBlank(pageNumStr)) {
 			pageNum = 1;
 			pageSize = 10;
 

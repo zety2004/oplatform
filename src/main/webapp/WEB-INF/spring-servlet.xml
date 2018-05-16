@@ -13,7 +13,7 @@
     <bean
             class="org.springframework.web.servlet.view.InternalResourceViewResolver"
             p:viewClass="org.springframework.web.servlet.view.JstlView"
-            p:prefix="/"
+            p:prefix="/jsp/"
             p:suffix=".jsp" />
 
     <!-- HandlerMapping -->
@@ -52,8 +52,13 @@
 
     <!-- 注解定时任务 -->
     <task:annotation-driven/>
-
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
     <!--<mvc:resources mapping="/resources/**" location="/resources/" />-->
 
     <mvc:resources location="/" mapping="**/*.js"/>
