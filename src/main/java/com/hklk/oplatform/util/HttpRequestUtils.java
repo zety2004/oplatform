@@ -74,8 +74,7 @@ public class HttpRequestUtils {
 		}
 		return "Failed";
 	}
-	
-	
+
 	/**
 	 * 发送get请求
 	 * 

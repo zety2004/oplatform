@@ -28,8 +28,6 @@ public class EditCurriculumController extends BaseController {
     @Autowired
     ConsumablesService consumablesService;
 
-    private int pageSize = 10;
-
     @ResponseBody
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(int pageNum, HttpServletRequest request,

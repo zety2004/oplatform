@@ -193,20 +193,7 @@ public class DateUtil {
 	}
 	
 	public static void main(String[] args){
-		String str1 = "2011-01-01";
-		String str2 = "1988-09-09";
-		Date date1 = DateUtil.string2Date(str1, "yyyy-MM-dd");
-		Date date2 = DateUtil.string2Date(str2, "yyyy-MM-dd");
-		Calendar c1 = Calendar.getInstance();
-		Calendar c2 = Calendar.getInstance();
-		c1.setTime(date1);
-		c2.setTime(date2);
-		c2.add(Calendar.YEAR, 4);
-		if (c2.before(c1)) {
-			System.out.println("illegal");
-		}else {
-			System.out.println("ok");
-		}
-		
 	}
+
+
 }

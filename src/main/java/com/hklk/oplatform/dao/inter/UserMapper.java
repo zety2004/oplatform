@@ -21,7 +21,7 @@ public interface UserMapper {
 
     User selectByNameAndPassword(Map<String,String> map);
 
-    List<User> selectUsers();
+    List<User> selectUsers(User user);
 
     List<PPage> selectPageForUser(Integer id);
 }

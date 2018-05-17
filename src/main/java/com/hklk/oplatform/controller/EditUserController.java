@@ -3,6 +3,7 @@ package com.hklk.oplatform.controller;
 import com.hklk.oplatform.entity.table.Role;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.table.UserRoleKey;
+import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.service.UserRoleService;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.StatusCode;
@@ -28,9 +29,9 @@ public class EditUserController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/queryUsers")
-    public String queryUsers(HttpServletRequest request,
+    public String queryUsers(User user, int pageNum, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
-        List<User> users = userService.queryUsers();
+        PageTableForm<User> users = userService.queryUsers(user, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), users);
     }
 

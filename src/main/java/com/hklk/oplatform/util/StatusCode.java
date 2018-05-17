@@ -7,8 +7,6 @@ public class StatusCode {
     //session 认证
     public static final String AUTHENTICATION_KEY = "SESSION_AUTHENTICATION";
 
-
-
     // 通用错误以9开头
     public final static int APPLICATION_ERROR = 9000;// 应用级错误
     public final static int VALIDATE_ERROR = 9001;// 参数验证错误

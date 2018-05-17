@@ -2,6 +2,7 @@ package com.hklk.oplatform.service;
 
 import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
+import com.hklk.oplatform.entity.vo.PageTableForm;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface UserService {
     * @Param []
     * @Return java.util.List<com.hklk.oplatform.entity.table.User>
     **/
-    List<User> queryUsers();
+    public PageTableForm<User> queryUsers(User user, int pageNum, int pageSize);
 
     /**
     * @author 曹良峰

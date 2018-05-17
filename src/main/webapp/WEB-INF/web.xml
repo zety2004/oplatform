@@ -54,7 +54,7 @@
     <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
 
-
+<!--
   <filter>
     <filter-name>sessionValidate</filter-name>
     <filter-class>
@@ -62,13 +62,14 @@
     </filter-class>
     <init-param>
       <param-name>excludedPages</param-name>
-      <param-value>/loginUser/login,/,/js/jquery-2.1.4.js,/jsp/index.html</param-value><!-- 匹配不做拦截的请求声明-->
+      <param-value>/loginUser/login,/,/js/jquery-2.1.4.js,/jsp/index.html,/test/*</param-value>&lt;!&ndash; 匹配不做拦截的请求声明&ndash;&gt;
     </init-param>
   </filter>
   <filter-mapping>
     <filter-name>sessionValidate</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  -->
 
   <welcome-file-list>
     <welcome-file>jsp/index.html</welcome-file>

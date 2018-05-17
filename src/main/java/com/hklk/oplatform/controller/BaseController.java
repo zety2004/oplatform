@@ -15,10 +15,11 @@ import java.util.Date;
 
 public abstract class BaseController {
 
+    protected int pageSize = 10;
+
     @InitBinder
     protected void initBinder(HttpServletRequest request,
                               ServletRequestDataBinder binder) throws Exception {
-
         binder.registerCustomEditor(int.class, new IntegerEditor());
         binder.registerCustomEditor(long.class, new LongEditor());
         binder.registerCustomEditor(double.class, new DoubleEditor());
@@ -30,13 +31,6 @@ public abstract class BaseController {
     public String exception(Exception e, HttpServletRequest request) {
         e.printStackTrace();
         request.setAttribute("exception", e);
-/*		if (ServerInfo.isAjax(request) || request.getParameter("ajax") != null) {
-			return ToolUtil.buildResultStr(StatusCode.SYS_ERROR, StatusCode.getStatusMsg(StatusCode.SYS_ERROR));
-		}
-		ModelAndView mav = new ModelAndView("error");
-		mav.addObject("statusCode", 300);
-		mav.addObject("message", e.getMessage());*/
-
         return ToolUtil.buildResultStr(StatusCode.SYS_ERROR, StatusCode.getStatusMsg(StatusCode.SYS_ERROR));
     }
 }

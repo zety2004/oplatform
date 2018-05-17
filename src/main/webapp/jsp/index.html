@@ -9,7 +9,7 @@
 
 </head>
 <script>
-    var data = {'username': 'admin', 'password': 'hklk123456'}
+    var data = {'username': 'admin', 'pageNum': 1}
 
     function setCookie(name, value) {
         var Days = 30;
@@ -20,7 +20,7 @@
 
 var token;
     $.ajax({
-        url: "http://192.168.0.129:8080/loginUser/login",
+        url: "http://192.168.0.129:8080/editUser/queryUsers",
         type: 'POST',
         traditional: true,
         data: data,
@@ -64,5 +64,11 @@ var token;
 </script>
 <body>
 <button onclick="addUser()">添加用户</button>
+
+
+<form id="temp" action="/test/Upload" method="post" enctype="multipart/form-data">
+    <label>上传文件</label><input name="uploadfile" type="file"/>
+    <button type="submit">提交</button>
+</form>
 </body>
 </html>

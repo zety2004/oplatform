@@ -44,7 +44,7 @@
 	
 	
 	<!-- 日志输出级别 ERROR,WARN,INFO,DEBUG -->
-	<root level="ERROR">
+	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 		<appender-ref ref="SQLFILE" />
