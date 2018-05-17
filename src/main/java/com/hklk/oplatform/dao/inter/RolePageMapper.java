@@ -1,9 +1,7 @@
 package com.hklk.oplatform.dao.inter;
 
-import com.hklk.oplatform.entity.table.Page;
-import com.hklk.oplatform.entity.table.Role;
+import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.RolePage;
-import com.hklk.oplatform.entity.table.User;
 
 import java.util.List;
 
@@ -20,5 +18,5 @@ public interface RolePageMapper {
 
     int updateByPrimaryKey(RolePage record);
 
-    List<Page> selectPageByRoleId(Integer roleId);
+    List<PPage> selectPageByRoleId(Integer roleId);
 }

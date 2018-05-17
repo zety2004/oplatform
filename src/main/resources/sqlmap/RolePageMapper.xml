@@ -7,7 +7,7 @@
     <result column="role_id" property="roleId" jdbcType="INTEGER" />
   </resultMap>
 
-  <resultMap id="PageMap" type="com.hklk.oplatform.entity.table.Page" >
+  <resultMap id="PageMap" type="com.hklk.oplatform.entity.table.PPage" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="page_name" property="pageName" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="INTEGER" />

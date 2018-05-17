@@ -10,10 +10,8 @@ import java.io.PrintWriter;
 
 /**
  * Filter基类
- * 
- * @author Joe
  */
-public abstract class ClientFilter extends ParamFilter implements Filter {
+public abstract class ClientFilter implements Filter {
 	
 	// 匹配路径（? 匹配1个字符，* 匹配0个或多个字符，** 中的0个或多个目录）
 	protected String pattern;

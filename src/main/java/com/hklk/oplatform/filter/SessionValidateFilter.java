@@ -1,8 +1,7 @@
 package com.hklk.oplatform.filter;
 
-import com.hklk.oplatform.comm.SsoResultCode;
-import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.service.AuthenticationRpcService;
+import com.hklk.oplatform.util.SpringContextHolder;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +25,7 @@ public class SessionValidateFilter extends ClientFilter implements Filter {
         String token = getLocalToken(request);
         if (token == null) {
             return false;
-        } else if (authenticationRpcService.validate(token)) {// 验证token是否有效
+        } else if (getAuthenticationRpcService().validate(token)) {// 验证token是否有效
             return true;
         } else {
             return false;
@@ -54,12 +53,11 @@ public class SessionValidateFilter extends ClientFilter implements Filter {
                 break;
             }
         }
-
+        System.out.println(getLocalToken(request));
+        System.out.println(request.getServletPath());
         if (isExcludedPage) {
             chain.doFilter(request, response);
         } else {
-
-
             if (!isAccessAllowed(request, response)) {
                 PrintWriter out = response.getWriter();
                 if (isAjaxRequest(request) || request.getParameter("ajax") != null) {
@@ -90,5 +88,9 @@ public class SessionValidateFilter extends ClientFilter implements Filter {
     @Override
     public void destroy() {
 
+    }
+
+    public AuthenticationRpcService getAuthenticationRpcService() {
+        return SpringContextHolder.getBean("authenticationRpcService");
     }
 }

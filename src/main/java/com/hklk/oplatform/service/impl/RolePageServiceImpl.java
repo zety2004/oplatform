@@ -1,7 +1,7 @@
 package com.hklk.oplatform.service.impl;
 
 import com.hklk.oplatform.dao.inter.RolePageMapper;
-import com.hklk.oplatform.entity.table.Page;
+import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.RolePage;
 import com.hklk.oplatform.service.RolePageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class RolePageServiceImpl implements RolePageService {
     }
 
     @Override
-    public List<Page> selectPageByRoleId(Integer roleId) {
+    public List<PPage> selectPageByRoleId(Integer roleId) {
         return rolePageMapper.selectPageByRoleId(roleId);
     }
 }

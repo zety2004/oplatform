@@ -6,7 +6,6 @@ import com.hklk.oplatform.entity.vo.RpcUser;
 /**
  * 身份认证授权服务接口
  * 
- * @author Joe
  */
 public interface AuthenticationRpcService {
 	

@@ -1,6 +1,6 @@
 package com.hklk.oplatform.dao.inter;
 
-import com.hklk.oplatform.entity.table.Page;
+import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
 
 import java.util.List;
@@ -23,5 +23,5 @@ public interface UserMapper {
 
     List<User> selectUsers();
 
-    List<Page> selectPageForUser(Integer id);
+    List<PPage> selectPageForUser(Integer id);
 }

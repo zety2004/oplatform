@@ -1,21 +1,18 @@
-package com.hklk.oplatform.dao.inter;
+package com.hklk.oplatform.service;
 
 import com.hklk.oplatform.entity.table.Consumables;
 
 import java.util.List;
 
-public interface ConsumablesMapper {
-    int deleteByPrimaryKey(Integer id);
+public interface ConsumablesService {
 
-    int insert(Consumables record);
+    int deleteByPrimaryKey(Integer id);
 
     int insertSelective(Consumables record);
 
     Consumables selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Consumables record);
-
-    int updateByPrimaryKey(Consumables record);
 
     List<Consumables> queryConsumablesByCurId(Integer curriculumId);
 }

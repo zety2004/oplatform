@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hklk.oplatform.dao.inter.PageMapper" >
-  <resultMap id="BaseResultMap" type="com.hklk.oplatform.entity.table.Page" >
+  <resultMap id="BaseResultMap" type="com.hklk.oplatform.entity.table.PPage" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="page_name" property="pageName" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="INTEGER" />
@@ -21,13 +21,13 @@
     delete from hklk_page
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.hklk.oplatform.entity.table.Page" >
+  <insert id="insert" parameterType="com.hklk.oplatform.entity.table.PPage" >
     insert into hklk_page (id, page_name, parent_id, 
       page_src,page_remark)
     values (#{id,jdbcType=INTEGER}, #{pageName,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
       #{pageSrc,jdbcType=VARCHAR}, #{pageRemark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.Page" >
+  <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.PPage" >
     insert into hklk_page
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -64,7 +64,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.Page" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.PPage" >
     update hklk_page
     <set >
       <if test="pageName != null" >
@@ -82,7 +82,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.Page" >
+  <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.PPage" >
     update hklk_page
     set page_name = #{pageName,jdbcType=VARCHAR},
       parent_id = #{parentId,jdbcType=INTEGER},

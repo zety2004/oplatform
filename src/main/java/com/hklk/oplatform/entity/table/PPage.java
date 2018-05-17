@@ -2,7 +2,7 @@ package com.hklk.oplatform.entity.table;
 
 import java.io.Serializable;
 
-public class Page implements Serializable {
+public class PPage implements Serializable {
     private Integer id;
 
     private String pageName;

@@ -103,4 +103,12 @@
       unit = #{unit,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="queryConsumablesByCurId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from hklk_consumables
+    where curriculum_id = #{curriculumId,jdbcType=INTEGER}
+
+  </select>
 </mapper>

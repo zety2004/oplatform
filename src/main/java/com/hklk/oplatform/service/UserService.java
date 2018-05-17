@@ -1,6 +1,6 @@
 package com.hklk.oplatform.service;
 
-import com.hklk.oplatform.entity.table.Page;
+import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
 
 import java.util.List;
@@ -14,7 +14,23 @@ public interface UserService {
 
     int deleteUser(Integer id);
 
+    User selectByPrimaryKey(Integer id);
+
+    /**
+    * @author 曹良峰
+    * @Description 查询用户列表
+    * @Date 16:28 2018/5/16
+    * @Param []
+    * @Return java.util.List<com.hklk.oplatform.entity.table.User>
+    **/
     List<User> queryUsers();
 
-    List<Page> queryUserPages(Integer id);
+    /**
+    * @author 曹良峰
+    * @Description 查询用户所有权限页面
+    * @Date 16:39 2018/5/16
+    * @Param [id]
+    * @Return java.util.List<com.hklk.oplatform.entity.table.PPage>
+    **/
+    List<PPage> queryUserPages(Integer id);
 }

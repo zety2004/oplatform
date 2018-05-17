@@ -11,25 +11,21 @@ public class AddHeadFilter implements Filter {
     private static final Log log = LogFactory.getLog(AddHeadFilter.class);
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, Access-Toke");
-
         log.debug("允许跨域访问");
         chain.doFilter(req, res);
     }
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override
     public void destroy() {
-
     }
+
 }

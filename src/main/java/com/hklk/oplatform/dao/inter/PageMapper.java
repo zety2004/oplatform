@@ -1,22 +1,21 @@
 package com.hklk.oplatform.dao.inter;
 
-import com.hklk.oplatform.entity.table.Page;
-import com.hklk.oplatform.entity.table.Role;
+import com.hklk.oplatform.entity.table.PPage;
 
 import java.util.List;
 
 public interface PageMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(Page record);
+    int insert(PPage record);
 
-    int insertSelective(Page record);
+    int insertSelective(PPage record);
 
-    Page selectByPrimaryKey(Integer id);
+    PPage selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Page record);
+    int updateByPrimaryKeySelective(PPage record);
 
-    int updateByPrimaryKey(Page record);
+    int updateByPrimaryKey(PPage record);
 
-    List<Page> queryPages();
+    List<PPage> queryPages();
 }

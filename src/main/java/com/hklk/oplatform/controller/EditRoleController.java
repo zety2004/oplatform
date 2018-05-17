@@ -33,7 +33,6 @@ public class EditRoleController extends BaseController {
 
             List<Role> roles = roleService.queryRoles();
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), roles);
-
     }
 
     @ResponseBody
@@ -73,8 +72,8 @@ public class EditRoleController extends BaseController {
     @RequestMapping("/queryRolePage")
     public String queryRolePage(int roleId, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {
-        List<Page> pages = rolePageService.selectPageByRoleId(roleId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pages);
+        List<PPage> PPages = rolePageService.selectPageByRoleId(roleId);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), PPages);
     }
 
     @ResponseBody
@@ -84,5 +83,4 @@ public class EditRoleController extends BaseController {
         rolePageService.addRolePage(rolePage);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
-
 }

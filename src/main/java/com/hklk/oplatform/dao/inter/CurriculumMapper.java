@@ -2,6 +2,8 @@ package com.hklk.oplatform.dao.inter;
 
 import com.hklk.oplatform.entity.table.Curriculum;
 
+import java.util.List;
+
 public interface CurriculumMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -16,4 +18,6 @@ public interface CurriculumMapper {
     int updateByPrimaryKeyWithBLOBs(Curriculum record);
 
     int updateByPrimaryKey(Curriculum record);
+
+    List<Curriculum> queryCurriculums();
 }

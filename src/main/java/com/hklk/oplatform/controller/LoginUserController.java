@@ -2,7 +2,7 @@ package com.hklk.oplatform.controller;
 
 import com.hklk.oplatform.comm.LoginUser;
 import com.hklk.oplatform.comm.TokenManager;
-import com.hklk.oplatform.entity.table.Page;
+import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.service.UserService;
@@ -82,7 +82,7 @@ public class LoginUserController extends BaseController {
     @RequestMapping("/queryUserPages")
     public String queryUserPages(int id, HttpServletRequest request,
                                  HttpServletResponse response, HttpSession session) {
-        List<Page> pages = userService.queryUserPages(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pages);
+        List<PPage> PPages = userService.queryUserPages(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), PPages);
     }
 }

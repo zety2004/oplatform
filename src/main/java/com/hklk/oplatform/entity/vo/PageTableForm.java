@@ -1,17 +1,27 @@
 package com.hklk.oplatform.entity.vo;
 
-import org.apache.poi.ss.formula.functions.T;
+import com.github.pagehelper.Page;
 
 import java.util.List;
 
-public class PageTableForm {
+public class PageTableForm<T> {
     private int currentPage;
     private int pageSize;
     private int beginIndex;
     private int endIndex;
-    private int pageCount;
-    private int totleCount;
+    private long pageCount;
+    private long totleCount;
     private List<T> objList;
+
+    public PageTableForm(Page<T> page) {
+        this.currentPage = page.getPageNum();
+        this.pageSize = page.getPageSize();
+        this.beginIndex = page.getStartRow();
+        this.endIndex = page.getEndRow();
+        this.pageCount = page.getPages();
+        this.totleCount = page.getTotal();
+        this.objList = page.getResult();
+    }
 
     public int getCurrentPage() {
         return currentPage;
@@ -45,19 +55,19 @@ public class PageTableForm {
         this.endIndex = endIndex;
     }
 
-    public int getPageCount() {
+    public long getPageCount() {
         return pageCount;
     }
 
-    public void setPageCount(int pageCount) {
+    public void setPageCount(long pageCount) {
         this.pageCount = pageCount;
     }
 
-    public int getTotleCount() {
+    public long getTotleCount() {
         return totleCount;
     }
 
-    public void setTotleCount(int totleCount) {
+    public void setTotleCount(long totleCount) {
         this.totleCount = totleCount;
     }
 
