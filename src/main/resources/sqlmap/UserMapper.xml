@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hklk.oplatform.dao.inter.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.hklk.oplatform.entity.table.User" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="username" property="username" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="state" property="state" jdbcType="INTEGER" />
-    <result column="des" property="des" jdbcType="VARCHAR" />
-    <result column="user_ico" property="userIco" jdbcType="VARCHAR" />
-  </resultMap>
+<mapper namespace="com.hklk.oplatform.dao.inter.UserMapper">
+    <resultMap id="BaseResultMap" type="com.hklk.oplatform.entity.table.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="createtime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="des" property="des" jdbcType="VARCHAR"/>
+        <result column="user_ico" property="userIco" jdbcType="VARCHAR"/>
+    </resultMap>
 
-  <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
     id, username, password, createtime, nickname, remark, state, des, user_ico
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByNameForValidate" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select
+    count(0)
     from hklk_user
-    where id = #{id,jdbcType=INTEGER}
+    where username = #{name,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from hklk_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.hklk.oplatform.entity.table.User" >
+    <insert id="insert" parameterType="com.hklk.oplatform.entity.table.User">
     insert into hklk_user (id, username, password, 
       createtime, nickname, remark, 
       state, des, user_ico
@@ -36,98 +44,98 @@
       #{state,jdbcType=INTEGER}, #{des,jdbcType=VARCHAR}, #{userIco,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.User" >
-    insert into hklk_user
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="username != null" >
-        username,
-      </if>
-      <if test="password != null" >
-        password,
-      </if>
-      <if test="createtime != null" >
-        createtime,
-      </if>
-      <if test="nickname != null" >
-        nickname,
-      </if>
-      <if test="remark != null" >
-        remark,
-      </if>
-      <if test="state != null" >
-        state,
-      </if>
-      <if test="des != null" >
-        des,
-      </if>
-      <if test="userIco != null" >
-        user_ico,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="username != null" >
-        #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="nickname != null" >
-        #{nickname,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null" >
-        #{state,jdbcType=INTEGER},
-      </if>
-      <if test="des != null" >
-        #{des,jdbcType=VARCHAR},
-      </if>
-      <if test="userIco != null" >
-        #{userIco,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.User" >
-    update hklk_user
-    <set >
-      <if test="username != null" >
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        createtime = #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="nickname != null" >
-        nickname = #{nickname,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null" >
-        state = #{state,jdbcType=INTEGER},
-      </if>
-      <if test="des != null" >
-        des = #{des,jdbcType=VARCHAR},
-      </if>
-      <if test="userIco != null" >
-        user_ico = #{userIco,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.User" >
+    <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.User">
+        insert into hklk_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="des != null">
+                des,
+            </if>
+            <if test="userIco != null">
+                user_ico,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="des != null">
+                #{des,jdbcType=VARCHAR},
+            </if>
+            <if test="userIco != null">
+                #{userIco,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.User">
+        update hklk_user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="des != null">
+                des = #{des,jdbcType=VARCHAR},
+            </if>
+            <if test="userIco != null">
+                user_ico = #{userIco,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.User">
     update hklk_user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -140,32 +148,32 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByNameAndPassword" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select
-    <include refid="Base_Column_List" />
-    from hklk_user
-    where username =#{username} and password = #{password} and state = 1
-  </select>
+    <select id="selectByNameAndPassword" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_user
+        where username =#{username} and password = #{password} and state = 1
+    </select>
 
-  <select id="selectUsers" resultMap="BaseResultMap" parameterType="com.hklk.oplatform.entity.table.User" >
-    select
-    <include refid="Base_Column_List" />
-    from hklk_user where 1=1
-    <if test="username != null" >
-      and username like '%'||#{username,jdbcType=VARCHAR}||'%'
-    </if>
+    <select id="selectUsers" resultMap="BaseResultMap" parameterType="com.hklk.oplatform.entity.table.User">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_user where 1=1
+        <if test="username != null and username != ''">
+            and username like CONCAT('%', #{username}, '%')
+        </if>
 
-  </select>
+    </select>
 
-  <resultMap id="PageMap" type="com.hklk.oplatform.entity.table.PPage" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="page_name" property="pageName" jdbcType="VARCHAR" />
-    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
-    <result column="page_src" property="pageSrc" jdbcType="VARCHAR" />
-    <result column="page_remark" property="pageSrc" jdbcType="VARCHAR" />
-  </resultMap>
+    <resultMap id="PageMap" type="com.hklk.oplatform.entity.table.PPage">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="page_name" property="pageName" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+        <result column="page_src" property="pageSrc" jdbcType="VARCHAR"/>
+        <result column="page_remark" property="pageSrc" jdbcType="VARCHAR"/>
+    </resultMap>
 
-  <select id="selectPageForUser" resultMap="PageMap" parameterType="java.lang.Integer">
+    <select id="selectPageForUser" resultMap="PageMap" parameterType="java.lang.Integer">
       select hp.* from hklk_user t
       left join hklk_user_role h on t.id = h.user_id
       left join hklk_role hr on h.role_id = hr.id

@@ -34,4 +34,6 @@ public interface UserService {
     * @Return java.util.List<com.hklk.oplatform.entity.table.PPage>
     **/
     List<PPage> queryUserPages(Integer id);
+
+    int selectByNameForValidate(String name);
 }

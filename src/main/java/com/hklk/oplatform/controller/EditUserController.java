@@ -4,6 +4,7 @@ import com.hklk.oplatform.entity.table.Role;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.table.UserRoleKey;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.UserRoleService;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.StatusCode;
@@ -36,17 +37,46 @@ public class EditUserController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/selectUserById")
+    public String queryUsers(int id, HttpServletRequest request,
+                             HttpServletResponse response, HttpSession session) {
+        User user = userService.selectByPrimaryKey(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), user);
+    }
+
+
+    @ResponseBody
     @RequestMapping("/addUser")
     public String addUser(User user, HttpServletRequest request,
                           HttpServletResponse response, HttpSession session) {
-        userService.addUser(user);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+
+        int num = userService.selectByNameForValidate(user.getUsername());
+        if (num == 0) {
+            userService.addUser(user);
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        } else {
+            return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, StatusCode.getStatusMsg(StatusCode.ADDUSER_USERNAME_EX));
+        }
     }
 
     @ResponseBody
     @RequestMapping("/updateUser")
     public String updateUser(User user, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
+        int num = userService.selectByNameForValidate(user.getUsername());
+        if (num == 0) {
+            userService.updateUser(user);
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        } else {
+            return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, StatusCode.getStatusMsg(StatusCode.ADDUSER_USERNAME_EX));
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/resetUserPassword")
+    public String resetUserPassword(User user, HttpServletRequest request,
+                                    HttpServletResponse response, HttpSession session) {
+        user.setPassword(PasswordProvider.encrypt("hklk123456"));
         userService.updateUser(user);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }

@@ -70,4 +70,10 @@ public class UserServiceImpl implements UserService {
     public List<PPage> queryUserPages(Integer id) {
         return userMapper.selectPageForUser(id);
     }
+
+    @Override
+    public int selectByNameForValidate(String name) {
+        return userMapper.selectByNameForValidate(name);
+    }
+
 }

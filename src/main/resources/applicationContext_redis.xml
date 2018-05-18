@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd ">
+
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="maxTotal" value="${redis.maxActive}" />
+		<property name="maxWaitMillis" value="${redis.maxWait}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+	</bean>
+
+	<!-- Sentinel 模式 -->
+	<bean id="redisSentinelConfiguration" class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
+		<constructor-arg index="0" value="${redis.master}" />
+		<constructor-arg index="1">
+			<set>
+				<value>${redis.sentinel1.ip}:${redis.sentinel1.port}</value>
+			</set>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="redisSentinelConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg index="0" ref="redisSentinelConfiguration" />
+		<constructor-arg index="1" ref="poolConfig" />
+		<property name="password" value="${redis.master.password}"></property>
+		<property name="database" value="${redis.default.db}"></property>
+	</bean>
+	
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<property name="connectionFactory" ref="redisSentinelConnFactory" />
+	</bean>
+
+	<!-- 令牌管理(本地) -->
+	<bean id="redisObjTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="redisSentinelConnFactory" />
+	</bean>
+	<bean id="redisObjCache" class="com.hklk.oplatform.comm.cache.RedisObjCache">
+		<property name="redisObjTemplate" ref="redisObjTemplate" />
+	</bean>
+	<bean id="tokenManager" class="com.hklk.oplatform.comm.RedisTokenManager">
+		<property name="tokenTimeout" value="1800" />
+	</bean>
+
+</beans>

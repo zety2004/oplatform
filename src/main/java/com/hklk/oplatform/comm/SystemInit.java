@@ -1,8 +1,11 @@
 package com.hklk.oplatform.comm;
 
+import com.hklk.oplatform.comm.cache.RedisCache;
 import com.hklk.oplatform.util.PropUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,8 +17,13 @@ import java.util.Properties;
 @Component
 public class SystemInit {
     private static final Logger LOG = LoggerFactory.getLogger(SystemInit.class);
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+
     @PostConstruct
     public void init() {
+        RedisCache.initTemplate(redisTemplate);
         PropUtil.setProperties(loadProp("/application.properties"));
     }
 

@@ -22,6 +22,7 @@ public class StatusCode {
     //操作失败
     public static final String SYS_ERROR = "9999";
 
+
     //登录名或者密码错误
     public static final String LOGIN_NAME_OR_PWD_ERROR = "0001";
 
@@ -53,6 +54,9 @@ public class StatusCode {
     //删除页的时候该目录下必须保留一页存在
     public static final String ERROR_DELETE_PAGE = "0013";
 
+    //用户名已存在
+    public static final String ADDUSER_USERNAME_EX = "0014";
+
     public static String getStatusMsg(String code) {
 
         Map<String, String> map = new HashMap<String, String>();
@@ -72,6 +76,7 @@ public class StatusCode {
         map.put("0011", "最后一页,无下一页");
         map.put("0012", "该目录下第一页已存在");
         map.put("0013", "目录下最后一页不能删除，只可修改");
+        map.put(ADDUSER_USERNAME_EX, "用户名已存在");
         return map.get(code);
     }
 }

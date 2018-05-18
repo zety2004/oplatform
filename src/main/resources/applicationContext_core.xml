@@ -10,14 +10,9 @@
 
 	<description>Spring公共配置</description>
 
-	<!-- 令牌管理(本地) -->
-	<bean id="tokenManager" class="com.hklk.oplatform.comm.LocalTokenManager">
-		<property name="tokenTimeout" value="1800" />
-	</bean>
-
 	<!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
 	<context:component-scan base-package="com.hklk.oplatform.*">
-		<context:exclude-filter type="regex" expression="com.hklk.website.cache.*" />
+		<context:exclude-filter type="regex" expression="com.hklk.oplatform.comm.cache.*" />
 	</context:component-scan>
 
 	<bean class="com.hklk.oplatform.util.SpringContextHolder" />
@@ -55,8 +50,7 @@
 		<property name="dataSource" ref="druidDataSource" />
 	</bean>
 
-	<!-- production环境 -->
-	<context:property-placeholder location="classpath*:/application.properties" />
+
 
 	<bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
 		destroy-method="close">

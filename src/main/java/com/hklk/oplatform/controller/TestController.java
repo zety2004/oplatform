@@ -1,5 +1,7 @@
 package com.hklk.oplatform.controller;
 
+import com.hklk.oplatform.comm.cache.RedisCache;
+import com.hklk.oplatform.comm.cache.RedisObjCache;
 import com.hklk.oplatform.util.DateUtil;
 import com.hklk.oplatform.util.OssUtil;
 import net.sf.json.JSONObject;
@@ -9,14 +11,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
 @RequestMapping("/test")
 @Controller
 public class TestController extends BaseController {
+
     @RequestMapping("/Upload")
     @ResponseBody
-    public String commUploadB(MultipartHttpServletRequest request) {//参数类型不同
+    public String commUploadB(MultipartHttpServletRequest request) {
         JSONObject json = new JSONObject();
         json.put("succ", false);
         try {
@@ -35,5 +39,13 @@ public class TestController extends BaseController {
             e.printStackTrace();
             return json.toString();
         }
+    }
+
+    @RequestMapping("/testRedis")
+    @ResponseBody
+    public String testRedis(HttpServletRequest request) {
+        RedisObjCache redisObjCache = new RedisObjCache();
+        redisObjCache.set("1231231",new Object());
+        return "111";
     }
 }

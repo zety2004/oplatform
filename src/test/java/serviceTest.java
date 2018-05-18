@@ -1,3 +1,4 @@
+import com.hklk.oplatform.comm.cache.RedisCache;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.service.UserService;
 import comm.AbstractTestCase;
@@ -20,6 +21,11 @@ public class serviceTest extends AbstractTestCase {
 
         User temp = userService.loginUser("developer", "123456");
         System.out.println(temp.getUsername());
+    }
+    @Test
+    public void redisTest(){
+        RedisCache.set("userToken",String.valueOf(System.currentTimeMillis()));
+        System.out.println(1111);
     }
 
 
