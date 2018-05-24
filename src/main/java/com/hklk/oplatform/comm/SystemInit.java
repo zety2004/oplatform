@@ -29,7 +29,6 @@ public class SystemInit {
 
     /**
      * 读取配置文件
-     *
      * @param propsName
      * @return
      */

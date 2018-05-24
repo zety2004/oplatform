@@ -23,6 +23,16 @@ public class PageTableForm<T> {
         this.objList = page.getResult();
     }
 
+    public PageTableForm(Page<T> page, List<T> list) {
+        this.currentPage = page.getPageNum();
+        this.pageSize = page.getPageSize();
+        this.beginIndex = page.getStartRow();
+        this.endIndex = page.getEndRow();
+        this.pageCount = page.getPages();
+        this.totleCount = page.getTotal();
+        this.objList = list;
+    }
+
     public int getCurrentPage() {
         return currentPage;
     }

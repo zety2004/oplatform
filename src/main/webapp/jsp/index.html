@@ -5,11 +5,11 @@
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>好课乐课官网</title>
-    <script type="text/javascript" src="http://192.168.0.129:8080/js/jquery-2.1.4.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.4.js"></script>
 
 </head>
 <script>
-    var data = {'username': 'admin','pageNum': 1}
+    var data = {'param': '', 'pageNum': 1}
 
     function setCookie(name, value) {
         var Days = 30;
@@ -18,9 +18,9 @@
         document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
     }
 
-var token;
+    var token;
     $.ajax({
-        url: "http://192.168.0.129:8080/editUser/queryUsers",
+        url: "editSchool/querySchool",
         type: 'POST',
         traditional: true,
         data: data,
@@ -66,7 +66,7 @@ var token;
 <button onclick="addUser()">添加用户</button>
 
 
-<form id="temp" action="/test/Upload" method="post" enctype="multipart/form-data">
+<form id="temp" action="/editcm/uploadCurriculumCover" method="post" enctype="multipart/form-data">
     <label>上传文件</label><input name="uploadfile" type="file"/>
     <button type="submit">提交</button>
 </form>

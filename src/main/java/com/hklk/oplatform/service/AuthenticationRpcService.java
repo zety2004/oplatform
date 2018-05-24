@@ -1,5 +1,6 @@
 package com.hklk.oplatform.service;
 
+import com.hklk.oplatform.comm.LoginUser;
 import com.hklk.oplatform.entity.vo.RpcUser;
 
 
@@ -24,6 +25,6 @@ public interface AuthenticationRpcService {
 	 * @param token 授权码
 	 * @return
 	 */
-	public RpcUser findAuthInfo(String token);
+	public LoginUser findAuthInfo(String token);
 
 }

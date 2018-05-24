@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int selectByNameForValidate(String name) {
+    public User selectByNameForValidate(String name) {
         return userMapper.selectByNameForValidate(name);
     }
 

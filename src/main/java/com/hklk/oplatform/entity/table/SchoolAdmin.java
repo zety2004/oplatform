@@ -7,19 +7,15 @@ public class SchoolAdmin implements Serializable {
 
     private Integer schoolId;
 
-    private String name;
+    private String nickname;
 
     private String remarks;
 
-    private String status;
+    private Integer status;
 
-    private String phone;
+    private String account;
 
     private String pwd;
-
-    private Integer typeId;
-
-    private String platform;
 
     private static final long serialVersionUID = 1L;
 
@@ -39,12 +35,12 @@ public class SchoolAdmin implements Serializable {
         this.schoolId = schoolId;
     }
 
-    public String getName() {
-        return name;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getRemarks() {
@@ -55,20 +51,20 @@ public class SchoolAdmin implements Serializable {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getAccount() {
+        return account;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getPwd() {
@@ -79,19 +75,4 @@ public class SchoolAdmin implements Serializable {
         this.pwd = pwd == null ? null : pwd.trim();
     }
 
-    public Integer getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(String platform) {
-        this.platform = platform == null ? null : platform.trim();
-    }
 }

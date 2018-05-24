@@ -38,7 +38,12 @@ public class LoginUserController extends BaseController {
                             HttpServletResponse response, HttpSession session) {
         User user = userService.loginUser(username, password);
         if (user != null) {
-            LoginUser loginUser = new LoginUser(user.getId(), user.getUsername());
+            List<PPage> PPages = userService.queryUserPages(user.getId());
+            StringBuffer rolePage = new StringBuffer();
+            for (PPage pPage : PPages) {
+                rolePage.append(pPage.getPageSrc());
+            }
+            LoginUser loginUser = new LoginUser(user.getId(), user.getUsername(), rolePage.toString());
             String token = CookieUtils.getCookie(request, TokenManager.TOKEN);
             if (StringUtils.isBlank(token) || tokenManager.validate(token) == null) {// 没有登录的情况
                 token = createToken(loginUser);
@@ -46,7 +51,7 @@ public class LoginUserController extends BaseController {
             }
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), token);
         } else {
-            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+            return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
         }
     }
 

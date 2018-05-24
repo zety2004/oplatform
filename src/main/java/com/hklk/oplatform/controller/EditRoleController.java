@@ -69,6 +69,14 @@ public class EditRoleController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/addUserRole")
+    public String addUserRole(UserRoleKey userRoleKey, HttpServletRequest request,
+                                HttpServletResponse response, HttpSession session) {
+        userRoleService.addUserRole(userRoleKey);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    @ResponseBody
     @RequestMapping("/queryRolePage")
     public String queryRolePage(int roleId, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {

@@ -8,16 +8,19 @@ import com.hklk.oplatform.service.ConsumablesService;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.PageService;
 import com.hklk.oplatform.service.RolePageService;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.List;
 
 @RequestMapping("/editcm")
@@ -59,6 +62,26 @@ public class EditCurriculumController extends BaseController {
                                    HttpServletResponse response, HttpSession session) {
         curriculumService.updateCurriculum(curriculum);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    @RequestMapping("/uploadCurriculumCover")
+    @ResponseBody
+    public String commUploadB(MultipartHttpServletRequest request) {
+        try {
+            MultipartFile file = request.getFile("uploadfile");// 与页面input的name相同
+            String savePath = request.getSession().getServletContext().getRealPath("/")
+                    + "/uploadTempDirectory/" + file.getOriginalFilename();
+            System.out.println(savePath);
+            File fileTemp = new File(savePath);
+            file.transferTo(fileTemp);
+            String fileKey = "KCGX" + file.getOriginalFilename();
+            OssUtil.uploadFile(fileKey, fileTemp);
+            String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") +"/"+ fileKey;
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+        }
     }
 
     @ResponseBody

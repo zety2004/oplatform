@@ -23,17 +23,17 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="selectByNameForValidate" resultType="java.lang.Integer" parameterType="java.lang.String">
-    select
-    count(0)
-    from hklk_user
-    where username = #{name,jdbcType=INTEGER}
-  </select>
+    <select id="selectByNameForValidate" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_user
+        where username = #{name,jdbcType=INTEGER}
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from hklk_user
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+    </delete>
     <insert id="insert" parameterType="com.hklk.oplatform.entity.table.User">
     insert into hklk_user (id, username, password, 
       createtime, nickname, remark, 
@@ -180,5 +180,5 @@
       left join hklk_role_page h2 on hr.id = h2.role_id
       left join hklk_page hp on h2.page_id = hp.id
       where t.id = #{id,jdbcType=INTEGER}
-  </select>
+    </select>
 </mapper>

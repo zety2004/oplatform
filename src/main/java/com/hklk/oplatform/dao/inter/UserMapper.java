@@ -25,5 +25,5 @@ public interface UserMapper {
 
     List<PPage> selectPageForUser(Integer id);
 
-    int selectByNameForValidate(String name);
+    User selectByNameForValidate(String name);
 }

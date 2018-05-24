@@ -17,5 +17,7 @@ public interface SchoolMapper {
 
     int updateByPrimaryKey(School record);
 
-    List<School> querySchools();
+    List<School> querySchools(String param);
+
+    School selectSchoolByName(String name);
 }

@@ -35,5 +35,12 @@ public interface UserService {
     **/
     List<PPage> queryUserPages(Integer id);
 
-    int selectByNameForValidate(String name);
+    /**
+    * @author 曹良峰
+    * @Description 验证用户名是否存在
+    * @Date 10:31 2018/5/21
+    * @Param [name]
+    * @Return int
+    **/
+    User selectByNameForValidate(String name);
 }

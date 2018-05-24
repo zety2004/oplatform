@@ -50,8 +50,8 @@ public class EditUserController extends BaseController {
     public String addUser(User user, HttpServletRequest request,
                           HttpServletResponse response, HttpSession session) {
 
-        int num = userService.selectByNameForValidate(user.getUsername());
-        if (num == 0) {
+        User tmp = userService.selectByNameForValidate(user.getUsername());
+        if (tmp == null) {
             userService.addUser(user);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         } else {
@@ -63,12 +63,12 @@ public class EditUserController extends BaseController {
     @RequestMapping("/updateUser")
     public String updateUser(User user, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
-        int num = userService.selectByNameForValidate(user.getUsername());
-        if (num == 0) {
+        User tmp = userService.selectByNameForValidate(user.getUsername());
+        if (tmp != null && tmp.getId() != user.getId()) {
+            return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, StatusCode.getStatusMsg(StatusCode.ADDUSER_USERNAME_EX));
+        } else {
             userService.updateUser(user);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
-        } else {
-            return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, StatusCode.getStatusMsg(StatusCode.ADDUSER_USERNAME_EX));
         }
     }
 
