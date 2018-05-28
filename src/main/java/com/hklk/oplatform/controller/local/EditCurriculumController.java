@@ -136,4 +136,5 @@ public class EditCurriculumController extends BaseController {
         consumablesService.deleteByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
+
 }

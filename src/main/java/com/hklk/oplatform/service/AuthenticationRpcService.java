@@ -1,6 +1,6 @@
 package com.hklk.oplatform.service;
 
-import com.hklk.oplatform.comm.LoginUser;
+import org.apache.poi.ss.formula.functions.T;
 
 
 /**
@@ -14,7 +14,7 @@ public interface AuthenticationRpcService {
      * @param token 授权码
      * @return
      */
-    public boolean validate(String token);
+    public boolean validate(String key, String token);
 
     /**
      * 根据登录的Token和应用编码获取授权用户信息
@@ -22,6 +22,6 @@ public interface AuthenticationRpcService {
      * @param token 授权码
      * @return
      */
-    public LoginUser findAuthInfo(String token);
+    public Object findAuthInfo(String key, String token);
 
 }

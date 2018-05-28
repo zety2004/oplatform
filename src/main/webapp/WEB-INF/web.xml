@@ -27,6 +27,17 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
+  <filter>
+    <filter-name>AddHead</filter-name>
+    <filter-class>
+      com.hklk.oplatform.filter.AddHeadFilter
+    </filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AddHead</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
 
   <filter>
     <filter-name>encodingFilter</filter-name>

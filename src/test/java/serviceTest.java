@@ -1,6 +1,7 @@
 import com.hklk.oplatform.comm.cache.RedisCache;
 import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.User;
+import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.UserService;
 import comm.AbstractTestCase;
@@ -33,5 +34,11 @@ public class serviceTest extends AbstractTestCase {
         System.out.println(1111);
     }
 
+    @Test
+    public void selectByPrimaryKey() {
+        CurriculumVo id = curriculumService.selectByPrimaryKey(1);
+        System.out.println(id);
+        System.out.println(1111);
+    }
 
 }

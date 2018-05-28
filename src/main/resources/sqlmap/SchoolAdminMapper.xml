@@ -19,6 +19,14 @@
         from hklk_school_admin
         where id = #{id,jdbcType=INTEGER}
     </select>
+
+    <select id="loginSchool" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_school_admin
+        where account = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from hklk_school_admin
     where id = #{id,jdbcType=INTEGER}

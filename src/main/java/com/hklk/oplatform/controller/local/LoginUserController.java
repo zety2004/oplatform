@@ -38,7 +38,6 @@ public class LoginUserController extends BaseController {
     @RequestMapping("/login")
     public String loginUser(@RequestParam(value = "username", required = false) String username, @RequestParam(value = "password", required = false) String password, HttpServletRequest request,
                             HttpServletResponse response, HttpSession session) {
-        System.out.println("密码加密:" + PasswordProvider.encrypt(password));
         User user = userService.loginUser(username, password);
         if (user != null) {
             List<PPage> PPages = userService.queryUserPages(user.getId());
@@ -46,9 +45,9 @@ public class LoginUserController extends BaseController {
             for (PPage pPage : PPages) {
                 rolePage.append(pPage.getPageSrc());
             }
-            LoginUser loginUser = new LoginUser(user.getId(), user.getUsername(), rolePage.toString());
+            LoginUser loginUser = new LoginUser(user.getId(), user.getUsername(), user.getNickname(), rolePage.toString());
             String token = CookieUtils.getCookie(request, TokenManager.TOKEN);
-            if (StringUtils.isBlank(token) || tokenManager.validate(token) == null) {// 没有登录的情况
+            if (StringUtils.isBlank(token) || tokenManager.validate(tokenManager.userTokenKey, token) == null) {// 没有登录的情况
                 token = createToken(loginUser);
                 addTokenInCookie(token, request, response);
             }
@@ -62,7 +61,7 @@ public class LoginUserController extends BaseController {
         // 生成token
         String token = IdProvider.createUUIDId();
         // 缓存中添加token对应User
-        tokenManager.addToken(token, loginUser);
+        tokenManager.addToken(tokenManager.userTokenKey, token, loginUser);
         return token;
     }
 
@@ -82,7 +81,7 @@ public class LoginUserController extends BaseController {
     public String loginOut(HttpServletRequest request,
                            HttpServletResponse response, HttpSession session) {
         String token = request.getHeader("Access-Toke");
-        tokenManager.remove(token);
+        tokenManager.remove(tokenManager.userTokenKey, token);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 

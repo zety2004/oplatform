@@ -15,6 +15,8 @@ public interface SchoolAdminService {
     SchoolAdmin selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(SchoolAdmin record);
+
+    SchoolAdmin loginSchool(String account,String pwd);
     
     /**
     * @author 曹良峰

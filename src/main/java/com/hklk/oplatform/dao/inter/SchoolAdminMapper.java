@@ -3,6 +3,7 @@ package com.hklk.oplatform.dao.inter;
 import com.hklk.oplatform.entity.table.SchoolAdmin;
 
 import java.util.List;
+import java.util.Map;
 
 public interface
 SchoolAdminMapper {
@@ -13,6 +14,8 @@ SchoolAdminMapper {
     int insertSelective(SchoolAdmin record);
 
     SchoolAdmin selectByPrimaryKey(Integer id);
+
+    SchoolAdmin loginSchool(Map<String,String> map);
 
     int updateByPrimaryKeySelective(SchoolAdmin record);
 

@@ -18,23 +18,22 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class RedisTokenManager extends TokenManager {
 
 
-    private String userTokenKey = "userToken:";
     /**
      * 是否需要扩展token过期时间
      */
     private Set<String> tokenSet = new CopyOnWriteArraySet<String>();
 
-    public void addToken(String token, LoginUser loginUser) {
-        RedisCache.putValue(userTokenKey + token, JsonUtil.toJson(loginUser), tokenTimeout);
+    public void addToken(String key, String token, Object obj) {
+        RedisCache.putValue(key + token, JsonUtil.toJson(obj), tokenTimeout);
     }
 
-    public LoginUser validate(String token) {
-        String json = RedisCache.get(userTokenKey + token);
+    public LoginUser validate(String key, String token) {
+        String json = RedisCache.get(key + token);
         return JsonUtil.jsonToBean(json, LoginUser.class);
     }
 
-    public void remove(String token) {
-        RedisCache.remove(userTokenKey + token);
+    public void remove(String key, String token) {
+        RedisCache.remove(key + token);
     }
 
     @Override

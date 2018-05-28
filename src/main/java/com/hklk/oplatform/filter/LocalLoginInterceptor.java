@@ -1,5 +1,6 @@
 package com.hklk.oplatform.filter;
 
+import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.AuthenticationRpcService;
 import com.hklk.oplatform.util.StatusCode;
@@ -24,18 +25,18 @@ public class LocalLoginInterceptor implements HandlerInterceptor {
         return token == null ? null : token;
     }
 
-    public boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String token = getLocalToken(request);
         if (token == null) {
             return false;
-        } else if (authenticationRpcService.validate(token)) {// 验证token是否有效
+        } else if (authenticationRpcService.validate(TokenManager.userTokenKey, token)) {// 验证token是否有效
             return true;
         } else {
             return false;
         }
     }
 
-    protected void responseJson(HttpServletResponse response, int code, String message) throws IOException {
+    private void responseJson(HttpServletResponse response, int code, String message) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpStatus.OK.value());
         PrintWriter writer = response.getWriter();
@@ -45,10 +46,7 @@ public class LocalLoginInterceptor implements HandlerInterceptor {
         writer.close();
     }
 
-
-    //Action之前执行:
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    private void addResponseHead(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS");
         response.setHeader("X-Powered-By", "3.2.1");
@@ -57,11 +55,18 @@ public class LocalLoginInterceptor implements HandlerInterceptor {
         if (method.equals("OPTIONS")) {
             response.setStatus(204);
         }
+    }
 
+
+    //Action之前执行:
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        addResponseHead(request, response);
         // 如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
+
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         LocalLoginRepository classAnnotation = handlerMethod.getBean().getClass().getAnnotation(LocalLoginRepository.class);
         // 有 @LocalLoginRepository 注解，需要认证
