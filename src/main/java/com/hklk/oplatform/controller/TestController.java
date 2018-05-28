@@ -3,27 +3,24 @@ package com.hklk.oplatform.controller;
 import com.hklk.oplatform.comm.cache.RedisObjCache;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.PageTableForm;
-import com.hklk.oplatform.service.UserRoleService;
 import com.hklk.oplatform.service.UserService;
-import com.hklk.oplatform.util.DateUtil;
-import com.hklk.oplatform.util.ExcelUtils;
-import com.hklk.oplatform.util.OssUtil;
+import com.hklk.oplatform.util.*;
 import net.sf.json.JSONObject;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @RequestMapping("/test")
@@ -36,6 +33,13 @@ public class TestController extends BaseController {
     @Autowired
     UserService userService;
 
+    /**
+     * @author 曹良峰
+     * @Description 上传测试
+     * @Date 16:10 2018/5/24
+     * @Param [request]
+     * @Return java.lang.String
+     **/
     @RequestMapping("/Upload")
     @ResponseBody
     public String commUploadB(MultipartHttpServletRequest request) {
@@ -59,6 +63,13 @@ public class TestController extends BaseController {
         }
     }
 
+    /**
+     * @author 曹良峰
+     * @Description 测试导出excel
+     * @Date 16:38 2018/5/24
+     * @Param [request, response]
+     * @Return java.lang.String
+     **/
     @RequestMapping("/exportExcel")
     @ResponseBody
     public String exportExcel(HttpServletRequest request, HttpServletResponse response) {
@@ -77,6 +88,27 @@ public class TestController extends BaseController {
             e.printStackTrace();
         }
         return "OK";
+    }
+
+    @RequestMapping("/importExcel")
+    @ResponseBody
+    public String importExcel(MultipartHttpServletRequest request) {
+
+        try {
+            MultipartFile file = request.getFile("uploadfile");// 与页面input的name相同
+            String savePath = request.getSession().getServletContext().getRealPath("/")
+                    + "/uploadTempDirectory/" + file.getOriginalFilename();
+            File fileTemp = new File(savePath);
+            file.transferTo(fileTemp);
+
+            String[] fieldNames = {"username", "password", "nickname", "nickname", "remark", "des"};
+            List<User> users = ExcelUtils.importExcel(fileTemp, User.class, fieldNames, 1, 0, 0);
+
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+        }
     }
 
     @RequestMapping("/testRedis")

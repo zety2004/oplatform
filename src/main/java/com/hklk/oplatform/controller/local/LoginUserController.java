@@ -1,10 +1,13 @@
-package com.hklk.oplatform.controller;
+package com.hklk.oplatform.controller.local;
 
 import com.hklk.oplatform.comm.LoginUser;
 import com.hklk.oplatform.comm.TokenManager;
+import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
+import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.provider.IdProvider;
+import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.CookieUtils;
 import com.hklk.oplatform.util.StatusCode;
@@ -28,7 +31,6 @@ import java.util.List;
 public class LoginUserController extends BaseController {
     @Autowired
     UserService userService;
-
     @Resource
     private TokenManager tokenManager;
 
@@ -36,6 +38,7 @@ public class LoginUserController extends BaseController {
     @RequestMapping("/login")
     public String loginUser(@RequestParam(value = "username", required = false) String username, @RequestParam(value = "password", required = false) String password, HttpServletRequest request,
                             HttpServletResponse response, HttpSession session) {
+        System.out.println("密码加密:" + PasswordProvider.encrypt(password));
         User user = userService.loginUser(username, password);
         if (user != null) {
             List<PPage> PPages = userService.queryUserPages(user.getId());
@@ -83,11 +86,5 @@ public class LoginUserController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
-    @ResponseBody
-    @RequestMapping("/queryUserPages")
-    public String queryUserPages(int id, HttpServletRequest request,
-                                 HttpServletResponse response, HttpSession session) {
-        List<PPage> PPages = userService.queryUserPages(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), PPages);
-    }
+
 }

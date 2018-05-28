@@ -17,6 +17,7 @@
 
 	<bean class="com.hklk.oplatform.util.SpringContextHolder" />
 
+	<context:property-placeholder location="classpath*:/application.properties" />
 	<!-- MyBatis配置 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="druidDataSource" />
@@ -49,8 +50,6 @@
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="druidDataSource" />
 	</bean>
-
-
 
 	<bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
 		destroy-method="close">

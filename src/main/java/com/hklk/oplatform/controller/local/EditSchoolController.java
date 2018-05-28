@@ -1,9 +1,11 @@
-package com.hklk.oplatform.controller;
+package com.hklk.oplatform.controller.local;
 
+import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.School;
 import com.hklk.oplatform.entity.table.SchoolAdmin;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.SchoolVo;
+import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.SchoolAdminService;
 import com.hklk.oplatform.service.SchoolService;
 import com.hklk.oplatform.util.StatusCode;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+@LocalLoginRepository
 @RequestMapping("/editSchool")
 @Controller
 public class EditSchoolController extends BaseController {

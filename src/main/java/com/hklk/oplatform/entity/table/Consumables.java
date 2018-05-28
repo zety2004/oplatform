@@ -15,6 +15,8 @@ public class Consumables implements Serializable {
 
     private String unit;
 
+    private String pic;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -63,5 +65,13 @@ public class Consumables implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit == null ? null : unit.trim();
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 }

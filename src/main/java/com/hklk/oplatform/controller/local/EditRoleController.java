@@ -1,6 +1,8 @@
-package com.hklk.oplatform.controller;
+package com.hklk.oplatform.controller.local;
 
+import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.*;
+import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.RolePageService;
 import com.hklk.oplatform.service.RoleService;
 import com.hklk.oplatform.service.UserRoleService;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@LocalLoginRepository
 @RequestMapping("/editRole")
 @Controller
 public class EditRoleController extends BaseController {

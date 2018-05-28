@@ -2,8 +2,12 @@ package com.hklk.oplatform.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.hklk.oplatform.dao.inter.ConsumablesMapper;
 import com.hklk.oplatform.dao.inter.CurriculumMapper;
+import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.vo.CurriculumForListVo;
+import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.service.CurriculumService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +21,22 @@ public class CurriculumServiceImpl implements CurriculumService {
 
     @Autowired
     CurriculumMapper curriculumMapper;
+    @Autowired
+    ConsumablesMapper consumablesMapper;
 
     @Override
-    public PageTableForm<Curriculum> queryCurriculums(int pageNum, int pageSize) {
+    public PageTableForm<CurriculumForListVo> queryCurriculums(Curriculum curriculum,int pageNum, int pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
-        curriculumMapper.queryCurriculums();
-        PageTableForm<Curriculum> pageTableForm = new PageTableForm(page);
+        curriculumMapper.queryCurriculums(curriculum);
+        PageTableForm<CurriculumForListVo> pageTableForm = new PageTableForm(page);
         return pageTableForm;
     }
 
     @Override
-    public Curriculum selectByPrimaryKey(Integer id) {
-        return curriculumMapper.selectByPrimaryKey(id);
+    public CurriculumVo selectByPrimaryKey(Integer id) {
+        Curriculum curriculum = curriculumMapper.selectByPrimaryKey(id);
+        List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId(curriculum.getId());
+        return new CurriculumVo(curriculum, consumables);
     }
 
     @Override
@@ -44,5 +52,10 @@ public class CurriculumServiceImpl implements CurriculumService {
     @Override
     public int deleteCurriculum(Integer id) {
         return curriculumMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public Curriculum selectIdByUniqueNum(String uniqueNum) {
+        return curriculumMapper.selectIdByUniqueNum(uniqueNum);
     }
 }

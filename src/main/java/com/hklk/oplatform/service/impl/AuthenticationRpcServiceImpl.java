@@ -26,6 +26,4 @@ public class AuthenticationRpcServiceImpl implements AuthenticationRpcService {
         }
         return null;
     }
-
-
 }

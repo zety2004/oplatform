@@ -44,6 +44,7 @@ public class StatusCode {
         map.put(SYS_ERROR, "您的操作有误！");
         map.put(ADMIN_NUM_VALIDATE, "管理员数超过限制！");
         map.put(SCHOOLNAME_EX, "学校名已存在！");
+        map.put(SSO_TOKEN_ERROR, "TOKEN未授权或已过期！");
         map.put(SCHOOLNAME_UNEX, "学校名不存在");
         map.put(OVER_TIME, "Session Timeout! Please re-sign in！");
         map.put(LOGIN_NAME_OR_PWD_ERROR, "登录名或者密码错误");

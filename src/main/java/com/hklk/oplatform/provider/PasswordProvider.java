@@ -69,7 +69,7 @@ public class PasswordProvider {
     }
 
     public static void main(String[] args) {
-        System.err.println("加密        后:" + encrypt("123456"));
+        System.err.println("加密        后:" + encrypt("hklk123456"));
         System.err.println("加密        后:" + KL(encrypt("hklk123456")));
         System.err.println("加密        后:" + JM(KL(encrypt("hklk123456"))));
     }

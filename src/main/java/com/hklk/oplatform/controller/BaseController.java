@@ -16,6 +16,7 @@ import java.util.Date;
 public abstract class BaseController {
 
     protected int pageSize = 10;
+    protected int pageNum = 1;
 
     @InitBinder
     protected void initBinder(HttpServletRequest request,

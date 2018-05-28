@@ -1,8 +1,15 @@
-package com.hklk.oplatform.entity.table;
+package com.hklk.oplatform.entity.vo;
+
+import com.hklk.oplatform.entity.table.Consumables;
+import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.School;
+import com.hklk.oplatform.entity.table.SchoolAdmin;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
-public class Curriculum implements Serializable {
+public class CurriculumVo implements Serializable {
     private Integer id;
 
     private String cover;
@@ -29,9 +36,26 @@ public class Curriculum implements Serializable {
 
     private String des;
 
-    private String uniqueNum;
+    private List<Consumables> consumables;
 
     private static final long serialVersionUID = 1L;
+
+    public CurriculumVo(Curriculum curriculum, List<Consumables> consumables) {
+        this.id = curriculum.getId();
+        this.cover = curriculum.getCover();
+        this.name = curriculum.getName();
+        this.subject = curriculum.getSubject();
+        this.grade = curriculum.getGrade();
+        this.learningStyle = curriculum.getLearningStyle();
+        this.classHours = curriculum.getClassHours();
+        this.collectionNum = curriculum.getCollectionNum();
+        this.author = curriculum.getAuthor();
+        this.enclosure = curriculum.getEnclosure();
+        this.encDes = curriculum.getEncDes();
+        this.status = curriculum.getStatus();
+        this.des = curriculum.getDes();
+        this.consumables = consumables;
+    }
 
     public Integer getId() {
         return id;
@@ -46,7 +70,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setCover(String cover) {
-        this.cover = cover == null ? null : cover.trim();
+        this.cover = cover;
     }
 
     public String getName() {
@@ -54,7 +78,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+        this.name = name;
     }
 
     public String getSubject() {
@@ -62,7 +86,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setSubject(String subject) {
-        this.subject = subject == null ? null : subject.trim();
+        this.subject = subject;
     }
 
     public String getGrade() {
@@ -70,7 +94,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setGrade(String grade) {
-        this.grade = grade == null ? null : grade.trim();
+        this.grade = grade;
     }
 
     public String getLearningStyle() {
@@ -78,7 +102,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setLearningStyle(String learningStyle) {
-        this.learningStyle = learningStyle == null ? null : learningStyle.trim();
+        this.learningStyle = learningStyle;
     }
 
     public String getClassHours() {
@@ -86,7 +110,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setClassHours(String classHours) {
-        this.classHours = classHours == null ? null : classHours.trim();
+        this.classHours = classHours;
     }
 
     public Integer getCollectionNum() {
@@ -102,7 +126,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setAuthor(String author) {
-        this.author = author == null ? null : author.trim();
+        this.author = author;
     }
 
     public String getEnclosure() {
@@ -110,7 +134,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setEnclosure(String enclosure) {
-        this.enclosure = enclosure == null ? null : enclosure.trim();
+        this.enclosure = enclosure;
     }
 
     public String getEncDes() {
@@ -118,7 +142,7 @@ public class Curriculum implements Serializable {
     }
 
     public void setEncDes(String encDes) {
-        this.encDes = encDes == null ? null : encDes.trim();
+        this.encDes = encDes;
     }
 
     public Integer getStatus() {
@@ -134,14 +158,15 @@ public class Curriculum implements Serializable {
     }
 
     public void setDes(String des) {
-        this.des = des == null ? null : des.trim();
+        this.des = des;
     }
 
-    public String getUniqueNum() {
-        return uniqueNum;
+    public List<Consumables> getConsumables() {
+        return consumables;
     }
 
-    public void setUniqueNum(String uniqueNum) {
-        this.uniqueNum = uniqueNum;
+    public void setConsumables(List<Consumables> consumables) {
+        this.consumables = consumables;
     }
+
 }

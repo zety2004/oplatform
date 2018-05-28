@@ -1,6 +1,7 @@
 package com.hklk.oplatform.dao.inter;
 
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 
 import java.util.List;
 
@@ -19,5 +20,7 @@ public interface CurriculumMapper {
 
     int updateByPrimaryKey(Curriculum record);
 
-    List<Curriculum> queryCurriculums();
+    List<CurriculumForListVo> queryCurriculums(Curriculum curriculum);
+
+    Curriculum selectIdByUniqueNum(String uniqueNum);
 }

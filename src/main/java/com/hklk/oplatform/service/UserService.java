@@ -7,6 +7,13 @@ import com.hklk.oplatform.entity.vo.PageTableForm;
 import java.util.List;
 
 public interface UserService {
+    /**
+    * @author 曹良峰
+    * @Description 登陆
+    * @Date 16:05 2018/5/24
+    * @Param [username, pwd]
+    * @Return com.hklk.oplatform.entity.table.User
+    **/
     User loginUser(String username,String pwd);
 
     int addUser(User user);

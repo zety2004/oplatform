@@ -1,6 +1,8 @@
 package com.hklk.oplatform.service;
 
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.vo.CurriculumForListVo;
+import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 
 
@@ -13,13 +15,22 @@ public interface CurriculumService {
      * @Param []
      * @Return java.util.List<com.hklk.oplatform.entity.table.PPage>
      **/
-    PageTableForm<Curriculum> queryCurriculums(int pageNum, int pageSize);
+    PageTableForm<CurriculumForListVo> queryCurriculums(Curriculum curriculum,int pageNum, int pageSize);
 
-    Curriculum selectByPrimaryKey(Integer id);
+    /**
+     * @author 曹良峰
+     * @Description 根据id查询课程详情
+     * @Date 16:05 2018/5/24
+     * @Param [id]
+     * @Return com.hklk.oplatform.entity.vo.CurriculumVo
+     **/
+    CurriculumVo selectByPrimaryKey(Integer id);
 
     int addCurriculum(Curriculum curriculum);
 
     int updateCurriculum(Curriculum curriculum);
 
     int deleteCurriculum(Integer id);
+
+    Curriculum selectIdByUniqueNum(String uniqueNum);
 }

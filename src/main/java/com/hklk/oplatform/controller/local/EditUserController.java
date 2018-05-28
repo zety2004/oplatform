@@ -1,10 +1,11 @@
-package com.hklk.oplatform.controller;
+package com.hklk.oplatform.controller.local;
 
+import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Role;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.table.UserRoleKey;
 import com.hklk.oplatform.entity.vo.PageTableForm;
-import com.hklk.oplatform.provider.PasswordProvider;
+import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.UserRoleService;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.StatusCode;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@LocalLoginRepository
 @RequestMapping("/editUser")
 @Controller
 public class EditUserController extends BaseController {
@@ -76,7 +78,7 @@ public class EditUserController extends BaseController {
     @RequestMapping("/resetUserPassword")
     public String resetUserPassword(User user, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
-        user.setPassword(PasswordProvider.encrypt("hklk123456"));
+        user.setPassword("hklk123456");
         userService.updateUser(user);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
