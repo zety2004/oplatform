@@ -43,6 +43,7 @@ public class LoginSchoolController extends BaseController {
         SchoolAdmin schoolAdmin = schoolAdminService.loginSchool(account, pwd);
         LoginSchool loginSchool = new LoginSchool(schoolAdmin.getId(), schoolAdmin.getAccount(), schoolAdmin.getNickname(), "");
         String token = createToken(loginSchool);
+        System.out.println(token);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), token);
     }
 
