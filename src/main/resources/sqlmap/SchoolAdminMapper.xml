@@ -20,10 +20,20 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="loginSchool" resultMap="BaseResultMap" parameterType="map">
-        select
-        <include refid="Base_Column_List"/>
-        from hklk_school_admin
+
+    <resultMap id="BaseResultVoMap" type="com.hklk.oplatform.entity.vo.SchoolAdminVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <result column="schoolStatus" property="school_status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="loginSchool" resultMap="BaseResultVoMap" parameterType="map">
+        select a.*,s.`status` as school_status from hklk_school_admin a left join hklk_school s on a.school_id = s.id
         where account = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
     </select>
 

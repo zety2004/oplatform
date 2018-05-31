@@ -22,6 +22,6 @@ public interface AuthenticationRpcService {
      * @param token 授权码
      * @return
      */
-    public Object findAuthInfo(String key, String token);
+    public <T> T findAuthInfo(String key, String token);
 
 }

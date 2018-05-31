@@ -11,8 +11,8 @@
 
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, create_time, remarks, status,school_num
-  </sql>
+        id, name, create_time, remarks, status,school_num
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -20,15 +20,15 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from hklk_school
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+        delete from hklk_school
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
     <insert id="insert" parameterType="com.hklk.oplatform.entity.table.School">
-    insert into hklk_school (id, name, create_time,
-      remarks, status,school_num)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-      #{remarks,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{schoolNum,jdbcType=VARCHAR})
-  </insert>
+        insert into hklk_school (id, name, create_time,
+          remarks, status,school_num)
+        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+          #{remarks,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{schoolNum,jdbcType=VARCHAR})
+    </insert>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.School">
         insert into hklk_school
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -93,14 +93,15 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
+
     <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.School">
-    update hklk_school
-    set create_time = #{createTime,jdbcType=TIMESTAMP},
-      name = #{name,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
-      school_num = #{schoolNum,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+        update hklk_school
+        set create_time = #{createTime,jdbcType=TIMESTAMP},
+          name = #{name,jdbcType=VARCHAR},
+          remarks = #{remarks,jdbcType=VARCHAR},
+          status = #{status,jdbcType=INTEGER},
+          school_num = #{schoolNum,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
   </update>
 
     <select id="querySchools" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -110,6 +111,7 @@
         <if test="_parameter  != null and _parameter != ''">
             where name like CONCAT('%', #{param}, '%') or school_num like CONCAT('%', #{param}, '%')
         </if>
+        order by id desc
     </select>
 
     <select id="selectSchoolByName" resultMap="BaseResultMap" parameterType="java.lang.String">

@@ -14,14 +14,17 @@ public class LoginSchool implements Serializable {
 
     private String nickName;
 
+    private Integer schoolId;
+
     private String rolePage;
 
-    public LoginSchool(Integer schoolAdminId, String account, String nickName, String rolePage) {
+    public LoginSchool(Integer schoolAdminId, String account, String nickName, String rolePage, Integer schoolId) {
         super();
         this.schoolAdminId = schoolAdminId;
         this.account = account;
         this.nickName = nickName;
         this.rolePage = rolePage;
+        this.schoolId = schoolId;
     }
 
     public Integer getSchoolAdminId() {
@@ -46,6 +49,14 @@ public class LoginSchool implements Serializable {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
     }
 
     @Override

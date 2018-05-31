@@ -1,15 +1,10 @@
 package com.hklk.oplatform.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.hklk.oplatform.dao.inter.SchoolAdminMapper;
-import com.hklk.oplatform.dao.inter.SchoolMapper;
-import com.hklk.oplatform.entity.table.School;
 import com.hklk.oplatform.entity.table.SchoolAdmin;
-import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.entity.vo.SchoolAdminVo;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.SchoolAdminService;
-import com.hklk.oplatform.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +35,7 @@ public class SchoolAdminServiceImpl implements SchoolAdminService {
     }
 
     @Override
-    public SchoolAdmin loginSchool(String account, String pwd) {
+    public SchoolAdminVo loginSchool(String account, String pwd) {
         Map<String, String> params = new HashMap<>();
         params.put("account", account);
         if (pwd != null) {

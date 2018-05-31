@@ -5,7 +5,7 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="num" property="num" jdbcType="INTEGER"/>
-        <result column="unit_price" property="unitPrice" jdbcType="VARCHAR"/>
+        <result column="unit_price" property="unitPrice" jdbcType="DOUBLE"/>
         <result column="curriculum_id" property="curriculumId" jdbcType="INTEGER"/>
         <result column="unit" property="unit" jdbcType="VARCHAR"/>
         <result column="pic" property="pic" jdbcType="VARCHAR"/>
@@ -28,7 +28,7 @@
       unit_price, curriculum_id, unit,pic
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{num,jdbcType=INTEGER}, 
-      #{unitPrice,jdbcType=VARCHAR}, #{curriculumId,jdbcType=INTEGER}, #{unit,jdbcType=VARCHAR}, #{pic,jdbcType=VARCHAR}
+      #{unitPrice,jdbcType=DOUBLE}, #{curriculumId,jdbcType=INTEGER}, #{unit,jdbcType=VARCHAR}, #{pic,jdbcType=VARCHAR}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.Consumables">
@@ -67,7 +67,7 @@
                 #{num,jdbcType=INTEGER},
             </if>
             <if test="unitPrice != null">
-                #{unitPrice,jdbcType=VARCHAR},
+                #{unitPrice,jdbcType=DOUBLE},
             </if>
             <if test="curriculumId != null">
                 #{curriculumId,jdbcType=INTEGER},
@@ -90,7 +90,7 @@
                 num = #{num,jdbcType=INTEGER},
             </if>
             <if test="unitPrice != null">
-                unit_price = #{unitPrice,jdbcType=VARCHAR},
+                unit_price = #{unitPrice,jdbcType=DOUBLE},
             </if>
             <if test="curriculumId != null">
                 curriculum_id = #{curriculumId,jdbcType=INTEGER},
@@ -108,7 +108,7 @@
     update hklk_consumables
     set name = #{name,jdbcType=VARCHAR},
       num = #{num,jdbcType=INTEGER},
-      unit_price = #{unitPrice,jdbcType=VARCHAR},
+      unit_price = #{unitPrice,jdbcType=DOUBLE},
       curriculum_id = #{curriculumId,jdbcType=INTEGER},
       unit = #{unit,jdbcType=VARCHAR},
       pic = #{pic,jdbcType=VARCHAR}

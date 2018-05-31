@@ -20,6 +20,8 @@ public class StatusCode {
     public static final int OVER_TIME = 301;//超时
     public static final int SYS_ERROR = 9999;//系统错误
 
+    //账户已被禁用
+    public static final int LOGIN_DISABLE = 1000;
     //登录名或者密码错误
     public static final int LOGIN_NAME_OR_PWD_ERROR = 1001;
     //用户名已存在
@@ -34,6 +36,20 @@ public class StatusCode {
     public final static int SSO_TOKEN_ERROR = 1006;
     // 没有访问权限
     public final static int SSO_PERMISSION_ERROR = 1007;
+    // 该学校已经停用
+    public final static int SCHOOL_STATUS = 1008;
+    // 老师已存在
+    public final static int TEACHER_EX = 1009;
+    // 其他管理员已操作
+    public final static int CHECK_OPERATOR = 1010;
+    // 账号不存在请联系管理员
+    public final static int USER_UNFIND = 1011;
+    // 原密码输入错误
+    public final static int PASSWORD_ERROR = 1012;
+    // 班级已存在
+    public final static int CLASS_EX = 1013;
+    // 学生已存在
+    public final static int STUDENT_EX = 1014;
 
     public static String getStatusMsg(Object code) {
 
@@ -42,6 +58,7 @@ public class StatusCode {
         map.put(ERROR, "操作失败，请重试！");
 
         map.put(SYS_ERROR, "您的操作有误！");
+        map.put(LOGIN_DISABLE, "账号已被禁用！");
         map.put(ADMIN_NUM_VALIDATE, "管理员数超过限制！");
         map.put(SCHOOLNAME_EX, "学校名已存在！");
         map.put(SSO_TOKEN_ERROR, "TOKEN未授权或已过期！");
@@ -49,6 +66,13 @@ public class StatusCode {
         map.put(OVER_TIME, "Session Timeout! Please re-sign in！");
         map.put(LOGIN_NAME_OR_PWD_ERROR, "登录名或者密码错误");
         map.put(ADDUSER_USERNAME_EX, "用户名已存在");
+        map.put(SCHOOL_STATUS, "该学校已经停用！");
+        map.put(TEACHER_EX, "老师已存在！");
+        map.put(CHECK_OPERATOR, "其他管理员已操作！");
+        map.put(USER_UNFIND, "账号不存在请联系管理员！");
+        map.put(PASSWORD_ERROR, "原密码输入错误！");
+        map.put(CLASS_EX, "班级已存在！");
+        map.put(STUDENT_EX, "学生已存在！");
         return map.get(code);
     }
 }

@@ -9,7 +9,7 @@ public class Consumables implements Serializable {
 
     private Integer num;
 
-    private String unitPrice;
+    private Double unitPrice;
 
     private Integer curriculumId;
 
@@ -43,12 +43,12 @@ public class Consumables implements Serializable {
         this.num = num;
     }
 
-    public String getUnitPrice() {
+    public Double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(String unitPrice) {
-        this.unitPrice = unitPrice == null ? null : unitPrice.trim();
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public Integer getCurriculumId() {

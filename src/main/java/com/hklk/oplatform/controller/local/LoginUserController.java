@@ -5,9 +5,7 @@ import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
-import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.provider.IdProvider;
-import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.CookieUtils;
 import com.hklk.oplatform.util.StatusCode;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,27 +28,30 @@ import java.util.List;
 public class LoginUserController extends BaseController {
     @Autowired
     UserService userService;
-    @Resource
-    private TokenManager tokenManager;
 
     @ResponseBody
     @RequestMapping("/login")
     public String loginUser(@RequestParam(value = "username", required = false) String username, @RequestParam(value = "password", required = false) String password, HttpServletRequest request,
                             HttpServletResponse response, HttpSession session) {
         User user = userService.loginUser(username, password);
-        if (user != null) {
-            List<PPage> PPages = userService.queryUserPages(user.getId());
-            StringBuffer rolePage = new StringBuffer();
-            for (PPage pPage : PPages) {
-                rolePage.append(pPage.getPageSrc());
+        if (user != null && user.getState() == 1) {
+            List<PPage> pPages = userService.queryUserPages(user.getId());
+            LoginUser loginUser = new LoginUser(user.getId(), user.getUsername(), user.getNickname(), "");
+            if (pPages.get(0) != null) {
+                StringBuffer rolePage = new StringBuffer();
+                for (PPage pPage : pPages) {
+                    rolePage.append(pPage.getPageSrc());
+                }
+                loginUser.setRolePage(rolePage.toString());
             }
-            LoginUser loginUser = new LoginUser(user.getId(), user.getUsername(), user.getNickname(), rolePage.toString());
             String token = CookieUtils.getCookie(request, TokenManager.TOKEN);
             if (StringUtils.isBlank(token) || tokenManager.validate(tokenManager.userTokenKey, token) == null) {// 没有登录的情况
                 token = createToken(loginUser);
                 addTokenInCookie(token, request, response);
             }
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), token);
+        } else if (user != null && user.getState() != 1) {
+            return ToolUtil.buildResultStr(StatusCode.LOGIN_DISABLE, StatusCode.getStatusMsg(StatusCode.LOGIN_DISABLE));
         } else {
             return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
         }

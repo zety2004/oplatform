@@ -2,6 +2,7 @@ package com.hklk.oplatform.util;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.StringUtils;
 
@@ -9,7 +10,10 @@ import javax.servlet.ServletOutputStream;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -89,7 +93,7 @@ public class ExcelUtils {
     /**
      * 创建Excel工作簿
      *
-     * @param fileName Excel文件名
+     * @param fileExtension Excel文件名
      * @param in       文件输入流
      * @return
      * @throws IOException
@@ -409,6 +413,9 @@ public class ExcelUtils {
         // 产生表格标题行
         int rowIndex = sheet.getLastRowNum();
         if (columnHeaders != null && columnHeaders.length > 0) {
+            CellStyle style = workbook.createCellStyle();
+            short temp = 1;
+            style.setLeftBorderColor(temp);
             Row row = sheet.createRow(rowIndex);
             for (int i = 0; i < columnHeaders.length; i++) {
                 Cell cell = row.createCell(i);
@@ -467,7 +474,7 @@ public class ExcelUtils {
     }
 
     /**
-     * 把创建的excel工作簿写入到物理路径
+     * 把创建的excel工作簿写入到网页
      *
      * @param out      输出流
      * @param workbook excel工作簿

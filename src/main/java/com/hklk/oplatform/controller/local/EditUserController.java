@@ -1,11 +1,14 @@
 package com.hklk.oplatform.controller.local;
 
+import com.hklk.oplatform.comm.LoginUser;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Role;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.table.UserRoleKey;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
+import com.hklk.oplatform.provider.PasswordProvider;
+import com.hklk.oplatform.service.AuthenticationRpcService;
 import com.hklk.oplatform.service.UserRoleService;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.StatusCode;
@@ -29,6 +32,8 @@ public class EditUserController extends BaseController {
 
     @Autowired
     UserRoleService userRoleService;
+    @Autowired
+    AuthenticationRpcService authenticationRpcService;
 
     @ResponseBody
     @RequestMapping("/queryUsers")
@@ -71,6 +76,29 @@ public class EditUserController extends BaseController {
         } else {
             userService.updateUser(user);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/updateUserPassword")
+    public String updateUserPassword(String oldPassword, String newPassword, HttpServletRequest request,
+                                     HttpServletResponse response, HttpSession session) {
+        String token = request.getHeader("Access-Toke");
+        LoginUser loginUser = authenticationRpcService.findAuthInfo(tokenManager.userTokenKey, token);
+        if (loginUser == null) {
+            return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
+        }
+        User temp = userService.selectByPrimaryKey(loginUser.getUserId());
+        if (temp == null) {
+            return ToolUtil.buildResultStr(StatusCode.USER_UNFIND, StatusCode.getStatusMsg(StatusCode.USER_UNFIND));
+        } else if (temp != null && temp.getPassword().equals(PasswordProvider.encrypt(oldPassword))) {
+            User param = new User();
+            param.setId(loginUser.getUserId());
+            param.setPassword(newPassword);
+            userService.updateUser(param);
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        } else {
+            return ToolUtil.buildResultStr(StatusCode.PASSWORD_ERROR, StatusCode.getStatusMsg(StatusCode.PASSWORD_ERROR));
         }
     }
 

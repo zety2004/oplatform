@@ -66,7 +66,6 @@ public class LocalLoginInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
-
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         LocalLoginRepository classAnnotation = handlerMethod.getBean().getClass().getAnnotation(LocalLoginRepository.class);
         // 有 @LocalLoginRepository 注解，需要认证

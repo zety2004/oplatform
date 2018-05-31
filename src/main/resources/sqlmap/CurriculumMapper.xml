@@ -22,7 +22,7 @@
     <sql id="Base_Column_List">
     id, cover, name, subject, grade, learning_style, class_hours, collection_num, author, 
     enclosure, enc_des, status,unique_num
-  </sql>
+    </sql>
     <sql id="Blob_Column_List">
     des
   </sql>
@@ -209,20 +209,20 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
     <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.Curriculum">
-    update hklk_curriculum
-    set cover = #{cover,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      subject = #{subject,jdbcType=VARCHAR},
-      grade = #{grade,jdbcType=VARCHAR},
-      learning_style = #{learningStyle,jdbcType=VARCHAR},
-      class_hours = #{classHours,jdbcType=VARCHAR},
-      collection_num = #{collectionNum,jdbcType=INTEGER},
-      author = #{author,jdbcType=VARCHAR},
-      enclosure = #{enclosure,jdbcType=VARCHAR},
-      enc_des = #{encDes,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+        update hklk_curriculum
+        set cover = #{cover,jdbcType=VARCHAR},
+          name = #{name,jdbcType=VARCHAR},
+          subject = #{subject,jdbcType=VARCHAR},
+          grade = #{grade,jdbcType=VARCHAR},
+          learning_style = #{learningStyle,jdbcType=VARCHAR},
+          class_hours = #{classHours,jdbcType=VARCHAR},
+          collection_num = #{collectionNum,jdbcType=INTEGER},
+          author = #{author,jdbcType=VARCHAR},
+          enclosure = #{enclosure,jdbcType=VARCHAR},
+          enc_des = #{encDes,jdbcType=VARCHAR},
+          status = #{status,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 
     <resultMap id="BaseResultVoMap" type="com.hklk.oplatform.entity.vo.CurriculumForListVo">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -257,9 +257,9 @@
         <if test="learningStyle != null">
             and cc.learning_style like CONCAT('%', #{learningStyle}, '%')
         </if>
-
         <if test="subject != null">
             and cc.subject like CONCAT('%', #{subject}, '%')
         </if>
+        order by id desc
     </select>
 </mapper>

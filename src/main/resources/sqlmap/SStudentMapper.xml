@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hklk.oplatform.dao.inter.SStudentMapper">
+    <resultMap id="BaseResultMap" type="com.hklk.oplatform.entity.table.SStudent">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="class_id" property="classId" jdbcType="INTEGER"/>
+        <result column="full_name" property="fullName" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="parent_name" property="parentName" jdbcType="VARCHAR"/>
+        <result column="parent_phone" property="parentPhone" jdbcType="VARCHAR"/>
+        <result column="s_num" property="sNum" jdbcType="VARCHAR"/>
+        <result column="wechat_id" property="wechatId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, class_id, full_name, sex, parent_name, parent_phone, s_num, wechat_id
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_school_student
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectBySNumForValidate" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        st.*
+        FROM
+        hklk_school s
+        LEFT JOIN hklk_school_class sc ON s.id = sc.school_id
+        LEFT JOIN hklk_school_student st ON sc.id = st.class_id
+        where s.id = #{schoolId,jdbcType=INTEGER} and  st.s_num = #{sNum,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from hklk_school_student
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hklk.oplatform.entity.table.SStudent">
+    insert into hklk_school_student (id, class_id, full_name, 
+      sex, parent_name, parent_phone, 
+      s_num, wechat_id)
+    values (#{id,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}, #{fullName,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, #{parentPhone,jdbcType=VARCHAR}, 
+      #{sNum,jdbcType=VARCHAR}, #{wechatId,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.SStudent">
+        insert into hklk_school_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="classId != null">
+                class_id,
+            </if>
+            <if test="fullName != null">
+                full_name,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="parentName != null">
+                parent_name,
+            </if>
+            <if test="parentPhone != null">
+                parent_phone,
+            </if>
+            <if test="sNum != null">
+                s_num,
+            </if>
+            <if test="wechatId != null">
+                wechat_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="classId != null">
+                #{classId,jdbcType=INTEGER},
+            </if>
+            <if test="fullName != null">
+                #{fullName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="parentName != null">
+                #{parentName,jdbcType=VARCHAR},
+            </if>
+            <if test="parentPhone != null">
+                #{parentPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="sNum != null">
+                #{sNum,jdbcType=VARCHAR},
+            </if>
+            <if test="wechatId != null">
+                #{wechatId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.SStudent">
+        update hklk_school_student
+        <set>
+            <if test="classId != null">
+                class_id = #{classId,jdbcType=INTEGER},
+            </if>
+            <if test="fullName != null">
+                full_name = #{fullName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="parentName != null">
+                parent_name = #{parentName,jdbcType=VARCHAR},
+            </if>
+            <if test="parentPhone != null">
+                parent_phone = #{parentPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="sNum != null">
+                s_num = #{sNum,jdbcType=VARCHAR},
+            </if>
+            <if test="wechatId != null">
+                wechat_id = #{wechatId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.SStudent">
+    update hklk_school_student
+    set class_id = #{classId,jdbcType=INTEGER},
+      full_name = #{fullName,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      parent_name = #{parentName,jdbcType=VARCHAR},
+      parent_phone = #{parentPhone,jdbcType=VARCHAR},
+      s_num = #{sNum,jdbcType=VARCHAR},
+      wechat_id = #{wechatId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="queryStudentByClassId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_school_student
+        where class_id = #{classId,jdbcType=INTEGER}
+    </select>
+</mapper>

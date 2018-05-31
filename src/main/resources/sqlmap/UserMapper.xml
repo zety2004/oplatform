@@ -27,7 +27,7 @@
         select
         <include refid="Base_Column_List"/>
         from hklk_user
-        where username = #{name,jdbcType=INTEGER}
+        where username = #{name,jdbcType=VARCHAR}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -152,7 +152,7 @@
         select
         <include refid="Base_Column_List"/>
         from hklk_user
-        where username =#{username} and password = #{password} and state = 1
+        where username = #{username} and password = #{password}
     </select>
 
     <select id="selectUsers" resultMap="BaseResultMap" parameterType="com.hklk.oplatform.entity.table.User">
@@ -162,7 +162,7 @@
         <if test="username != null and username != ''">
             and username like CONCAT('%', #{username}, '%')
         </if>
-
+        order by id desc
     </select>
 
     <resultMap id="PageMap" type="com.hklk.oplatform.entity.table.PPage">

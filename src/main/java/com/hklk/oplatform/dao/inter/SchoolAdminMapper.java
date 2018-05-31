@@ -1,6 +1,7 @@
 package com.hklk.oplatform.dao.inter;
 
 import com.hklk.oplatform.entity.table.SchoolAdmin;
+import com.hklk.oplatform.entity.vo.SchoolAdminVo;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ SchoolAdminMapper {
 
     SchoolAdmin selectByPrimaryKey(Integer id);
 
-    SchoolAdmin loginSchool(Map<String,String> map);
+    SchoolAdminVo loginSchool(Map<String,String> map);
 
     int updateByPrimaryKeySelective(SchoolAdmin record);
 

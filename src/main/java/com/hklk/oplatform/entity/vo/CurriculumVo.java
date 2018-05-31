@@ -2,11 +2,8 @@ package com.hklk.oplatform.entity.vo;
 
 import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
-import com.hklk.oplatform.entity.table.School;
-import com.hklk.oplatform.entity.table.SchoolAdmin;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class CurriculumVo implements Serializable {

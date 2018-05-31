@@ -7,6 +7,7 @@ import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
+import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.service.ConsumablesService;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.util.OssUtil;
@@ -57,6 +58,8 @@ public class EditCurriculumController extends BaseController {
     @RequestMapping("/addCurriculum")
     public String addCurriculum(Curriculum curriculum, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {
+        String uniqueNum = IdProvider.createUUIDId();
+        curriculum.setUniqueNum(uniqueNum);
         curriculumService.addCurriculum(curriculum);
         Curriculum result = curriculumService.selectIdByUniqueNum(curriculum.getUniqueNum());
         System.out.println(curriculum.getUniqueNum());
@@ -84,7 +87,6 @@ public class EditCurriculumController extends BaseController {
             MultipartFile file = request.getFile("uploadfile");// 与页面input的name相同
             String savePath = request.getSession().getServletContext().getRealPath("/")
                     + "/uploadTempDirectory/" + file.getOriginalFilename();
-            System.out.println(savePath);
             File fileTemp = new File(savePath);
             file.transferTo(fileTemp);
             String fileKey = "KCGX" + file.getOriginalFilename();

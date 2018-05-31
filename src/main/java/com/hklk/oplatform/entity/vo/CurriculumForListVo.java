@@ -1,10 +1,6 @@
 package com.hklk.oplatform.entity.vo;
 
-import com.hklk.oplatform.entity.table.Consumables;
-import com.hklk.oplatform.entity.table.Curriculum;
-
 import java.io.Serializable;
-import java.util.List;
 
 public class CurriculumForListVo implements Serializable {
     private Integer id;
