@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @SchoolLoginRepository
-@RequestMapping("/EditTeacher")
+@RequestMapping("/editTeacher")
 @Controller
 public class EditTeacherController extends BaseController {
     @Autowired

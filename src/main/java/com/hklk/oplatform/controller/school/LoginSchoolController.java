@@ -73,7 +73,6 @@ public class LoginSchoolController extends BaseController {
         }
     }
 
-
     @ResponseBody
     @RequestMapping("/loginOut")
     public String loginOut(HttpServletRequest request,

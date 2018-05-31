@@ -9,6 +9,7 @@ import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
 import com.hklk.oplatform.entity.vo.CurriculumChoiceVo;
 import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.SCApplyService;
 import com.hklk.oplatform.service.SSyllabusService;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@SchoolLoginRepository
 @RequestMapping("/schoolCurriculum")
 @Controller
 public class SchoolCurriculumController extends BaseController {

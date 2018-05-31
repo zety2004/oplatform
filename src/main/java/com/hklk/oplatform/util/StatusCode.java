@@ -50,6 +50,8 @@ public class StatusCode {
     public final static int CLASS_EX = 1013;
     // 学生已存在
     public final static int STUDENT_EX = 1014;
+    // 导入学生存在失败项,请确认数据是否正确
+    public final static int IMPORTERROR_STUDENT = 1015;
 
     public static String getStatusMsg(Object code) {
 
@@ -73,6 +75,7 @@ public class StatusCode {
         map.put(PASSWORD_ERROR, "原密码输入错误！");
         map.put(CLASS_EX, "班级已存在！");
         map.put(STUDENT_EX, "学生已存在！");
+        map.put(IMPORTERROR_STUDENT, "导入学生存在失败项,请确认数据是否正确！");
         return map.get(code);
     }
 }

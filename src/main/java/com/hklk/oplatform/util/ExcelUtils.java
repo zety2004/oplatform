@@ -1,7 +1,10 @@
 package com.hklk.oplatform.util;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.StringUtils;
@@ -94,7 +97,7 @@ public class ExcelUtils {
      * 创建Excel工作簿
      *
      * @param fileExtension Excel文件名
-     * @param in       文件输入流
+     * @param in            文件输入流
      * @return
      * @throws IOException
      */
@@ -389,6 +392,22 @@ public class ExcelUtils {
         }
     }
 
+    private static CellStyle buildCssForCell(CellStyle style) {
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);//水平居中
+        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        style.setFillPattern(HSSFCellStyle.BIG_SPOTS);
+        style.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+        style.setFillBackgroundColor(HSSFColor.LIGHT_YELLOW.index);
+/*        style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        style.setFillBackgroundColor(HSSFColor.LIGHT_YELLOW.index);*/
+        style.setWrapText(true);
+        return style;
+    }
+
     /**
      * 导出内容到Excel文件
      *
@@ -413,12 +432,15 @@ public class ExcelUtils {
         // 产生表格标题行
         int rowIndex = sheet.getLastRowNum();
         if (columnHeaders != null && columnHeaders.length > 0) {
-            CellStyle style = workbook.createCellStyle();
-            short temp = 1;
-            style.setLeftBorderColor(temp);
+
             Row row = sheet.createRow(rowIndex);
+            row.setHeight((short) 600);
             for (int i = 0; i < columnHeaders.length; i++) {
+                sheet.setColumnWidth(i, 7500);
                 Cell cell = row.createCell(i);
+                CellStyle style = workbook.createCellStyle();
+                buildCssForCell(style);
+                cell.setCellStyle(style);
                 cell.setCellValue(columnHeaders[i]);
             }
             rowIndex++;
