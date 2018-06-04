@@ -308,7 +308,6 @@
     </dependencies>
 
 
-
     <build>
 
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -317,11 +316,11 @@
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
-                        <!--<exclude>application.properties</exclude>
-                        <exclude>applicationContext_*.xml</exclude>
-                        <exclude>generatorConfig.xml</exclude>
-                        <exclude>logback.xml</exclude>
-                        <exclude>sqlmap/*</exclude>-->
+                    <exclude>application.properties</exclude>
+                    <exclude>applicationContext_*.xml</exclude>
+                    <exclude>generatorConfig.xml</exclude>
+                    <exclude>logback.xml</exclude>
+                    <!--<exclude>sqlmap/*</exclude>-->
                 </excludes>
             </resource>
         </resources>
