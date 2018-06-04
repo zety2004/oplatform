@@ -27,7 +27,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.List;
 
-@LocalLoginRepository
+/*@LocalLoginRepository*/
 @RequestMapping("/editcm")
 @Controller
 public class EditCurriculumController extends BaseController {
