@@ -2,9 +2,7 @@ package com.hklk.oplatform.service;
 
 import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.SStudent;
-import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
-import com.hklk.oplatform.entity.vo.CurriculumChoiceVo;
-import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.entity.vo.*;
 
 import java.util.List;
 
@@ -22,11 +20,13 @@ public interface SCApplyService {
 
     int insertSelective(SCApply scApply);
 
+    PageTableForm<CurriculumOrderVo> queryCurriculumOrder(Integer isHandle,int pageNum, int pageSize);
+
     SCApply selectByPrimaryKey(Integer id);
 
     PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize);
 
-    PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId,int pageNum, int pageSize);
+    PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId,String param,int pageNum, int pageSize);
 
-    List<SStudent> queryStudentBySCAId(Integer scaId);
+    List<StudentPay> queryStudentBySCAId(Integer scaId);
 }

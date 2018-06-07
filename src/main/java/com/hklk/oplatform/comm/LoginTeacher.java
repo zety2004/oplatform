@@ -5,10 +5,10 @@ import java.io.Serializable;
 /**
  * 登录成功用户对象
  */
-public class LoginSchool implements Serializable {
+public class LoginTeacher implements Serializable {
 
     // 登录成功ID
-    private Integer schoolAdminId;
+    private Integer teacherId;
     // 登录成功用户名
     private String account;
 
@@ -18,24 +18,24 @@ public class LoginSchool implements Serializable {
 
     private String rolePage;
 
-    public LoginSchool() {
+    public LoginTeacher() {
     }
 
-    public LoginSchool(Integer schoolAdminId, String account, String nickName, String rolePage, Integer schoolId) {
+    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId) {
         super();
-        this.schoolAdminId = schoolAdminId;
+        this.teacherId = teacherId;
         this.account = account;
         this.nickName = nickName;
         this.rolePage = rolePage;
         this.schoolId = schoolId;
     }
 
-    public Integer getSchoolAdminId() {
-        return schoolAdminId;
+    public Integer getTeacherId() {
+        return teacherId;
     }
 
-    public void setSchoolAdminId(Integer schoolAdminId) {
-        this.schoolAdminId = schoolAdminId;
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
     public String getAccount() {
@@ -70,11 +70,11 @@ public class LoginSchool implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        LoginSchool other = (LoginSchool) obj;
-        if (schoolAdminId == null) {
-            if (other.schoolAdminId != null)
+        LoginTeacher other = (LoginTeacher) obj;
+        if (teacherId == null) {
+            if (other.teacherId != null)
                 return false;
-        } else if (!schoolAdminId.equals(other.schoolAdminId))
+        } else if (!teacherId.equals(other.teacherId))
             return false;
         return true;
     }

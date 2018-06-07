@@ -1,7 +1,6 @@
 package com.hklk.oplatform.filter;
 
 import com.hklk.oplatform.comm.TokenManager;
-import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.AuthenticationRpcService;
 import com.hklk.oplatform.util.StatusCode;

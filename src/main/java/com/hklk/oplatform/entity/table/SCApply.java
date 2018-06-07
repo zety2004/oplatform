@@ -30,6 +30,10 @@ public class SCApply implements Serializable {
 
     private Integer schoolId;
 
+    private Integer orderOpUserId;
+
+    private String orderRemark;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -134,5 +138,21 @@ public class SCApply implements Serializable {
 
     public void setSchoolId(Integer schoolId) {
         this.schoolId = schoolId;
+    }
+
+    public Integer getOrderOpUserId() {
+        return orderOpUserId;
+    }
+
+    public void setOrderOpUserId(Integer orderOpUserId) {
+        this.orderOpUserId = orderOpUserId;
+    }
+
+    public String getOrderRemark() {
+        return orderRemark;
+    }
+
+    public void setOrderRemark(String orderRemark) {
+        this.orderRemark = orderRemark;
     }
 }

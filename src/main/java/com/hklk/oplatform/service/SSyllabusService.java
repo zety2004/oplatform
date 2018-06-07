@@ -1,5 +1,6 @@
 package com.hklk.oplatform.service;
 
+import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.SSyllabus;
 
 public interface SSyllabusService {
@@ -12,5 +13,5 @@ public interface SSyllabusService {
      **/
     int deleteByPrimaryKey(Integer id);
 
-    int insertOrUpdateByPrimaryKeySelective(SSyllabus sSyllabus);
+    int insertOrUpdateByPrimaryKeySelective(SSyllabus sSyllabus, SCApply scApply);
 }

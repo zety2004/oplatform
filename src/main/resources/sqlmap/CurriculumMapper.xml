@@ -247,7 +247,7 @@
         t.enclosure, t.enc_des, t.status
         ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc
         from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id GROUP BY t.id ) cc
-        where 1=1
+        where status=1
         <if test="name != null">
             and cc.name like CONCAT('%', #{name}, '%')
         </if>

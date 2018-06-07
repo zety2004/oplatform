@@ -3,7 +3,7 @@ package com.hklk.oplatform.entity.vo;
 import java.io.Serializable;
 import java.util.Date;
 
-public class CurriculumChoiceVo implements Serializable {
+public class CurriculumOrderVo implements Serializable {
     private Integer id;
 
     private String curriculumName;
@@ -12,11 +12,17 @@ public class CurriculumChoiceVo implements Serializable {
 
     private String grade;
 
-    private Date currStartTime;
+    private Date beginOfSelectTime;
+
+    private Date endOfSelectTime;
 
     private Integer maxNum;
 
     private Integer studentNum;
+
+    private Integer isSign;
+
+    private String orderRemark;
 
     private static final long serialVersionUID = 1L;
 
@@ -45,12 +51,20 @@ public class CurriculumChoiceVo implements Serializable {
         this.teacherName = teacherName;
     }
 
-    public Date getCurrStartTime() {
-        return currStartTime;
+    public Date getBeginOfSelectTime() {
+        return beginOfSelectTime;
     }
 
-    public void setCurrStartTime(Date currStartTime) {
-        this.currStartTime = currStartTime;
+    public void setBeginOfSelectTime(Date beginOfSelectTime) {
+        this.beginOfSelectTime = beginOfSelectTime;
+    }
+
+    public Date getEndOfSelectTime() {
+        return endOfSelectTime;
+    }
+
+    public void setEndOfSelectTime(Date endOfSelectTime) {
+        this.endOfSelectTime = endOfSelectTime;
     }
 
     public Integer getMaxNum() {
@@ -75,5 +89,21 @@ public class CurriculumChoiceVo implements Serializable {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public Integer getIsSign() {
+        return isSign;
+    }
+
+    public void setIsSign(Integer isSign) {
+        this.isSign = isSign;
+    }
+
+    public String getOrderRemark() {
+        return orderRemark;
+    }
+
+    public void setOrderRemark(String orderRemark) {
+        this.orderRemark = orderRemark;
     }
 }

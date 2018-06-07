@@ -32,8 +32,6 @@ public class EditUserController extends BaseController {
 
     @Autowired
     UserRoleService userRoleService;
-    @Autowired
-    AuthenticationRpcService authenticationRpcService;
 
     @ResponseBody
     @RequestMapping("/queryUsers")
@@ -83,8 +81,7 @@ public class EditUserController extends BaseController {
     @RequestMapping("/updateUserPassword")
     public String updateUserPassword(String oldPassword, String newPassword, HttpServletRequest request,
                                      HttpServletResponse response, HttpSession session) {
-        String token = request.getHeader("Access-Toke");
-        LoginUser loginUser = authenticationRpcService.findAuthInfo(tokenManager.userTokenKey, token);
+        LoginUser loginUser = getLoginUser(request);
         if (loginUser == null) {
             return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
         }

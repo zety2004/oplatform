@@ -1,6 +1,8 @@
 package com.hklk.oplatform.controller;
 
 import com.hklk.oplatform.comm.LoginSchool;
+import com.hklk.oplatform.comm.LoginTeacher;
+import com.hklk.oplatform.comm.LoginUser;
 import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.service.AuthenticationRpcService;
 import com.hklk.oplatform.util.StatusCode;
@@ -38,8 +40,24 @@ public abstract class BaseController {
 
     public LoginSchool getLoginSchool(HttpServletRequest request) {
         String token = request.getHeader("Access-Toke");
-        LoginSchool loginSchool = authenticationRpcService.findAuthInfo(tokenManager.userTokenKey, token);
+        //LoginSchool loginSchool = authenticationRpcService.findAuthInfo(tokenManager.schoolTokenKey, token);
+        LoginSchool loginSchool = new LoginSchool();
+        loginSchool.setSchoolId(1);
         return loginSchool;
+    }
+
+    public LoginTeacher getLoginTeacher(HttpServletRequest request) {
+        String token = request.getHeader("Access-Toke");
+        //LoginSchool loginSchool = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token);
+        LoginTeacher loginTeacher = new LoginTeacher();
+        loginTeacher.setSchoolId(1);
+        return loginTeacher;
+    }
+
+    public LoginUser getLoginUser(HttpServletRequest request) {
+        String token = request.getHeader("Access-Toke");
+        LoginUser loginUser = authenticationRpcService.findAuthInfo(tokenManager.userTokenKey, token);
+        return loginUser;
     }
 
     @ExceptionHandler(Exception.class)

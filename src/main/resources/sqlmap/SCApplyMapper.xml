@@ -193,22 +193,73 @@
         <result column="student_num" property="studentNum" jdbcType="INTEGER"/>
     </resultMap>
 
-    <select id="queryCurriculumChoice" resultMap="CurriculumChoiceMap" parameterType="java.lang.Integer">
+    <select id="queryCurriculumChoice" resultMap="CurriculumChoiceMap" parameterType="map">
         SELECT
-            sca.id,c.`name` as curriculum_name,c.grade,st.t_name as teacher_name,sca.curr_start_time,sca.max_num,COUNT(scc.id) as student_num
-            FROM
-            hklk_school_curriculum_apply sca
-            LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
-            LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
-            LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
-            where sca.status = 1 and sca.school_id = #{schoolId,jdbcType=INTEGER}
-            GROUP BY sca.id
+        sca.id,c.`name` as curriculum_name,c.grade,st.t_name as
+        teacher_name,sca.curr_start_time,sca.max_num,COUNT(scc.id) as student_num
+        FROM
+        hklk_school_curriculum_apply sca
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
+        where sca.status = 3 and sca.school_id = #{schoolId,jdbcType=INTEGER}
+        <if test="param != null">
+            and c.name like CONCAT('%', #{param}, '%')
+        </if>
+        GROUP BY sca.id
     </select>
 
-    <select id="queryStudentBySCAId" resultType="com.hklk.oplatform.entity.table.SStudent"
+    <resultMap id="CurriculumOrderMap" type="com.hklk.oplatform.entity.vo.CurriculumOrderVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="curriculum_name" property="curriculumName" jdbcType="VARCHAR"/>
+        <result column="grade" property="grade" jdbcType="VARCHAR"/>
+        <result column="teacher_name" property="teacherName" jdbcType="VARCHAR"/>
+        <result column="begin_of_select_time" property="beginOfSelectTime" jdbcType="TIMESTAMP"/>
+        <result column="end_of_select_time" property="endOfSelectTime" jdbcType="TIMESTAMP"/>
+        <result column="max_num" property="maxNum" jdbcType="INTEGER"/>
+        <result column="student_num" property="studentNum" jdbcType="INTEGER"/>
+        <result column="is_sign" property="isSign" jdbcType="INTEGER"/>
+        <result column="order_remark" property="orderRemark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="java.lang.Integer">
+        SELECT
+        sca.id,c.`name` as curriculum_name,c.grade,st.t_name as
+        teacher_name,sca.begin_of_select_time,sca.end_of_select_time,sca.max_num,COUNT(scc.id) as student_num,
+        CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = COUNT(scc.id) THEN 1 else 0 end
+        is_sign,sca.order_remark
+        FROM
+        hklk_school_curriculum_apply sca
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
+        where sca.status in (2,3);
+        <if test="isHandle != null">
+            and sca.order_op_user_id is null
+        </if>
+        <if test="isHandle == null">
+            and sca.order_op_user_id is not null
+        </if>
+        GROUP BY sca.id
+    </select>
+
+
+    <resultMap id="StudentPayMap" type="com.hklk.oplatform.entity.vo.StudentPay">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="class_id" property="classId" jdbcType="INTEGER"/>
+        <result column="full_name" property="fullName" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="parent_name" property="parentName" jdbcType="VARCHAR"/>
+        <result column="parent_phone" property="parentPhone" jdbcType="VARCHAR"/>
+        <result column="s_num" property="sNum" jdbcType="VARCHAR"/>
+        <result column="wechat_id" property="wechatId" jdbcType="VARCHAR"/>
+        <result column="pay_state" property="payState" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryStudentBySCAId" resultMap="StudentPayMap"
             parameterType="java.lang.Integer">
         SELECT
-            ss.*
+            ss.*,scc.pay_state
         FROM
             hklk_student_choice_curriculum scc
         LEFT JOIN hklk_school_student ss ON scc.student_id = ss.id

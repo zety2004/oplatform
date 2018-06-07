@@ -142,11 +142,9 @@ public class EditClassAndStudentController extends BaseController {
             } else {
                 return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
         }
     }
-
 }

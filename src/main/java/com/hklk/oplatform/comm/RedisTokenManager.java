@@ -5,6 +5,7 @@ import com.hklk.oplatform.util.JsonUtil;
 import jdk.nashorn.internal.parser.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Map.Entry;
@@ -15,9 +16,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * 单实例环境令牌管理
  */
+@Component
 public class RedisTokenManager extends TokenManager {
-
-
     /**
      * 是否需要扩展token过期时间
      */

@@ -1,6 +1,8 @@
 package com.hklk.oplatform.service.impl;
 
+import com.hklk.oplatform.dao.inter.SCApplyMapper;
 import com.hklk.oplatform.dao.inter.SSyllabusMapper;
+import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.table.SSyllabus;
 import com.hklk.oplatform.service.SStudentService;
@@ -14,6 +16,8 @@ public class SSyllabusServiceServiceImpl implements SSyllabusService {
 
     @Autowired
     SSyllabusMapper sSyllabusMapper;
+    @Autowired
+    SCApplyMapper scApplyMapper;
 
     @Override
     public int deleteByPrimaryKey(Integer id) {
@@ -21,7 +25,8 @@ public class SSyllabusServiceServiceImpl implements SSyllabusService {
     }
 
     @Override
-    public int insertOrUpdateByPrimaryKeySelective(SSyllabus sSyllabus) {
+    public int insertOrUpdateByPrimaryKeySelective(SSyllabus sSyllabus, SCApply scApply) {
+        scApplyMapper.updateByPrimaryKeySelective(scApply);
         if (sSyllabus.getId() != null) {
             return sSyllabusMapper.updateByPrimaryKeySelective(sSyllabus);
         } else {

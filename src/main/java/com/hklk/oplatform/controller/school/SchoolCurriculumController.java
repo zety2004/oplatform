@@ -5,10 +5,7 @@ import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.table.SSyllabus;
-import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
-import com.hklk.oplatform.entity.vo.CurriculumChoiceVo;
-import com.hklk.oplatform.entity.vo.CurriculumForListVo;
-import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.SCApplyService;
@@ -23,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 
 @SchoolLoginRepository
@@ -56,9 +54,9 @@ public class SchoolCurriculumController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/queryCurriculumChoice")
-    public String queryCurriculumChoice(int pageNum, HttpServletRequest request,
+    public String queryCurriculumChoice(int pageNum,String param, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
-        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = scApplyService.queryCurriculumChoice(getLoginSchool(request).getSchoolId(), pageNum, pageSize);
+        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = scApplyService.queryCurriculumChoice(getLoginSchool(request).getSchoolId(),param, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVoPageTableForm);
     }
 
@@ -66,7 +64,7 @@ public class SchoolCurriculumController extends BaseController {
     @RequestMapping("/queryStudentBySCAId")
     public String queryStudentBySCAId(Integer scaId, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
-        List<SStudent> sStudents = scApplyService.queryStudentBySCAId(scaId);
+        List<StudentPay> sStudents = scApplyService.queryStudentBySCAId(scaId);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), sStudents);
     }
 
@@ -85,10 +83,26 @@ public class SchoolCurriculumController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/addOrUpdateSyllabus")
-    public String addOrUpdateSyllabus(SSyllabus sSyllabus, HttpServletRequest request,
+    public String addOrUpdateSyllabus(Integer id, Integer scaId, Integer timeType, Integer weekType, String classPlace, Date beginOfSelectTime, Date endOfSelectTime, Date currStartTime, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
-        sSyllabusService.insertOrUpdateByPrimaryKeySelective(sSyllabus);
+        SSyllabus sSyllabus = new SSyllabus();
+        sSyllabus.setId(id);
+        sSyllabus.setScaId(scaId);
+        sSyllabus.setSchoolId(getLoginSchool(request).getSchoolId());
+        sSyllabus.setTimeType(timeType);
+        sSyllabus.setWeekType(weekType);
+
+        SCApply scApply = new SCApply();
+        scApply.setId(scaId);
+        scApply.setClassPlace(classPlace);
+        scApply.setBeginOfSelectTime(beginOfSelectTime);
+        scApply.setEndOfSelectTime(endOfSelectTime);
+        scApply.setStatus(3);
+        scApply.setCurrStartTime(currStartTime);
+
+
+        sSyllabusService.insertOrUpdateByPrimaryKeySelective(sSyllabus, scApply);
+
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
-
 }

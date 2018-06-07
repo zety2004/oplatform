@@ -7,13 +7,16 @@ import java.util.concurrent.TimeUnit;
 import com.hklk.oplatform.exception.CacheException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-
+@Component
 public class RedisObjCache<T> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
+    @Autowired
     private RedisTemplate<String, T> redisObjTemplate;
 
     public static final String KEY_SET_PREFIX = "_set:";

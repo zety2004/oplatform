@@ -12,6 +12,8 @@ public abstract class TokenManager {
 
     public static final String schoolTokenKey = "schoolToken:";
 
+    public static final String teacherTokenKey = "teacherToken:";
+
     public static final String TOKEN = "token";
 
     // 令牌有效期，单位为秒，默认6小时

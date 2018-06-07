@@ -5,9 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.hklk.oplatform.dao.inter.SCApplyMapper;
 import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.SStudent;
-import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
-import com.hklk.oplatform.entity.vo.CurriculumChoiceVo;
-import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.service.SCApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,15 +53,26 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, int pageNum, int pageSize) {
+    public PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int pageNum, int pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
-        scApplyMapper.queryCurriculumChoice(schoolId);
+        Map<String, Object> params = new HashMap<>();
+        params.put("schoolId", schoolId);
+        params.put("param", param);
+        scApplyMapper.queryCurriculumChoice(params);
         PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = new PageTableForm<>(page);
         return curriculumChoiceVoPageTableForm;
     }
 
     @Override
-    public List<SStudent> queryStudentBySCAId(Integer scaId) {
+    public List<StudentPay> queryStudentBySCAId(Integer scaId) {
         return scApplyMapper.queryStudentBySCAId(scaId);
+    }
+
+    @Override
+    public PageTableForm<CurriculumOrderVo> queryCurriculumOrder(Integer isHandle, int pageNum, int pageSize) {
+        Page page = PageHelper.startPage(pageNum, pageSize, true);
+        scApplyMapper.queryCurriculumOrder(isHandle);
+        PageTableForm<CurriculumOrderVo> curriculumOrderVoPageTableForm = new PageTableForm<>(page);
+        return curriculumOrderVoPageTableForm;
     }
 }

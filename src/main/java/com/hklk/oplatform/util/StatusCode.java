@@ -52,6 +52,8 @@ public class StatusCode {
     public final static int STUDENT_EX = 1014;
     // 导入学生存在失败项,请确认数据是否正确
     public final static int IMPORTERROR_STUDENT = 1015;
+    //订单已处理
+    public final static int ORDER_IS_HANDLE = 1016;
 
     public static String getStatusMsg(Object code) {
 
@@ -76,6 +78,7 @@ public class StatusCode {
         map.put(CLASS_EX, "班级已存在！");
         map.put(STUDENT_EX, "学生已存在！");
         map.put(IMPORTERROR_STUDENT, "导入学生存在失败项,请确认数据是否正确！");
+        map.put(ORDER_IS_HANDLE, "订单已处理！");
         return map.get(code);
     }
 }

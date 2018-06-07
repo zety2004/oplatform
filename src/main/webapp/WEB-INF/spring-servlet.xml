@@ -64,6 +64,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <bean class="com.hklk.oplatform.filter.LocalLoginInterceptor"></bean>
+
         </mvc:interceptor>
     </mvc:interceptors>
 

@@ -4,12 +4,14 @@ import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.vo.CurriculumForListVo;
+import com.hklk.oplatform.entity.vo.CurriculumOrderVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.service.ConsumablesService;
 import com.hklk.oplatform.service.CurriculumService;
+import com.hklk.oplatform.service.SCApplyService;
 import com.hklk.oplatform.util.OssUtil;
 import com.hklk.oplatform.util.PropUtil;
 import com.hklk.oplatform.util.StatusCode;
@@ -35,6 +37,8 @@ public class EditCurriculumController extends BaseController {
     CurriculumService curriculumService;
     @Autowired
     ConsumablesService consumablesService;
+    @Autowired
+    SCApplyService scApplyService;
 
     protected int pageSize = 12;
 
@@ -43,6 +47,14 @@ public class EditCurriculumController extends BaseController {
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
         PageTableForm<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums(curriculum, pageNum, pageSize);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+    }
+
+    @ResponseBody
+    @RequestMapping("/queryCurriculumOrder")
+    public String queryCurriculumOrder(Integer isHandle, int pageNum, HttpServletRequest request,
+                                       HttpServletResponse response, HttpSession session) {
+        PageTableForm<CurriculumOrderVo> curriculumPageTableForm = scApplyService.queryCurriculumOrder(isHandle, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
