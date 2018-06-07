@@ -89,5 +89,4 @@ public class LoginSchoolController extends BaseController {
         tokenManager.addToken(tokenManager.schoolTokenKey, token, loginSchool);
         return token;
     }
-
 }

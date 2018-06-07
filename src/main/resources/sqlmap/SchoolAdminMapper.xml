@@ -29,7 +29,7 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
-        <result column="schoolStatus" property="school_status" jdbcType="INTEGER"/>
+        <result column="school_status" property="schoolStatus" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="loginSchool" resultMap="BaseResultVoMap" parameterType="map">

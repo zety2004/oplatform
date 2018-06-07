@@ -35,20 +35,10 @@ public class LoginTeacherController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/login")
-    public String loginSchool(@RequestParam(value = "account") String account, @RequestParam(value = "pwd") String pwd, HttpServletRequest request,
-                              HttpServletResponse response, HttpSession session) {
-        SchoolAdminVo schoolAdmin = schoolAdminService.loginSchool(account, pwd);
-        if (schoolAdmin != null && schoolAdmin.getStatus() == 1 && schoolAdmin.getSchoolStatus() == 1) {
-            LoginSchool loginSchool = new LoginSchool(schoolAdmin.getId(), schoolAdmin.getAccount(), schoolAdmin.getNickname(), "", schoolAdmin.getSchoolId());
-            String token = createToken(loginSchool);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), token);
-        } else if (schoolAdmin != null && schoolAdmin.getSchoolStatus() != 1) {
-            return ToolUtil.buildResultStr(StatusCode.SCHOOL_STATUS, StatusCode.getStatusMsg(StatusCode.SCHOOL_STATUS));
-        } else if (schoolAdmin != null && schoolAdmin.getStatus() != 1) {
-            return ToolUtil.buildResultStr(StatusCode.LOGIN_DISABLE, StatusCode.getStatusMsg(StatusCode.LOGIN_DISABLE));
-        } else {
-            return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
-        }
+    public String loginTeacher(@RequestParam(value = "account") String account, @RequestParam(value = "pwd") String pwd, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) {
+
+        return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
     }
 
     @ResponseBody
