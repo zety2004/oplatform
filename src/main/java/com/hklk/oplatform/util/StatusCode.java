@@ -55,6 +55,7 @@ public class StatusCode {
     //订单已处理
     public final static int ORDER_IS_HANDLE = 1016;
 
+
     public static String getStatusMsg(Object code) {
 
         Map<Object, String> map = new HashMap<Object, String>();
@@ -70,7 +71,7 @@ public class StatusCode {
         map.put(OVER_TIME, "Session Timeout! Please re-sign in！");
         map.put(LOGIN_NAME_OR_PWD_ERROR, "登录名或者密码错误");
         map.put(ADDUSER_USERNAME_EX, "用户名已存在");
-        map.put(SCHOOL_STATUS, "该学校已经停用！");
+        map.put(SCHOOL_STATUS, "学校已经停用！");
         map.put(TEACHER_EX, "老师已存在！");
         map.put(CHECK_OPERATOR, "其他管理员已操作！");
         map.put(USER_UNFIND, "账号不存在请联系管理员！");

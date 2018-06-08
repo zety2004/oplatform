@@ -142,4 +142,18 @@
         order by id desc
     </select>
 
+
+    <resultMap id="BaseResultVoMap" type="com.hklk.oplatform.entity.vo.TeacherVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <result column="school_status" property="schoolStatus" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="loginTeacher" resultMap="BaseResultVoMap" parameterType="map">
+        select a.*,s.`status` as school_status from hklk_school_teacher a left join hklk_school s on a.school_id = s.id
+        where phone = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

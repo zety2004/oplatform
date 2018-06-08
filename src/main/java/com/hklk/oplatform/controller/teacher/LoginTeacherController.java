@@ -4,11 +4,14 @@ import com.hklk.oplatform.comm.LoginSchool;
 import com.hklk.oplatform.comm.LoginTeacher;
 import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.controller.BaseController;
+import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.table.SchoolAdmin;
 import com.hklk.oplatform.entity.vo.SchoolAdminVo;
+import com.hklk.oplatform.entity.vo.TeacherVo;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.AuthenticationRpcService;
+import com.hklk.oplatform.service.STeacherService;
 import com.hklk.oplatform.service.SchoolAdminService;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
@@ -26,19 +29,28 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/loginTeacher")
 @Controller
 public class LoginTeacherController extends BaseController {
-    @Autowired
-    SchoolAdminService schoolAdminService;
     @Resource
     private TokenManager tokenManager;
     @Autowired
-    AuthenticationRpcService authenticationRpcService;
+    STeacherService sTeacherService;
 
     @ResponseBody
     @RequestMapping("/login")
     public String loginTeacher(@RequestParam(value = "account") String account, @RequestParam(value = "pwd") String pwd, HttpServletRequest request,
                                HttpServletResponse response, HttpSession session) {
-
-        return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
+        TeacherVo teacherVo = sTeacherService.loginTeacher(account, pwd);
+        if (teacherVo != null && teacherVo.getStatus() == 1 && teacherVo.getSchoolStatus() == 1) {
+            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.gettName(), "", teacherVo.getSchoolId());
+            String token = createToken(loginTeacher);
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), token);
+        } else if (teacherVo != null && teacherVo.getSchoolStatus() != 1) {
+            System.out.println("学校停用");
+            return ToolUtil.buildResultStr(StatusCode.SCHOOL_STATUS, StatusCode.getStatusMsg(StatusCode.SCHOOL_STATUS));
+        } else if (teacherVo != null && teacherVo.getStatus() != 1) {
+            return ToolUtil.buildResultStr(StatusCode.LOGIN_DISABLE, StatusCode.getStatusMsg(StatusCode.LOGIN_DISABLE));
+        } else {
+            return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
+        }
     }
 
     @ResponseBody
@@ -49,14 +61,16 @@ public class LoginTeacherController extends BaseController {
         if (loginTeacher == null) {
             return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
         }
-        SchoolAdmin temp = schoolAdminService.selectByPrimaryKey(loginTeacher.getTeacherId());
+        STeacher sTeacher = new STeacher();
+        sTeacher.setId(loginTeacher.getTeacherId());
+        STeacher temp = sTeacherService.selectBySTeacher(sTeacher);
         if (temp == null) {
             return ToolUtil.buildResultStr(StatusCode.USER_UNFIND, StatusCode.getStatusMsg(StatusCode.USER_UNFIND));
         } else if (temp != null && temp.getPwd().equals(PasswordProvider.encrypt(oldPassword))) {
-            SchoolAdmin param = new SchoolAdmin();
+            STeacher param = new STeacher();
             param.setId(loginTeacher.getTeacherId());
             param.setPwd(newPassword);
-            schoolAdminService.updateByPrimaryKeySelective(param);
+            sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         } else {
             return ToolUtil.buildResultStr(StatusCode.PASSWORD_ERROR, StatusCode.getStatusMsg(StatusCode.PASSWORD_ERROR));
@@ -72,11 +86,11 @@ public class LoginTeacherController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
-    private String createToken(LoginSchool loginSchool) {
+    private String createToken(LoginTeacher loginTeacher) {
         // 生成token
         String token = IdProvider.createUUIDId();
         // 缓存中添加token对应User
-        tokenManager.addToken(tokenManager.teacherTokenKey, token, loginSchool);
+        tokenManager.addToken(tokenManager.teacherTokenKey, token, loginTeacher);
         return token;
     }
 

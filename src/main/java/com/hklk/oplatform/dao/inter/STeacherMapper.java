@@ -1,8 +1,10 @@
 package com.hklk.oplatform.dao.inter;
 
 import com.hklk.oplatform.entity.table.STeacher;
+import com.hklk.oplatform.entity.vo.TeacherVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface STeacherMapper {
     int deleteByPrimaryKey(Integer id);
@@ -18,4 +20,6 @@ public interface STeacherMapper {
     int updateByPrimaryKey(STeacher sTeacher);
 
     List<STeacher> queryTeacherBySchoolId(Integer schoolId);
+
+    TeacherVo loginTeacher(Map<String,Object> param);
 }

@@ -4,11 +4,9 @@ import com.hklk.oplatform.comm.LoginSchool;
 import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.SchoolAdmin;
-import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.SchoolAdminVo;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
-import com.hklk.oplatform.service.AuthenticationRpcService;
 import com.hklk.oplatform.service.SchoolAdminService;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
@@ -30,8 +28,6 @@ public class LoginSchoolController extends BaseController {
     SchoolAdminService schoolAdminService;
     @Resource
     private TokenManager tokenManager;
-    @Autowired
-    AuthenticationRpcService authenticationRpcService;
 
     @ResponseBody
     @RequestMapping("/login")

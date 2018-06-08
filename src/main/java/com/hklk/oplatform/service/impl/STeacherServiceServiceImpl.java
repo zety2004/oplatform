@@ -8,6 +8,7 @@ import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.entity.vo.TeacherVo;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.STeacherService;
 import com.hklk.oplatform.service.UserService;
@@ -52,4 +53,13 @@ public class STeacherServiceServiceImpl implements STeacherService {
         return pageTableForm;
     }
 
+    @Override
+    public TeacherVo loginTeacher(String account, String pwd) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("account", account);
+        if (pwd != null) {
+            params.put("pwd", PasswordProvider.encrypt(pwd));
+        }
+        return sTeacherMapper.loginTeacher(params);
+    }
 }

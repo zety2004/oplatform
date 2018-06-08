@@ -7,7 +7,7 @@ public class Dic implements Serializable {
 
     private String name;
 
-    private Integer typecode;
+    private Integer typeCode;
 
     private static final long serialVersionUID = 1L;
 
@@ -27,11 +27,11 @@ public class Dic implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getTypecode() {
-        return typecode;
+    public Integer getTypeCode() {
+        return typeCode;
     }
 
-    public void setTypecode(Integer typecode) {
-        this.typecode = typecode;
+    public void setTypeCode(Integer typeCode) {
+        this.typeCode = typeCode;
     }
 }
