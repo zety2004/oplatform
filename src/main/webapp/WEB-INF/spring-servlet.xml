@@ -45,7 +45,7 @@
 
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="2097152"/> <!-- 文件最大 2M -->
+        <property name="maxUploadSize" value="209715200"/> <!-- 文件最大 200M -->
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="resolveLazily" value="true"/>
     </bean>

@@ -2,10 +2,10 @@ package com.hklk.oplatform.controller.local;
 
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.SCApply;
-import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.vo.CurriculumOrderVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.StudentPay;
+import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.SCApplyService;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-/*@LocalLoginRepository*/
+@LocalLoginRepository
 @RequestMapping("/editcmo")
 @Controller
 public class EditCurriculumOrderController extends BaseController {
