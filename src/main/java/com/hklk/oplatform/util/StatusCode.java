@@ -18,6 +18,8 @@ public class StatusCode {
     public static final int SUCCESS = 200;//成功
     public static final int ERROR = 300;    //操作失败
     public static final int OVER_TIME = 301;//超时
+    public static final int UPLOAD_ERROR = 302;//上传文件失败,最大不得超过200M
+
     public static final int SYS_ERROR = 9999;//系统错误
 
     //账户已被禁用
@@ -55,6 +57,8 @@ public class StatusCode {
     //订单已处理
     public final static int ORDER_IS_HANDLE = 1016;
 
+    //该班级非自己创建无法删除
+    public final static int VALIDATE_CLASS_IS_TEACHER_CREATE = 1017;
 
     public static String getStatusMsg(Object code) {
 
@@ -80,6 +84,8 @@ public class StatusCode {
         map.put(STUDENT_EX, "学生已存在！");
         map.put(IMPORTERROR_STUDENT, "导入学生存在失败项,请确认数据是否正确！");
         map.put(ORDER_IS_HANDLE, "订单已处理！");
+        map.put(UPLOAD_ERROR, "上传文件失败,最大不得超过200M！");
+        map.put(VALIDATE_CLASS_IS_TEACHER_CREATE, "该班级不是自己创建的，不能删除！");
         return map.get(code);
     }
 }

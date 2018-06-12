@@ -26,7 +26,7 @@ public abstract class BaseController {
     @Autowired
     AuthenticationRpcService authenticationRpcService;
 
-    protected int pageSize = 10;
+    protected int pageSize = 20;
     protected int pageNum = 1;
 
     @InitBinder
@@ -48,9 +48,10 @@ public abstract class BaseController {
 
     public LoginTeacher getLoginTeacher(HttpServletRequest request) {
         String token = request.getHeader("Access-Toke");
-        //LoginSchool loginSchool = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token);
+       // LoginTeacher loginTeacher = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token);
         LoginTeacher loginTeacher = new LoginTeacher();
         loginTeacher.setSchoolId(1);
+        loginTeacher.setTeacherId(1);
         return loginTeacher;
     }
 

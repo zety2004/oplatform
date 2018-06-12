@@ -11,9 +11,10 @@
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
         <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
         <result column="head_ico" property="headIco" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, t_name, phone, sex, remark, status, pwd, school_id, head_ico
+    id, t_name, phone, sex, remark, status, pwd, school_id, head_ico,create_time
   </sql>
     <select id="selectBySTeacher" resultMap="BaseResultMap" parameterType="com.hklk.oplatform.entity.table.STeacher">
         select
@@ -134,11 +135,14 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="queryTeacherBySchoolId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="queryTeacherBySchoolId" resultMap="BaseResultMap" parameterType="map">
         select
         <include refid="Base_Column_List"/>
         from hklk_school_teacher
         where school_id = #{schoolId,jdbcType=INTEGER}
+        <if test="param != null">
+            and t_name like CONCAT('%',#{param}, '%') or phone like CONCAT('%',#{param}, '%')
+        </if>
         order by id desc
     </select>
 

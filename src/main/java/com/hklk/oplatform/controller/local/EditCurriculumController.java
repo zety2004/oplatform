@@ -8,13 +8,11 @@ import com.hklk.oplatform.entity.vo.CurriculumOrderVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.provider.IdProvider;
+import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.ConsumablesService;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.SCApplyService;
-import com.hklk.oplatform.util.OssUtil;
-import com.hklk.oplatform.util.PropUtil;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,13 +98,14 @@ public class EditCurriculumController extends BaseController {
                     + "/uploadTempDirectory/" + file.getOriginalFilename();
             File fileTemp = new File(savePath);
             file.transferTo(fileTemp);
-            String fileKey = "KCGX" + file.getOriginalFilename();
+            System.out.println(PasswordProvider.getMd5ByFile(fileTemp));
+            String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + FileUtils.getFilenameExtension(file.getOriginalFilename());
             OssUtil.uploadFile(fileKey, fileTemp);
             String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
         }
     }
 

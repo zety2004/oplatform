@@ -10,9 +10,10 @@
         <result column="parent_phone" property="parentPhone" jdbcType="VARCHAR"/>
         <result column="s_num" property="sNum" jdbcType="VARCHAR"/>
         <result column="wechat_id" property="wechatId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, class_id, full_name, sex, parent_name, parent_phone, s_num, wechat_id
+    id, class_id, full_name, sex, parent_name, parent_phone, s_num, wechat_id,create_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select

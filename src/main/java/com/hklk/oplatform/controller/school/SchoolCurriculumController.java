@@ -34,14 +34,20 @@ public class SchoolCurriculumController extends BaseController {
     @Autowired
     SSyllabusService sSyllabusService;
 
-    private int pageSize = 20;
-
     @ResponseBody
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
         PageTableForm<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums(curriculum, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectCurriculumById")
+    public String selectCurriculumById(Integer id, HttpServletRequest request,
+                                       HttpServletResponse response, HttpSession session) {
+        CurriculumVo curriculum = curriculumService.selectByPrimaryKey(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 
     @ResponseBody

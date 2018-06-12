@@ -1,9 +1,9 @@
-package com.hklk.oplatform.entity.table;
+package com.hklk.oplatform.entity.vo;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class SClass implements Serializable {
+public class SClassVo implements Serializable {
     private Integer id;
 
     private Integer schoolId;
@@ -17,6 +17,8 @@ public class SClass implements Serializable {
     private Integer createBy;
 
     private Date createTime;
+
+    private Integer studentNum;
 
     private static final long serialVersionUID = 1L;
 
@@ -74,5 +76,13 @@ public class SClass implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getStudentNum() {
+        return studentNum;
+    }
+
+    public void setStudentNum(Integer studentNum) {
+        this.studentNum = studentNum;
     }
 }

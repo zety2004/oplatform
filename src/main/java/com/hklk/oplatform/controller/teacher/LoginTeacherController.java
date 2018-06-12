@@ -54,7 +54,7 @@ public class LoginTeacherController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping("/updateSchoolAdminPassword")
+    @RequestMapping("/updateTeacherPassword")
     public String updateUserPassword(String oldPassword, String newPassword, HttpServletRequest request,
                                      HttpServletResponse response, HttpSession session) {
         LoginTeacher loginTeacher = getLoginTeacher(request);
@@ -86,6 +86,15 @@ public class LoginTeacherController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    @ResponseBody
+    @RequestMapping("/forgetPassword")
+    public String forgetPassword(HttpServletRequest request,
+                           HttpServletResponse response, HttpSession session) {
+        String token = request.getHeader("Access-Toke");
+        tokenManager.remove(tokenManager.teacherTokenKey, token);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
     private String createToken(LoginTeacher loginTeacher) {
         // 生成token
         String token = IdProvider.createUUIDId();
@@ -93,5 +102,7 @@ public class LoginTeacherController extends BaseController {
         tokenManager.addToken(tokenManager.teacherTokenKey, token, loginTeacher);
         return token;
     }
+
+
 
 }

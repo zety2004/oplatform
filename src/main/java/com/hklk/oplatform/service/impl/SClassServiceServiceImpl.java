@@ -5,7 +5,9 @@ import com.github.pagehelper.PageHelper;
 import com.hklk.oplatform.dao.inter.SClassMapper;
 import com.hklk.oplatform.entity.table.SClass;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.entity.vo.SClassVo;
 import com.hklk.oplatform.service.SClassService;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +36,13 @@ public class SClassServiceServiceImpl implements SClassService {
     }
 
     @Override
-    public PageTableForm<SClass> queryClasses(Integer schoolId, int pageNum, int pageSize) {
+    public PageTableForm<SClassVo> queryClasses(String param, Integer schoolId, int pageNum, int pageSize) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("param", param);
+        params.put("schoolId", schoolId);
         Page page = PageHelper.startPage(pageNum, pageSize, true);
-        sClassMapper.queryClasses(schoolId);
-        PageTableForm<SClass> sClassPageTableForm = new PageTableForm<>(page);
+        sClassMapper.queryClasses(params);
+        PageTableForm<SClassVo> sClassPageTableForm = new PageTableForm<>(page);
         return sClassPageTableForm;
     }
 
@@ -47,5 +52,10 @@ public class SClassServiceServiceImpl implements SClassService {
         param.put("name", name);
         param.put("schoolId", schoolId);
         return sClassMapper.selectByNameForValidate(param);
+    }
+
+    @Override
+    public SClass selectByPrimaryKey(Integer id) {
+        return sClassMapper.selectByPrimaryKey(id);
     }
 }

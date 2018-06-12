@@ -49,7 +49,7 @@ public class LoginSchoolController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/updateSchoolAdminPassword")
-    public String updateUserPassword(String oldPassword, String newPassword, HttpServletRequest request,
+    public String updateSchoolAdminPassword(String oldPassword, String newPassword, HttpServletRequest request,
                                      HttpServletResponse response, HttpSession session) {
         LoginSchool loginSchool = getLoginSchool(request);
         if (loginSchool == null) {

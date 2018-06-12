@@ -8,9 +8,10 @@
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="create_by" property="createBy" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, school_id, grade, remark, name, create_by
+    id, school_id, grade, remark, name, create_by,create_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -112,10 +113,25 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <select id="queryClasses" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <resultMap id="BaseResultVoMap" type="com.hklk.oplatform.entity.vo.SClassVo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
+        <result column="grade" property="grade" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="student_num" property="studentNum" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="queryClasses" resultMap="BaseResultVoMap" parameterType="map">
         select
-        <include refid="Base_Column_List"/>
-        from hklk_school_class
+        sc.*,count(h.id) as student_num
+        from hklk_school_class sc left join hklk_school_student h on sc.id = h.class_id
         where school_id = #{school_id,jdbcType=INTEGER}
+        <if test="param != null">
+            and sc.name like CONCAT('%',#{param}, '%')
+        </if>
+        group by sc.id
     </select>
 </mapper>

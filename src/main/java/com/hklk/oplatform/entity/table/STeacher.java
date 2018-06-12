@@ -1,6 +1,7 @@
 package com.hklk.oplatform.entity.table;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class STeacher implements Serializable {
     private Integer id;
@@ -20,6 +21,8 @@ public class STeacher implements Serializable {
     private Integer schoolId;
 
     private String headIco;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -93,5 +96,13 @@ public class STeacher implements Serializable {
 
     public void setHeadIco(String headIco) {
         this.headIco = headIco == null ? null : headIco.trim();
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

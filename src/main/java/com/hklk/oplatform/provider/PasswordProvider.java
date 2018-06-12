@@ -3,7 +3,13 @@ package com.hklk.oplatform.provider;
 import com.hklk.oplatform.exception.ServiceException;
 import com.hklk.oplatform.util.StringUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -47,30 +53,36 @@ public class PasswordProvider {
         return password;
     }
 
-    // 可逆的加密算法
-    public static String KL(String inStr) {
-        // String s = new String(inStr);
-        char[] a = inStr.toCharArray();
-        for (int i = 0; i < a.length; i++) {
-            a[i] = (char) (a[i] ^ 't');
+
+    public static String getMd5ByFile(File file) throws FileNotFoundException {
+        String value = null;
+        FileInputStream in = new FileInputStream(file);
+        try {
+            MappedByteBuffer byteBuffer = in.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(byteBuffer);
+            BigInteger bi = new BigInteger(1, md5.digest());
+            value = bi.toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != in) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        String s = new String(a);
-        return s;
+        return value;
     }
 
-    // 加密后解密
-    public static String JM(String inStr) {
-        char[] a = inStr.toCharArray();
-        for (int i = 0; i < a.length; i++) {
-            a[i] = (char) (a[i] ^ 't');
-        }
-        String k = new String(a);
-        return k;
-    }
 
-    public static void main(String[] args) {
+
+
+    public static void main(String[] args) throws FileNotFoundException {
         System.err.println("加密        后:" + encrypt("12345678"));
-        System.err.println("加密        后:" + KL(encrypt("hklk123456")));
-        System.err.println("加密        后:" + JM(KL(encrypt("hklk123456"))));
+        File file = new File("D:\\zookeeper-3.4.12.tar.gz");
+        System.out.println(getMd5ByFile(file));
     }
 }

@@ -23,15 +23,12 @@ public class EditTeacherController extends BaseController {
     @Autowired
     STeacherService sTeacherService;
 
-    private int pageSize = 20;
-
-
 
     @ResponseBody
     @RequestMapping("/queryTeachers")
-    public String queryTeachers(int pageNum, HttpServletRequest request,
+    public String queryTeachers(String param, int pageNum, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {
-        PageTableForm<STeacher> pageTableForm = sTeacherService.queryTeacherBySchoolId(getLoginSchool(request).getSchoolId(), pageNum, pageSize);
+        PageTableForm<STeacher> pageTableForm = sTeacherService.queryTeacherBySchoolId(getLoginSchool(request).getSchoolId(), param, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
     }
 

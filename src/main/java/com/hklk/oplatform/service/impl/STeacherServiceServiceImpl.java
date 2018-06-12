@@ -3,20 +3,15 @@ package com.hklk.oplatform.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.hklk.oplatform.dao.inter.STeacherMapper;
-import com.hklk.oplatform.dao.inter.UserMapper;
-import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.STeacher;
-import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.TeacherVo;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.STeacherService;
-import com.hklk.oplatform.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -46,9 +41,12 @@ public class STeacherServiceServiceImpl implements STeacherService {
     }
 
     @Override
-    public PageTableForm<STeacher> queryTeacherBySchoolId(Integer schoolId, int pageNum, int pageSize) {
+    public PageTableForm<STeacher> queryTeacherBySchoolId(Integer schoolId, String param, int pageNum, int pageSize) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("schoolId", schoolId);
+        params.put("param", param);
         Page<STeacher> page = PageHelper.startPage(pageNum, pageSize, true);
-        sTeacherMapper.queryTeacherBySchoolId(schoolId);
+        sTeacherMapper.queryTeacherBySchoolId(params);
         PageTableForm<STeacher> pageTableForm = new PageTableForm<>(page);
         return pageTableForm;
     }

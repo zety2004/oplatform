@@ -19,7 +19,7 @@ public interface STeacherMapper {
 
     int updateByPrimaryKey(STeacher sTeacher);
 
-    List<STeacher> queryTeacherBySchoolId(Integer schoolId);
+    List<STeacher> queryTeacherBySchoolId(Map<String,Object> param);
 
     TeacherVo loginTeacher(Map<String,Object> param);
 }

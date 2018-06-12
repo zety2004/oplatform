@@ -12,7 +12,7 @@ public interface STeacherService {
 
     int insertOrUpdateByPrimaryKeySelective(STeacher sTeacher);
 
-    PageTableForm<STeacher> queryTeacherBySchoolId(Integer schoolId, int pageNum, int pageSize);
+    PageTableForm<STeacher> queryTeacherBySchoolId(Integer schoolId, String param, int pageNum, int pageSize);
 
     TeacherVo loginTeacher(String account, String pwd);
 }
