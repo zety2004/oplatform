@@ -99,7 +99,7 @@ public class EditCurriculumController extends BaseController {
             File fileTemp = new File(savePath);
             file.transferTo(fileTemp);
             System.out.println(PasswordProvider.getMd5ByFile(fileTemp));
-            String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + FileUtils.getFilenameExtension(file.getOriginalFilename());
+            String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + FileUtils.getFilenameExtension(file.getOriginalFilename());
             OssUtil.uploadFile(fileKey, fileTemp);
             String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
