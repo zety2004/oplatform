@@ -20,6 +20,8 @@ public class CurriculumApplyVo implements Serializable {
 
     private Date applyTime;
 
+    private Integer maxNum;
+
     private static final long serialVersionUID = 1L;
 
 
@@ -85,5 +87,13 @@ public class CurriculumApplyVo implements Serializable {
 
     public void setApplyTime(Date applyTime) {
         this.applyTime = applyTime;
+    }
+
+    public Integer getMaxNum() {
+        return maxNum;
+    }
+
+    public void setMaxNum(Integer maxNum) {
+        this.maxNum = maxNum;
     }
 }

@@ -2,6 +2,7 @@ package com.hklk.oplatform.controller.teacher;
 
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
@@ -45,5 +46,17 @@ public class TeacherApplyCurriculumController extends BaseController {
                                        HttpServletResponse response, HttpSession session) {
         CurriculumVo curriculum = curriculumService.selectByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
+    }
+
+    @ResponseBody
+    @RequestMapping("/addOrUpdateCurriculumApply")
+    public String addOrUpdateCurriculumApply(SCApply scApply, HttpServletRequest request,
+                                             HttpServletResponse response, HttpSession session) {
+        if (scApply.getId() == null) {
+            scApplyService.insertSelective(scApply);
+        } else {
+            scApplyService.updateByPrimaryKeySelective(scApply);
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 }

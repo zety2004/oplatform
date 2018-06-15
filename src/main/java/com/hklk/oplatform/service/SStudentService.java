@@ -13,7 +13,9 @@ public interface SStudentService {
 
     int insertOrUpdateByPrimaryKeySelective(SStudent sStudent);
 
-    List<SStudent> queryStudentByClassId(Integer classId);
+    SStudent selectByPrimaryKey(Integer id);
+
+    List<SStudent> queryStudentByClassId(String param,Integer classId);
 
     SStudent selectBySNumForValidate(Integer schoolId, String sNum);
 }

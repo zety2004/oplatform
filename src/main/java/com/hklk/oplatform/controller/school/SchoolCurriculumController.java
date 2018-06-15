@@ -54,15 +54,18 @@ public class SchoolCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculumApply")
     public String queryCurriculumApply(Integer status, int pageNum, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
+        if (status == null) {
+            status = 0;
+        }
         PageTableForm<CurriculumApplyVo> curriculumPageTableForm = scApplyService.queryCurriculumApply(getLoginSchool(request).getSchoolId(), status, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
     @ResponseBody
     @RequestMapping("/queryCurriculumChoice")
-    public String queryCurriculumChoice(int pageNum,String param, HttpServletRequest request,
+    public String queryCurriculumChoice(int pageNum, String param, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
-        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = scApplyService.queryCurriculumChoice(getLoginSchool(request).getSchoolId(),param, pageNum, pageSize);
+        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = scApplyService.queryCurriculumChoice(getLoginSchool(request).getSchoolId(), param, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVoPageTableForm);
     }
 
@@ -105,7 +108,6 @@ public class SchoolCurriculumController extends BaseController {
         scApply.setEndOfSelectTime(endOfSelectTime);
         scApply.setStatus(3);
         scApply.setCurrStartTime(currStartTime);
-
 
         sSyllabusService.insertOrUpdateByPrimaryKeySelective(sSyllabus, scApply);
 

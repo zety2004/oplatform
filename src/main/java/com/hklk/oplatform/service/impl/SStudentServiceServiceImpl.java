@@ -24,7 +24,7 @@ public class SStudentServiceServiceImpl implements SStudentService {
 
     @Override
     public int insertOrUpdateByPrimaryKeySelective(SStudent sStudent) {
-        if (sStudent.getId() != null) {
+        if (sStudent.getId() == null) {
             return sStudentMapper.insertSelective(sStudent);
         } else {
             return sStudentMapper.updateByPrimaryKeySelective(sStudent);
@@ -32,8 +32,16 @@ public class SStudentServiceServiceImpl implements SStudentService {
     }
 
     @Override
-    public List<SStudent> queryStudentByClassId(Integer classId) {
-        return sStudentMapper.queryStudentByClassId(classId);
+    public SStudent selectByPrimaryKey(Integer id) {
+        return sStudentMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<SStudent> queryStudentByClassId(String param,Integer classId) {
+        Map<String ,Object> params = new HashMap<>();
+        params.put("param",param);
+        params.put("classId",classId);
+        return sStudentMapper.queryStudentByClassId(params);
     }
 
     @Override

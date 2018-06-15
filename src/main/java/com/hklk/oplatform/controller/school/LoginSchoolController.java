@@ -20,6 +20,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping("/loginSchool")
 @Controller
@@ -37,7 +39,10 @@ public class LoginSchoolController extends BaseController {
         if (schoolAdmin != null && schoolAdmin.getStatus() == 1 && schoolAdmin.getSchoolStatus() == 1) {
             LoginSchool loginSchool = new LoginSchool(schoolAdmin.getId(), schoolAdmin.getAccount(), schoolAdmin.getNickname(), "", schoolAdmin.getSchoolId());
             String token = createToken(loginSchool);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), token);
+            Map<String, String> result = new HashMap<>();
+            result.put("token", token);
+            result.put("nickName", schoolAdmin.getNickname());
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
         } else if (schoolAdmin != null && schoolAdmin.getSchoolStatus() != 1) {
             return ToolUtil.buildResultStr(StatusCode.SCHOOL_STATUS, StatusCode.getStatusMsg(StatusCode.SCHOOL_STATUS));
         } else if (schoolAdmin != null && schoolAdmin.getStatus() != 1) {
@@ -50,7 +55,7 @@ public class LoginSchoolController extends BaseController {
     @ResponseBody
     @RequestMapping("/updateSchoolAdminPassword")
     public String updateSchoolAdminPassword(String oldPassword, String newPassword, HttpServletRequest request,
-                                     HttpServletResponse response, HttpSession session) {
+                                            HttpServletResponse response, HttpSession session) {
         LoginSchool loginSchool = getLoginSchool(request);
         if (loginSchool == null) {
             return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
@@ -67,6 +72,22 @@ public class LoginSchoolController extends BaseController {
         } else {
             return ToolUtil.buildResultStr(StatusCode.PASSWORD_ERROR, StatusCode.getStatusMsg(StatusCode.PASSWORD_ERROR));
         }
+    }
+
+    @ResponseBody
+    @RequestMapping("/updateSchoolNickName")
+    public String updateSchoolNickName(String nickName, HttpServletRequest request,
+                                    HttpServletResponse response, HttpSession session) {
+        LoginSchool loginSchool = getLoginSchool(request);
+        if (loginSchool == null) {
+            return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
+        }
+        loginSchool.setSchoolAdminId(2);
+        SchoolAdmin param = new SchoolAdmin();
+        param.setId(loginSchool.getSchoolAdminId());
+        param.setNickname(nickName);
+        schoolAdminService.updateByPrimaryKeySelective(param);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
     @ResponseBody

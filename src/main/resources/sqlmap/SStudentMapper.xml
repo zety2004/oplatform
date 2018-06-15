@@ -143,5 +143,8 @@
         <include refid="Base_Column_List"/>
         from hklk_school_student
         where class_id = #{classId,jdbcType=INTEGER}
+        <if test="param != null">
+            and full_name like CONCAT('%',#{param}, '%') or s_num like CONCAT('%',#{param}, '%')
+        </if>
     </select>
 </mapper>

@@ -2,15 +2,12 @@ package com.hklk.oplatform.controller.teacher;
 
 import com.hklk.oplatform.comm.LoginTeacher;
 import com.hklk.oplatform.controller.BaseController;
-import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.SClass;
 import com.hklk.oplatform.entity.table.SStudent;
-import com.hklk.oplatform.entity.table.STeacher;
-import com.hklk.oplatform.entity.vo.CurriculumForListVo;
-import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.SClassVo;
-import com.hklk.oplatform.service.*;
+import com.hklk.oplatform.service.SClassService;
+import com.hklk.oplatform.service.SStudentService;
 import com.hklk.oplatform.util.ExcelUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
@@ -29,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @RequestMapping("/tEditStudent")
 @Controller
@@ -40,11 +36,12 @@ public class EditClassAndStudentByTeacherController extends BaseController {
     @Autowired
     SStudentService sStudentService;
 
+
     @ResponseBody
     @RequestMapping("/queryClasses")
     public String queryClasses(String param, int pageNum, HttpServletRequest request,
                                HttpServletResponse response, HttpSession session) {
-        PageTableForm<SClassVo> pageTableForm = sClassService.queryClasses(param,getLoginTeacher(request).getSchoolId(), pageNum, pageSize);
+        PageTableForm<SClassVo> pageTableForm = sClassService.queryClasses(param, getLoginTeacher(request).getSchoolId(), pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
     }
 
@@ -82,9 +79,9 @@ public class EditClassAndStudentByTeacherController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/queryStudentByClassId")
-    public String queryStudentByClassId(Integer classId, HttpServletRequest request,
+    public String queryStudentByClassId(String param, Integer classId, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
-        List<SStudent> result = sStudentService.queryStudentByClassId(classId);
+        List<SStudent> result = sStudentService.queryStudentByClassId(param, classId);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
     }
 
@@ -104,6 +101,15 @@ public class EditClassAndStudentByTeacherController extends BaseController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping("/delStudent")
+    public String delStudent(Integer id, HttpServletRequest request,
+                             HttpServletResponse response, HttpSession session) {
+        sStudentService.deleteByPrimaryKey(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+
+    }
+
     @RequestMapping("/exportExcelForStudent")
     @ResponseBody
     public String exportExcelForStudent(Integer classId, HttpServletRequest request,
@@ -111,7 +117,7 @@ public class EditClassAndStudentByTeacherController extends BaseController {
 
         String[] columnHeader = {"sNum", "fullName", "sex", "parentName", "parentPhone"};
         String[] fieldNames = {"学号", "姓名", "性别", "家长姓名", "家长联系电话"};
-        List<SStudent> result = sStudentService.queryStudentByClassId(classId);
+        List<SStudent> result = sStudentService.queryStudentByClassId(null, classId);
         try {
             System.out.println("teacher export ----------------------");
             ServletOutputStream out = response.getOutputStream();
@@ -142,8 +148,10 @@ public class EditClassAndStudentByTeacherController extends BaseController {
 
             int inx = 0;
             for (SStudent sStudent : sStudents) {
+
                 SStudent temp = sStudentService.selectBySNumForValidate(schoolId, sStudent.getsNum());
                 if (sStudent.getId() == null && temp != null) {
+                    System.out.println(sStudent.getsNum() + ":添加失败");
                     errorInsert.add(sStudent);
                     inx++;
                 } else {

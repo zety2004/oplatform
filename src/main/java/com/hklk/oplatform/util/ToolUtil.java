@@ -24,25 +24,10 @@ public final class ToolUtil {
         return (ArrayList<Entry<String, Integer>>) entries;
     }
 
-    public static String buildResultStr(String statusCode, String statusMessage) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("resultCode", statusCode);
-        map.put("resultMsg", statusMessage);
-        return JsonUtil.toJson(map, dateFormate);
-    }
-
     public static String buildResultStr(int statusCode, String statusMessage) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("resultCode", statusCode);
         map.put("resultMsg", statusMessage);
-        return JsonUtil.toJson(map, dateFormate);
-    }
-
-    public static String buildResultStr(String statusCode, String statusMessage, Object obj) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("resultCode", statusCode);
-        map.put("resultMsg", statusMessage);
-        map.put("resultData", obj);
         return JsonUtil.toJson(map, dateFormate);
     }
 

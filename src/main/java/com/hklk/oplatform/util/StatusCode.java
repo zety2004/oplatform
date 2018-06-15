@@ -56,26 +56,35 @@ public class StatusCode {
     public final static int IMPORTERROR_STUDENT = 1015;
     //订单已处理
     public final static int ORDER_IS_HANDLE = 1016;
-
     //该班级非自己创建无法删除
     public final static int VALIDATE_CLASS_IS_TEACHER_CREATE = 1017;
+
+    //老师不存在
+    public final static int TEACHER_IS_NOT_EX = 1018;
+    //您选择的文件不符合模板规则，导入失败！
+    public final static int FILE_IS_NOT_RIGHT = 1019;
 
     public static String getStatusMsg(Object code) {
 
         Map<Object, String> map = new HashMap<Object, String>();
         map.put(SUCCESS, "成功");
         map.put(ERROR, "操作失败，请重试！");
-
         map.put(SYS_ERROR, "您的操作有误！");
+
+        map.put(SSO_TOKEN_ERROR, "TOKEN未授权或已过期！");
+
+        map.put(OVER_TIME, "Session Timeout! Please re-sign in！");
+
+        map.put(ADDUSER_USERNAME_EX, "用户名已存在");
+        map.put(LOGIN_NAME_OR_PWD_ERROR, "登录名或者密码错误");
+
         map.put(LOGIN_DISABLE, "账号已被禁用！");
+
         map.put(ADMIN_NUM_VALIDATE, "管理员数超过限制！");
         map.put(SCHOOLNAME_EX, "学校名已存在！");
-        map.put(SSO_TOKEN_ERROR, "TOKEN未授权或已过期！");
         map.put(SCHOOLNAME_UNEX, "学校名不存在");
-        map.put(OVER_TIME, "Session Timeout! Please re-sign in！");
-        map.put(LOGIN_NAME_OR_PWD_ERROR, "登录名或者密码错误");
-        map.put(ADDUSER_USERNAME_EX, "用户名已存在");
         map.put(SCHOOL_STATUS, "学校已经停用！");
+
         map.put(TEACHER_EX, "老师已存在！");
         map.put(CHECK_OPERATOR, "其他管理员已操作！");
         map.put(USER_UNFIND, "账号不存在请联系管理员！");
@@ -86,6 +95,8 @@ public class StatusCode {
         map.put(ORDER_IS_HANDLE, "订单已处理！");
         map.put(UPLOAD_ERROR, "上传文件失败,最大不得超过200M！");
         map.put(VALIDATE_CLASS_IS_TEACHER_CREATE, "该班级不是自己创建的，不能删除！");
+        map.put(TEACHER_IS_NOT_EX, "您输入的账号不存在！");
+        map.put(FILE_IS_NOT_RIGHT, "您选择的文件不符合模板规则，导入失败！");
         return map.get(code);
     }
 }

@@ -128,7 +128,7 @@
         select
         sc.*,count(h.id) as student_num
         from hklk_school_class sc left join hklk_school_student h on sc.id = h.class_id
-        where school_id = #{school_id,jdbcType=INTEGER}
+        where school_id = #{schoolId,jdbcType=INTEGER}
         <if test="param != null">
             and sc.name like CONCAT('%',#{param}, '%')
         </if>

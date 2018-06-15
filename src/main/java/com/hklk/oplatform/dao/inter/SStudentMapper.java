@@ -18,7 +18,7 @@ public interface SStudentMapper {
 
     int updateByPrimaryKey(SStudent record);
 
-    List<SStudent> queryStudentByClassId(Integer classId);
+    List<SStudent> queryStudentByClassId(Map<String, Object> params);
 
     SStudent selectBySNumForValidate(Map<String, Object> map);
 }

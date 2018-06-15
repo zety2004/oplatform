@@ -21,8 +21,6 @@ public class CurriculumForListVo implements Serializable {
 
     private String author;
 
-    private String enclosure;
-
     private String encDes;
 
     private Integer status;
@@ -30,7 +28,6 @@ public class CurriculumForListVo implements Serializable {
     private Boolean ishc;
 
     private static final long serialVersionUID = 1L;
-
 
     public Integer getId() {
         return id;
@@ -102,14 +99,6 @@ public class CurriculumForListVo implements Serializable {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public String getEnclosure() {
-        return enclosure;
-    }
-
-    public void setEnclosure(String enclosure) {
-        this.enclosure = enclosure;
     }
 
     public String getEncDes() {

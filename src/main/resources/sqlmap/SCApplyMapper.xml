@@ -165,12 +165,13 @@
         <result column="class_hours" property="classHours" jdbcType="VARCHAR"/>
         <result column="apply_remark" property="applyRemark" jdbcType="VARCHAR"/>
         <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP"/>
+        <result column="max_num" property="maxNum" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
         select sca.id,CONCAT(st.t_name,'/',st.phone) as apply_person,
         c.`name` as apply_curriculum, SUM(cs.num*cs.unit_price) as total_price,
-        c.grade,c.class_hours ,sca.apply_remark,sca.apply_time
+        c.grade,c.class_hours ,sca.apply_remark,sca.apply_time,sca.max_num
         from hklk_school_curriculum_apply sca
         LEFT JOIN hklk_curriculum c on sca.curriculum_id = c.id
         LEFT JOIN hklk_school_teacher st on sca.teacher_id = st.id

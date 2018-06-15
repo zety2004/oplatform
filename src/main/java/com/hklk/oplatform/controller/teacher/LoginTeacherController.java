@@ -33,6 +33,8 @@ public class LoginTeacherController extends BaseController {
     private TokenManager tokenManager;
     @Autowired
     STeacherService sTeacherService;
+    @Autowired
+    SchoolAdminService schoolAdminService;
 
     @ResponseBody
     @RequestMapping("/login")
@@ -88,11 +90,18 @@ public class LoginTeacherController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/forgetPassword")
-    public String forgetPassword(HttpServletRequest request,
-                           HttpServletResponse response, HttpSession session) {
-        String token = request.getHeader("Access-Toke");
-        tokenManager.remove(tokenManager.teacherTokenKey, token);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    public String forgetPassword(String account, HttpServletRequest request,
+                                 HttpServletResponse response, HttpSession session) {
+        STeacher sTeacher = new STeacher();
+        sTeacher.setPhone(account);
+        STeacher result = sTeacherService.selectBySTeacher(sTeacher);
+        if (result == null) {
+            return ToolUtil.buildResultStr(StatusCode.TEACHER_IS_NOT_EX, StatusCode.getStatusMsg(StatusCode.TEACHER_IS_NOT_EX));
+        } else {
+            SchoolAdmin schoolAdmin = schoolAdminService.querySchoolAdminsBySchoolId(result.getSchoolId()).get(0);
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), schoolAdmin.getAccount());
+        }
+
     }
 
     private String createToken(LoginTeacher loginTeacher) {
@@ -102,7 +111,6 @@ public class LoginTeacherController extends BaseController {
         tokenManager.addToken(tokenManager.teacherTokenKey, token, loginTeacher);
         return token;
     }
-
 
 
 }
