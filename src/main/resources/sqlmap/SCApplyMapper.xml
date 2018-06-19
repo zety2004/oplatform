@@ -164,14 +164,20 @@
         <result column="grade" property="grade" jdbcType="VARCHAR"/>
         <result column="class_hours" property="classHours" jdbcType="VARCHAR"/>
         <result column="apply_remark" property="applyRemark" jdbcType="VARCHAR"/>
+        <result column="class_place" property="classPlace" jdbcType="VARCHAR"/>
         <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP"/>
         <result column="max_num" property="maxNum" jdbcType="INTEGER"/>
+        <result column="teacher_id" property="teacherId" jdbcType="INTEGER"/>
+        <result column="begin_of_select_time" property="beginOfSelectTime" jdbcType="TIMESTAMP"/>
+        <result column="end_of_select_time" property="endOfSelectTime" jdbcType="TIMESTAMP"/>
+        <result column="curr_start_time" property="currStartTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
         select sca.id,CONCAT(st.t_name,'/',st.phone) as apply_person,
         c.`name` as apply_curriculum, SUM(cs.num*cs.unit_price) as total_price,
-        c.grade,c.class_hours ,sca.apply_remark,sca.apply_time,sca.max_num
+        c.grade,c.class_hours
+        ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,sca.end_of_select_time,sca.curr_start_time
         from hklk_school_curriculum_apply sca
         LEFT JOIN hklk_curriculum c on sca.curriculum_id = c.id
         LEFT JOIN hklk_school_teacher st on sca.teacher_id = st.id
@@ -192,18 +198,46 @@
         <result column="curr_start_time" property="currStartTime" jdbcType="TIMESTAMP"/>
         <result column="max_num" property="maxNum" jdbcType="INTEGER"/>
         <result column="student_num" property="studentNum" jdbcType="INTEGER"/>
+        <result column="choose_time" property="chooseTime" jdbcType="VARCHAR"/>
+        <result column="class_place" property="classPlace" jdbcType="VARCHAR"/>
+        <result column="apply_status" property="applyStatus" jdbcType="VARCHAR"/>
+        <result column="curriculum_id" property="curriculumId" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryCurriculumChoice" resultMap="CurriculumChoiceMap" parameterType="map">
         SELECT
-        sca.id,c.`name` as curriculum_name,c.grade,st.t_name as
-        teacher_name,sca.curr_start_time,sca.max_num,COUNT(scc.id) as student_num
+        sca.id,
+        c.`name` AS curriculum_name,
+        c.grade,
+        sca.curriculum_id,
+        CONCAT(st.t_name,'/',st.phone) AS teacher_name,
+        sca.curr_start_time,
+        sca.max_num,
+        sca.class_place,
+        CONCAT(sca.begin_of_select_time,' 至 ',sca.end_of_select_time) as choose_time,
+        COUNT(scc.id) AS student_num,
+        <![CDATA[
+        CASE
+        WHEN sca.begin_of_select_time < SYSDATE()  THEN
+        0/*未开课*/
+        WHEN sca.begin_of_select_time < SYSDATE() < sca.end_of_select_time THEN
+        1/*开始选课*/
+        WHEN SYSDATE() > sca.curr_start_time THEN
+        2/*开始上课*/
+        WHEN SYSDATE() < date_add(
+        sca.curr_start_time,
+        INTERVAL (SELECT tc.class_hours/count(ts.id)*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
+        ) THEN
+        3/*已结束*/
+        END as apply_status
+        ]]>
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
-        where sca.status = 3 and sca.school_id = #{schoolId,jdbcType=INTEGER}
+        WHERE
+        sca. STATUS = 3 and sca.school_id = #{schoolId,jdbcType=INTEGER}
         <if test="param != null">
             and c.name like CONCAT('%', #{param}, '%')
         </if>

@@ -119,7 +119,6 @@ public class EditClassAndStudentController extends BaseController {
                              HttpServletResponse response, HttpSession session) {
         sStudentService.deleteByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
-
     }
 
     @RequestMapping("/exportExcelForStudent")

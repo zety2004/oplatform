@@ -1,6 +1,7 @@
 package com.hklk.oplatform.entity.table;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class SSyllabus implements Serializable {
     private Integer id;
@@ -12,6 +13,10 @@ public class SSyllabus implements Serializable {
     private Integer timeType;
 
     private Integer weekType;
+
+    private Date classTime;
+
+
 
     private static final long serialVersionUID = 1L;
 
@@ -53,5 +58,13 @@ public class SSyllabus implements Serializable {
 
     public void setWeekType(Integer weekType) {
         this.weekType = weekType;
+    }
+
+    public Date getClassTime() {
+        return classTime;
+    }
+
+    public void setClassTime(Date classTime) {
+        this.classTime = classTime;
     }
 }

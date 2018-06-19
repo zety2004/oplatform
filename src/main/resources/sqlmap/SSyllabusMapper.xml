@@ -7,9 +7,10 @@
         <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
         <result column="time_type" jdbcType="INTEGER" property="timeType"/>
         <result column="week_type" jdbcType="INTEGER" property="weekType"/>
+        <result column="class_time" property="classTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, sca_id, school_id, time_type, week_type
+    id, sca_id, school_id, time_type, week_type,class_time
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
@@ -23,9 +24,9 @@
   </delete>
     <insert id="insert" parameterType="com.hklk.oplatform.entity.table.SSyllabus">
     insert into hklk_school_syllabus (id, sca_id, school_id, 
-      time_type, week_type)
+      time_type, week_type,class_time)
     values (#{id,jdbcType=INTEGER}, #{scaId,jdbcType=INTEGER}, #{schoolId,jdbcType=INTEGER}, 
-      #{timeType,jdbcType=INTEGER}, #{weekType,jdbcType=INTEGER})
+      #{timeType,jdbcType=INTEGER}, #{weekType,jdbcType=INTEGER}, #{classTime,jdbcType=TIMESTAMP})
   </insert>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.SSyllabus">
         insert into hklk_school_syllabus
@@ -45,6 +46,9 @@
             <if test="weekType != null">
                 week_type,
             </if>
+            <if test="classTime != null">
+                class_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -61,6 +65,9 @@
             </if>
             <if test="weekType != null">
                 #{weekType,jdbcType=INTEGER},
+            </if>
+            <if test="classTime != null">
+                #{classTime,jdbcType=TIMESTAMP},
             </if>
         </trim>
     </insert>
@@ -79,6 +86,9 @@
             <if test="weekType != null">
                 week_type = #{weekType,jdbcType=INTEGER},
             </if>
+            <if test="classTime != null">
+                class_time = #{classTime,jdbcType=TIMESTAMP},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -87,7 +97,8 @@
     set sca_id = #{scaId,jdbcType=INTEGER},
       school_id = #{schoolId,jdbcType=INTEGER},
       time_type = #{timeType,jdbcType=INTEGER},
-      week_type = #{weekType,jdbcType=INTEGER}
+      week_type = #{weekType,jdbcType=INTEGER},
+      class_time = #{classTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

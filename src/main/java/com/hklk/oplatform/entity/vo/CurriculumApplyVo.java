@@ -8,6 +8,8 @@ public class CurriculumApplyVo implements Serializable {
 
     private String applyPerson;
 
+    private String teacherId;
+
     private String applyCurriculum;
 
     private String totalPrice;
@@ -16,11 +18,19 @@ public class CurriculumApplyVo implements Serializable {
 
     private String classHours;
 
+    private String classPlace;
+
     private String applyRemark;
 
     private Date applyTime;
 
     private Integer maxNum;
+
+    private Date beginOfSelectTime;
+
+    private Date endOfSelectTime;
+
+    private Date currStartTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -95,5 +105,45 @@ public class CurriculumApplyVo implements Serializable {
 
     public void setMaxNum(Integer maxNum) {
         this.maxNum = maxNum;
+    }
+
+    public String getClassPlace() {
+        return classPlace;
+    }
+
+    public void setClassPlace(String classPlace) {
+        this.classPlace = classPlace;
+    }
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public Date getBeginOfSelectTime() {
+        return beginOfSelectTime;
+    }
+
+    public void setBeginOfSelectTime(Date beginOfSelectTime) {
+        this.beginOfSelectTime = beginOfSelectTime;
+    }
+
+    public Date getEndOfSelectTime() {
+        return endOfSelectTime;
+    }
+
+    public void setEndOfSelectTime(Date endOfSelectTime) {
+        this.endOfSelectTime = endOfSelectTime;
+    }
+
+    public Date getCurrStartTime() {
+        return currStartTime;
+    }
+
+    public void setCurrStartTime(Date currStartTime) {
+        this.currStartTime = currStartTime;
     }
 }

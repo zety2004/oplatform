@@ -62,6 +62,18 @@ public class EditTeacherController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/updateTeacherStatus")
+    public String updateTeacherStatus(Integer id, Integer status, HttpServletRequest request,
+                                      HttpServletResponse response, HttpSession session) {
+        STeacher param = new STeacher();
+        param.setId(id);
+        param.setStatus(status);
+        sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+
+    @ResponseBody
     @RequestMapping("/delTeacher")
     public String delTeacher(Integer id, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
