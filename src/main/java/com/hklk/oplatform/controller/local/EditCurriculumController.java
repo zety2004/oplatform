@@ -7,6 +7,7 @@ import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumOrderVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.ConsumablesService;
@@ -26,7 +27,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.List;
 
-/*@LocalLoginRepository*/
+@LocalLoginRepository
 @RequestMapping("/editcm")
 @Controller
 public class EditCurriculumController extends BaseController {
