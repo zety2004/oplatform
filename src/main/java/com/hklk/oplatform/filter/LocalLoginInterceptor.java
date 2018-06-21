@@ -1,5 +1,6 @@
 package com.hklk.oplatform.filter;
 
+import com.hklk.oplatform.comm.LoginUser;
 import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.AuthenticationRpcService;
@@ -29,7 +30,7 @@ public class LocalLoginInterceptor implements HandlerInterceptor {
         String token = getLocalToken(request);
         if (token == null) {
             return false;
-        } else if (authenticationRpcService.validate(TokenManager.userTokenKey, token)) {// 验证token是否有效
+        } else if (authenticationRpcService.validate(TokenManager.userTokenKey, token, LoginUser.class)) {// 验证token是否有效
             return true;
         } else {
             return false;

@@ -7,7 +7,7 @@
         <result column="school_id" jdbcType="INTEGER" property="schoolId"/>
         <result column="time_type" jdbcType="INTEGER" property="timeType"/>
         <result column="week_type" jdbcType="INTEGER" property="weekType"/>
-        <result column="class_time" property="classTime" jdbcType="TIMESTAMP"/>
+        <result column="class_time" property="classTime" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, sca_id, school_id, time_type, week_type,class_time
@@ -22,11 +22,17 @@
     delete from hklk_school_syllabus
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+    <delete id="deleteBySchoolId" parameterType="java.lang.Integer">
+    delete from hklk_school_syllabus
+    where school_id = #{schoolId,jdbcType=INTEGER}
+  </delete>
+
     <insert id="insert" parameterType="com.hklk.oplatform.entity.table.SSyllabus">
     insert into hklk_school_syllabus (id, sca_id, school_id, 
       time_type, week_type,class_time)
     values (#{id,jdbcType=INTEGER}, #{scaId,jdbcType=INTEGER}, #{schoolId,jdbcType=INTEGER}, 
-      #{timeType,jdbcType=INTEGER}, #{weekType,jdbcType=INTEGER}, #{classTime,jdbcType=TIMESTAMP})
+      #{timeType,jdbcType=INTEGER}, #{weekType,jdbcType=INTEGER}, #{classTime,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.SSyllabus">
         insert into hklk_school_syllabus
@@ -67,7 +73,7 @@
                 #{weekType,jdbcType=INTEGER},
             </if>
             <if test="classTime != null">
-                #{classTime,jdbcType=TIMESTAMP},
+                #{classTime,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -87,7 +93,7 @@
                 week_type = #{weekType,jdbcType=INTEGER},
             </if>
             <if test="classTime != null">
-                class_time = #{classTime,jdbcType=TIMESTAMP},
+                class_time = #{classTime,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -98,7 +104,143 @@
       school_id = #{schoolId,jdbcType=INTEGER},
       time_type = #{timeType,jdbcType=INTEGER},
       week_type = #{weekType,jdbcType=INTEGER},
-      class_time = #{classTime,jdbcType=TIMESTAMP}
+      class_time = #{classTime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+    <select id="queryMapByWeekType" parameterType="map" resultType="map">
+        SELECT
+        sca.id,
+        sca.begin_of_select_time as beginOfSelectTime,
+        sca.end_of_select_time as endOfSelectTime,
+        sca.curr_start_time as currStartTime,
+        sca.teacher_id as teacherId,
+        c.grade,
+        st.t_name as teacherName,
+        sca.max_num as maxNum,
+        c.`name` as curriculumName,
+        sca.curriculum_id as curriculumId,
+        sca.class_place as classPlace,
+        ss.class_time as classTime
+        FROM
+        hklk_school_syllabus ss
+        LEFT JOIN hklk_school_curriculum_apply sca ON ss.sca_id = sca.id
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        where ss.school_id = #{schoolId}
+        <if test="weekType != null">
+            and ss.week_type = #{weekType}
+        </if>
+    </select>
+
+    <select id="queryMapByTimeType" parameterType="map" resultType="map">
+        SELECT
+        sca.id,
+        sca.begin_of_select_time as beginOfSelectTime,
+        sca.end_of_select_time as endOfSelectTime,
+        sca.curr_start_time as currStartTime,
+        sca.teacher_id as teacherId,
+        c.grade,
+        st.t_name as teacherName,
+        sca.max_num as maxNum,
+        c.`name` as curriculumName,
+        sca.curriculum_id as curriculumId,
+        sca.class_place as classPlace,
+        ss.class_time as classTime,
+        ss.week_type as weekType,
+        <![CDATA[
+        CASE
+        WHEN sca.begin_of_select_time > SYSDATE() THEN
+        0 /*未开课*/
+        WHEN sca.begin_of_select_time< SYSDATE()
+        AND SYSDATE()
+        < sca.end_of_select_time THEN
+        1 /*开始选课*/
+        WHEN sca.end_of_select_time< SYSDATE()
+        AND SYSDATE()
+        < sca.curr_start_time THEN
+        2 /*备课中*/
+        WHEN SYSDATE() > sca.curr_start_time and SYSDATE()< date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(tc.class_hours / count(ts.id)) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        3 /*开始上课*/
+        WHEN SYSDATE()> date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(tc.class_hours / count(ts.id)) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        4 /*已结束*/
+        END AS applyStatus,
+        ]]>
+        (select count(tss.id) from hklk_school_syllabus tss where tss.school_id=1 and tss.sca_id = sca.id) as weeklyNum
+        FROM
+        hklk_school_syllabus ss
+        LEFT JOIN hklk_school_curriculum_apply sca ON ss.sca_id = sca.id
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        where ss.school_id = #{schoolId}
+        <if test="timeType != null">
+            and ss.time_type = #{timeType}
+        </if>
+        order by week_type
+    </select>
+
+
+    <select id="queryMapByTimeTypeForEnd" parameterType="map" resultType="map">
+        SELECT
+        sca.id,
+        sca.begin_of_select_time as beginOfSelectTime,
+        sca.end_of_select_time as endOfSelectTime,
+        sca.curr_start_time as currStartTime,
+        sca.teacher_id as teacherId,
+        c.grade,
+        st.t_name as teacherName,
+        sca.max_num as maxNum,
+        c.`name` as curriculumName,
+        sca.curriculum_id as curriculumId,
+        sca.class_place as classPlace,
+        ss.class_time as classTime,
+        ss.week_type as weekType
+        FROM
+        hklk_school_syllabus_end ss
+        LEFT JOIN hklk_school_curriculum_apply sca ON ss.sca_id = sca.id
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        where ss.school_id = #{schoolId}
+        <if test="weekType != null">
+            and ss.week_type = #{weekType}
+        </if>
+    </select>
+
+
+    <select id="selectMaxTimeType" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT
+        max(time_type)
+        FROM
+        hklk_school_syllabus ss
+        where ss.school_id = #{schoolId}
+    </select>
+
 </mapper>

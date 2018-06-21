@@ -183,9 +183,15 @@
         LEFT JOIN hklk_school_teacher st on sca.teacher_id = st.id
         LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
         where sca.school_id = #{schoolId,jdbcType=INTEGER}
-        <if test="status != null">
-            and sca.status = #{status,jdbcType=INTEGER}
-        </if>
+        <choose>
+            <when test="status != null and status == 1">
+                and sca.status in (1,3)
+            </when>
+            <otherwise>
+                and sca.status = #{status,jdbcType=INTEGER}
+            </otherwise>
+        </choose>
+
         group by sca.id
     </select>
 
@@ -201,6 +207,7 @@
         <result column="choose_time" property="chooseTime" jdbcType="VARCHAR"/>
         <result column="class_place" property="classPlace" jdbcType="VARCHAR"/>
         <result column="apply_status" property="applyStatus" jdbcType="VARCHAR"/>
+        <result column="class_time" property="classTime" jdbcType="VARCHAR"/>
         <result column="curriculum_id" property="curriculumId" jdbcType="INTEGER"/>
     </resultMap>
 
@@ -218,24 +225,32 @@
         COUNT(scc.id) AS student_num,
         <![CDATA[
         CASE
-        WHEN sca.begin_of_select_time < SYSDATE()  THEN
+        WHEN sca.begin_of_select_time > SYSDATE()  THEN
         0/*未开课*/
-        WHEN sca.begin_of_select_time < SYSDATE() < sca.end_of_select_time THEN
+        WHEN sca.begin_of_select_time < SYSDATE() and SYSDATE() < sca.end_of_select_time THEN
         1/*开始选课*/
-        WHEN SYSDATE() > sca.curr_start_time THEN
-        2/*开始上课*/
-        WHEN SYSDATE() < date_add(
+        WHEN sca.end_of_select_time < SYSDATE() and SYSDATE() < sca.curr_start_time THEN
+        2/*备课中*/
+        WHEN SYSDATE() > sca.curr_start_time and SYSDATE() < date_add(
         sca.curr_start_time,
-        INTERVAL (SELECT tc.class_hours/count(ts.id)*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
+        INTERVAL (SELECT CEILING(tc.class_hours/count(ts.id))*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
         ) THEN
-        3/*已结束*/
+        3/*开始上课*/
+        WHEN SYSDATE() > date_add(
+        sca.curr_start_time,
+        INTERVAL (SELECT CEILING(tc.class_hours/count(ts.id))*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
+        ) THEN
+        4/*已结束*/
         END as apply_status
         ]]>
+        ,
+        concat(group_concat(h.week_type),'|',max(h.class_time)) class_time
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
+        left join hklk_school_syllabus h on sca.id = h.sca_id
         WHERE
         sca. STATUS = 3 and sca.school_id = #{schoolId,jdbcType=INTEGER}
         <if test="param != null">
@@ -289,15 +304,17 @@
         <result column="s_num" property="sNum" jdbcType="VARCHAR"/>
         <result column="wechat_id" property="wechatId" jdbcType="VARCHAR"/>
         <result column="pay_state" property="payState" jdbcType="VARCHAR"/>
+        <result column="class_name" property="className" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="queryStudentBySCAId" resultMap="StudentPayMap"
             parameterType="java.lang.Integer">
         SELECT
-            ss.*,scc.pay_state
+            ss.*,scc.pay_state,h.name as class_name
         FROM
             hklk_student_choice_curriculum scc
         LEFT JOIN hklk_school_student ss ON scc.student_id = ss.id
+        left join hklk_school_class h on ss.class_id = h.id
         where scc.sca_id = #{scaId,jdbcType=INTEGER}
     </select>
 

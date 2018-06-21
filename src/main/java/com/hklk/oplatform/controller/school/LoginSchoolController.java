@@ -66,7 +66,7 @@ public class LoginSchoolController extends BaseController {
         } else if (temp != null && temp.getPwd().equals(PasswordProvider.encrypt(oldPassword))) {
             SchoolAdmin param = new SchoolAdmin();
             param.setId(loginSchool.getSchoolAdminId());
-            param.setPwd(newPassword);
+            param.setPwd(PasswordProvider.encrypt(newPassword));
             schoolAdminService.updateByPrimaryKeySelective(param);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         } else {
@@ -82,7 +82,6 @@ public class LoginSchoolController extends BaseController {
         if (loginSchool == null) {
             return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
         }
-        loginSchool.setSchoolAdminId(2);
         SchoolAdmin param = new SchoolAdmin();
         param.setId(loginSchool.getSchoolAdminId());
         param.setNickname(nickName);

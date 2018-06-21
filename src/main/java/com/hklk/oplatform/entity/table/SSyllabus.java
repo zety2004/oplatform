@@ -14,8 +14,7 @@ public class SSyllabus implements Serializable {
 
     private Integer weekType;
 
-    private Date classTime;
-
+    private String classTime;
 
 
     private static final long serialVersionUID = 1L;
@@ -60,11 +59,11 @@ public class SSyllabus implements Serializable {
         this.weekType = weekType;
     }
 
-    public Date getClassTime() {
+    public String getClassTime() {
         return classTime;
     }
 
-    public void setClassTime(Date classTime) {
+    public void setClassTime(String classTime) {
         this.classTime = classTime;
     }
 }

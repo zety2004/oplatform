@@ -1,5 +1,6 @@
 package com.hklk.oplatform.util;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -299,6 +300,25 @@ public final class JsonUtil {
             }
         }
         return true;
+    }
+
+    /**
+     * @author 曹良峰
+     * @Description 反射获取class
+     * @Date 19:14 2018/6/19
+     * @Param [clz]
+     * @Return java.lang.Class<java.lang.Object>
+     **/
+    public static Class<Object> getSuperClassGenricType(final Class clz) {
+        Type type = clz.getGenericSuperclass();
+        if(!(type instanceof ParameterizedType)) {
+            return Object.class;
+        }
+        Type[] params = ((ParameterizedType)type).getActualTypeArguments();
+        if(!(params[0] instanceof Class)) {
+            return Object.class;
+        }
+        return (Class) params[0];
     }
 
     private static Gson gson;

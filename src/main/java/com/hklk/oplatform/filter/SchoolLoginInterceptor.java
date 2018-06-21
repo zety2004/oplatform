@@ -1,5 +1,6 @@
 package com.hklk.oplatform.filter;
 
+import com.hklk.oplatform.comm.LoginSchool;
 import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.AuthenticationRpcService;
@@ -30,7 +31,7 @@ public class SchoolLoginInterceptor implements HandlerInterceptor {
         String token = getLocalToken(request);
         if (token == null) {
             return false;
-        } else if (authenticationRpcService.validate(TokenManager.schoolTokenKey, token)) {// 验证token是否有效
+        } else if (authenticationRpcService.validate(TokenManager.schoolTokenKey, token, LoginSchool.class)) {// 验证token是否有效
             return true;
         } else {
             return false;

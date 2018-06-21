@@ -3,6 +3,9 @@ package com.hklk.oplatform.service;
 import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.SSyllabus;
 
+import java.util.List;
+import java.util.Map;
+
 public interface SSyllabusService {
     /**
      * @author 曹良峰
@@ -13,5 +16,17 @@ public interface SSyllabusService {
      **/
     int deleteByPrimaryKey(Integer id);
 
+    int deleteBySchoolId(Integer id);
+
     int insertOrUpdateByPrimaryKeySelective(SSyllabus sSyllabus, SCApply scApply);
+
+    int delAndbatchSaveSyllabus(String param, Integer schoolId);
+
+    List<Map<String, String>> queryMapByWeekType(Integer weekType ,Integer schoolId);
+
+    List<Map<String, String>> queryMapByTimeType(Integer timeType ,Integer schoolId);
+
+    List<Map<String, String>> queryMapByTimeTypeForEnd(Integer weekType, Integer schoolId);
+
+    int selectMaxTimeType(Integer schoolId);
 }

@@ -3,7 +3,6 @@ package com.hklk.oplatform.controller.school;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.SCApply;
-import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.table.SSyllabus;
 import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
@@ -20,8 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @SchoolLoginRepository
 @RequestMapping("/schoolCurriculum")
@@ -52,7 +50,7 @@ public class SchoolCurriculumController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/queryCurriculumApply")
-    public String queryCurriculumApply(Integer status, int pageNum, HttpServletRequest request,
+    public String queryCurriculumApply(String param, Integer status, int pageNum, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
         if (status == null) {
             status = 0;
@@ -82,7 +80,7 @@ public class SchoolCurriculumController extends BaseController {
     public String updateCurriculumApply(SCApply scApply, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
         SCApply temp = scApplyService.selectByPrimaryKey(scApply.getId());
-        if (temp.getOperatorId() != null) {
+        if (temp.getOperatorId() != null && scApply.getStatus() != 0) {
             return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
         } else {
             scApplyService.updateByPrimaryKeySelective(scApply);
@@ -91,26 +89,51 @@ public class SchoolCurriculumController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping("/addOrUpdateSyllabus")
-    public String addOrUpdateSyllabus(Integer id, Integer scaId, Integer timeType, Integer weekType, String classPlace, Date beginOfSelectTime, Date endOfSelectTime, Date currStartTime, HttpServletRequest request,
-                                      HttpServletResponse response, HttpSession session) {
-        SSyllabus sSyllabus = new SSyllabus();
-        sSyllabus.setId(id);
-        sSyllabus.setScaId(scaId);
-        sSyllabus.setSchoolId(getLoginSchool(request).getSchoolId());
-        sSyllabus.setTimeType(timeType);
-        sSyllabus.setWeekType(weekType);
-
-        SCApply scApply = new SCApply();
-        scApply.setId(scaId);
-        scApply.setClassPlace(classPlace);
-        scApply.setBeginOfSelectTime(beginOfSelectTime);
-        scApply.setEndOfSelectTime(endOfSelectTime);
-        scApply.setStatus(3);
-        scApply.setCurrStartTime(currStartTime);
-
-        sSyllabusService.insertOrUpdateByPrimaryKeySelective(sSyllabus, scApply);
-
+    @RequestMapping("/addOrUpdateSyllabusAll")
+    public String addOrUpdateSyllabusAll(String param, HttpServletRequest request,
+                                         HttpServletResponse response, HttpSession session) {
+        sSyllabusService.delAndbatchSaveSyllabus(param, getLoginSchool(request).getSchoolId());
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    @ResponseBody
+    @RequestMapping("/querySyllabusAll")
+    public String querySyllabusAll(HttpServletRequest request,
+                                   HttpServletResponse response, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+        String classTime = "";
+        for (int i = 1; i < 6; i++) {
+            List<Map<String, String>> temp = sSyllabusService.queryMapByWeekType(i, getLoginSchool(request).getSchoolId());
+            if ("".equals(classTime) && temp.size() > 0) {
+                classTime = temp.get(0).get("classTime");
+                result.put("classTime", classTime);
+            }
+            result.put("week" + i, temp);
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+    }
+
+    @ResponseBody
+    @RequestMapping("/querySyllabusByTimeType")
+    public String querySyllabusByTimeType(HttpServletRequest request,
+                                          HttpServletResponse response, HttpSession session) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        Integer schoolId = getLoginSchool(request).getSchoolId();
+        Integer maxTimeType = sSyllabusService.selectMaxTimeType(schoolId);
+        for (int i = 0; i <= maxTimeType; i++) {
+            result.put("timeType" + i, sSyllabusService.queryMapByTimeType(i, schoolId));
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+    }
+
+    @ResponseBody
+    @RequestMapping("/querySyllabusByTimeTypeForEnd")
+    public String querySyllabusByTimeTypeForEnd(HttpServletRequest request,
+                                                HttpServletResponse response, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+        for (int i = 1; i < 6; i++) {
+            result.put("week" + i, sSyllabusService.queryMapByTimeTypeForEnd(i, getLoginSchool(request).getSchoolId()));
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
     }
 }

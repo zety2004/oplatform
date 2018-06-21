@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import static com.hklk.oplatform.util.JsonUtil.getSuperClassGenricType;
+
 /**
  * 单实例环境令牌管理
  */
@@ -27,9 +29,9 @@ public class RedisTokenManager extends TokenManager {
         RedisCache.putValue(key + token, JsonUtil.toJson(obj), tokenTimeout);
     }
 
-    public LoginUser validate(String key, String token) {
+    public <T> T validate(String key, String token, Class<T> clazz) {
         String json = RedisCache.get(key + token);
-        return JsonUtil.jsonToBean(json, LoginUser.class);
+        return JsonUtil.jsonToBean(json, clazz);
     }
 
     public void remove(String key, String token) {

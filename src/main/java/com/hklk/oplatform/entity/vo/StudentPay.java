@@ -21,6 +21,8 @@ public class StudentPay implements Serializable {
 
     private String payState;
 
+    private String className;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -93,5 +95,13 @@ public class StudentPay implements Serializable {
 
     public void setPayState(String payState) {
         this.payState = payState;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

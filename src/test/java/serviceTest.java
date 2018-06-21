@@ -1,15 +1,16 @@
 import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.User;
-import com.hklk.oplatform.service.ConsumablesService;
-import com.hklk.oplatform.service.CurriculumService;
-import com.hklk.oplatform.service.UserService;
+import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
+import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.service.*;
 import comm.AbstractTestCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @TransactionConfiguration(defaultRollback = false)
@@ -20,6 +21,10 @@ public class serviceTest extends AbstractTestCase {
     CurriculumService curriculumService;
     @Autowired
     ConsumablesService consumablesService;
+    @Autowired
+    SSyllabusService sSyllabusService;
+    @Autowired
+    SCApplyService scApplyService;
 
     @Test
     public void loginTest() {
@@ -49,5 +54,16 @@ public class serviceTest extends AbstractTestCase {
         int temp = consumablesService.insertSelective(consumables);
         System.out.println("-------------------" + temp + "----------------------");
     }
+
+    @Test
+    public void queryMapByWeekType() {
+        List<Map<String, String>> result = sSyllabusService.queryMapByWeekType(1,1);
+    }
+
+    @Test
+    public void queryCurriculumApply() {
+        PageTableForm<CurriculumApplyVo> pageTableForm = scApplyService.queryCurriculumApply(1, null, 1, 10);
+    }
+
 
 }

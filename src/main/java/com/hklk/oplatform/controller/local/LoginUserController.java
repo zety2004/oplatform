@@ -45,7 +45,7 @@ public class LoginUserController extends BaseController {
                 loginUser.setRolePage(rolePage.toString());
             }
             String token = CookieUtils.getCookie(request, TokenManager.TOKEN);
-            if (StringUtils.isBlank(token) || tokenManager.validate(tokenManager.userTokenKey, token) == null) {// 没有登录的情况
+            if (StringUtils.isBlank(token) || tokenManager.validate(tokenManager.userTokenKey, token, LoginUser.class) == null) {// 没有登录的情况
                 token = createToken(loginUser);
                 addTokenInCookie(token, request, response);
             }

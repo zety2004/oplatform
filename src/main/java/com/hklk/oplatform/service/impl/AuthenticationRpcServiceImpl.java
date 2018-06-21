@@ -2,6 +2,7 @@ package com.hklk.oplatform.service.impl;
 
 import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.service.AuthenticationRpcService;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,15 +14,15 @@ public class AuthenticationRpcServiceImpl implements AuthenticationRpcService {
     private TokenManager tokenManager;
 
     @Override
-    public boolean validate(String key, String token) {
-        return tokenManager.validate(key, token) != null;
+    public <T> boolean validate(String key, String token, Class<T> clazz) {
+        return tokenManager.validate(key, token, clazz) != null;
     }
 
     @Override
-    public <T> T findAuthInfo(String key, String token) {
-        Object obj = tokenManager.validate(key, token);
+    public <T> T findAuthInfo(String key, String token, Class<T> clazz) {
+        T obj = tokenManager.validate(key, token, clazz);
         if (obj != null) {
-            return (T) obj;
+            return obj;
         }
         return null;
     }

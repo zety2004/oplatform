@@ -65,10 +65,10 @@
             <mvc:mapping path="/**"/>
             <bean class="com.hklk.oplatform.filter.LocalLoginInterceptor"></bean>
         </mvc:interceptor>
-<!--        <mvc:interceptor>
+        <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <bean class="com.hklk.oplatform.filter.SchoolLoginInterceptor"></bean>
-        </mvc:interceptor>-->
+        </mvc:interceptor>
     </mvc:interceptors>
 
 

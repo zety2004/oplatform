@@ -40,15 +40,13 @@ public abstract class BaseController {
 
     public LoginSchool getLoginSchool(HttpServletRequest request) {
         String token = request.getHeader("Access-Toke");
-        //LoginSchool loginSchool = authenticationRpcService.findAuthInfo(tokenManager.schoolTokenKey, token);
-        LoginSchool loginSchool = new LoginSchool();
-        loginSchool.setSchoolId(1);
+        LoginSchool loginSchool = authenticationRpcService.findAuthInfo(tokenManager.schoolTokenKey, token, LoginSchool.class);
         return loginSchool;
     }
 
     public LoginTeacher getLoginTeacher(HttpServletRequest request) {
         String token = request.getHeader("Access-Toke");
-       // LoginTeacher loginTeacher = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token);
+        // LoginTeacher loginTeacher = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token);
         LoginTeacher loginTeacher = new LoginTeacher();
         loginTeacher.setSchoolId(1);
         loginTeacher.setTeacherId(1);
@@ -57,7 +55,7 @@ public abstract class BaseController {
 
     public LoginUser getLoginUser(HttpServletRequest request) {
         String token = request.getHeader("Access-Toke");
-        LoginUser loginUser = authenticationRpcService.findAuthInfo(tokenManager.userTokenKey, token);
+        LoginUser loginUser = authenticationRpcService.findAuthInfo(tokenManager.userTokenKey, token, LoginUser.class);
         return loginUser;
     }
 

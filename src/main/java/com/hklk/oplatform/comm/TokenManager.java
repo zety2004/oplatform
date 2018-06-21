@@ -1,5 +1,7 @@
 package com.hklk.oplatform.comm;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -54,7 +56,7 @@ public abstract class TokenManager {
      * @param token
      * @return
      */
-    public abstract LoginUser validate(String key, String token);
+    public abstract <T> T validate(String key, String token, Class<T> clazz);
 
     /**
      * 移除令牌

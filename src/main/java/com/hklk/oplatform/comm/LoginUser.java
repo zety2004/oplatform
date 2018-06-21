@@ -18,6 +18,10 @@ public class LoginUser implements Serializable {
 
     private String rolePage;
 
+
+    public LoginUser() {
+    }
+
     public LoginUser(Integer userId, String account, String nickName, String rolePage) {
         super();
         this.userId = userId;
