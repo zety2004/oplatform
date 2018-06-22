@@ -237,7 +237,7 @@
 
     <select id="selectMaxTimeType" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         SELECT
-        max(time_type)
+        IFNULL(max(time_type),0)
         FROM
         hklk_school_syllabus ss
         where ss.school_id = #{schoolId}
