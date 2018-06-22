@@ -52,10 +52,12 @@ public class SStudent implements Serializable {
         return sex;
     }
 
-/*    public void setSex(Object sex) {
-        if (sex.getClass().getTypeName())
-        this.sex = sex;
-    }*/
+    public void setSex(Object sex) {
+        if (sex.getClass().getTypeName().equals("java.lang.String")) {
+            sex = sex == "男" ? 1 : 0;
+        }
+        this.sex = (Integer) sex;
+    }
 
     public String getParentName() {
         return parentName;
@@ -95,5 +97,12 @@ public class SStudent implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public static void main(String[] args) {
+        Integer temp = 0;
+        //java.lang.String
+        //java.lang.Integer
+        System.out.println(temp.getClass().getTypeName());
     }
 }
