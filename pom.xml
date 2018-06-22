@@ -10,10 +10,9 @@
     <packaging>jar</packaging>
 
 
-    <name>oWebsite Maven Webapp</name>
+    <name>OPlatform Maven Webapp</name>
     <!-- FIXME change it to the project's oplatform -->
     <url>http://www.example.com</url>
-
 
     <properties>
         <!-- 主要依赖库的版本定义 -->
@@ -23,7 +22,6 @@
     </properties>
 
     <dependencies>
-
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -305,22 +303,26 @@
             <version>3.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.11.3</version>
+        </dependency>
+
     </dependencies>
 
-
     <build>
-
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
-                    <exclude>application.properties</exclude>
-                    <exclude>applicationContext_*.xml</exclude>
-                    <exclude>generatorConfig.xml</exclude>
-                    <exclude>logback.xml</exclude>
-                    <!--<exclude>sqlmap/*</exclude>-->
+                        <exclude>application.properties</exclude>
+                        <exclude>applicationContext_*.xml</exclude>
+                        <exclude>generatorConfig.xml</exclude>
+                        <exclude>logback.xml</exclude>
+                       <!-- <exclude>sqlmap/*</exclude>-->
                 </excludes>
             </resource>
         </resources>
