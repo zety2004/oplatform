@@ -136,9 +136,9 @@
     <select id="queryMapByTimeType" parameterType="map" resultType="map">
         SELECT
         sca.id,
-        sca.begin_of_select_time as beginOfSelectTime,
-        sca.end_of_select_time as endOfSelectTime,
-        sca.curr_start_time as currStartTime,
+        DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d') as beginOfSelectTime,
+        DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d') as endOfSelectTime,
+        DATE_FORMAT(sca.curr_start_time,'%Y-%m-%d') as currStartTime,
         sca.teacher_id as teacherId,
         c.grade,
         st.t_name as teacherName,
@@ -211,9 +211,9 @@
     <select id="queryMapByTimeTypeForEnd" parameterType="map" resultType="map">
         SELECT
         sca.id,
-        sca.begin_of_select_time as beginOfSelectTime,
-        sca.end_of_select_time as endOfSelectTime,
-        sca.curr_start_time as currStartTime,
+        DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d') as beginOfSelectTime,
+        DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d') as endOfSelectTime,
+        DATE_FORMAT(sca.curr_start_time,'%Y-%m-%d') as currStartTime,
         sca.teacher_id as teacherId,
         c.grade,
         st.t_name as teacherName,
