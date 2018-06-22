@@ -62,7 +62,7 @@ public class EditClassAndStudentController extends BaseController {
     public String addOrUpdateClass(SClass sClass, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
         Integer schoolId = getLoginSchool(request).getSchoolId();
-        sClass.setSchoolId(1);
+        sClass.setSchoolId(schoolId);
         SClass temp = sClassService.selectByNameForValidate(sClass.getName(), schoolId);
         if (sClass.getId() == null && temp != null) {
             return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
