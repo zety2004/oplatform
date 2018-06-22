@@ -74,10 +74,23 @@ public class LoginSchoolController extends BaseController {
         }
     }
 
+
+    @ResponseBody
+    @RequestMapping("/findAccountForSchoolAdmin")
+    public String findAccountForSchoolAdmin(String account, HttpServletRequest request,
+                                            HttpServletResponse response, HttpSession session) {
+        SchoolAdmin param = schoolAdminService.querySchoolAdminsByName(account);
+        if (param == null) {
+            return ToolUtil.buildResultStr(StatusCode.USER_UNFIND, StatusCode.getStatusMsg(StatusCode.USER_UNFIND));
+        } else {
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        }
+    }
+
     @ResponseBody
     @RequestMapping("/updateSchoolNickName")
     public String updateSchoolNickName(String nickName, HttpServletRequest request,
-                                    HttpServletResponse response, HttpSession session) {
+                                       HttpServletResponse response, HttpSession session) {
         LoginSchool loginSchool = getLoginSchool(request);
         if (loginSchool == null) {
             return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));

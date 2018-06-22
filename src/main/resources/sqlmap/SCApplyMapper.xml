@@ -221,7 +221,8 @@
         sca.curr_start_time,
         sca.max_num,
         sca.class_place,
-        CONCAT(sca.begin_of_select_time,' 至 ',sca.end_of_select_time) as choose_time,
+        CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
+        choose_time,
         COUNT(scc.id) AS student_num,
         <![CDATA[
         CASE

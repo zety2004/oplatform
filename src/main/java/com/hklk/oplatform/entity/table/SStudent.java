@@ -10,7 +10,7 @@ public class SStudent implements Serializable {
 
     private String fullName;
 
-    private String sex;
+    private Integer sex;
 
     private String parentName;
 
@@ -48,13 +48,14 @@ public class SStudent implements Serializable {
         this.fullName = fullName == null ? null : fullName.trim();
     }
 
-    public String getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex == null ? null : sex.trim();
-    }
+/*    public void setSex(Object sex) {
+        if (sex.getClass().getTypeName())
+        this.sex = sex;
+    }*/
 
     public String getParentName() {
         return parentName;

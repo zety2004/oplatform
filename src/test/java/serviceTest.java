@@ -25,6 +25,8 @@ public class serviceTest extends AbstractTestCase {
     SSyllabusService sSyllabusService;
     @Autowired
     SCApplyService scApplyService;
+    @Autowired
+    SStudentService sStudentService;
 
     @Test
     public void loginTest() {
@@ -63,6 +65,10 @@ public class serviceTest extends AbstractTestCase {
     @Test
     public void queryCurriculumApply() {
         PageTableForm<CurriculumApplyVo> pageTableForm = scApplyService.queryCurriculumApply(1, null, 1, 10);
+    }
+    @Test
+    public void queryStudent() {
+         sStudentService.queryStudentByClassId("", 24);
     }
 
 
