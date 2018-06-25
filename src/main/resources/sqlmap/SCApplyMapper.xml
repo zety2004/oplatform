@@ -281,6 +281,7 @@
         <result column="curriculum_id" property="curriculumId" jdbcType="INTEGER"/>
         <result column="order_remark" property="orderRemark" jdbcType="VARCHAR"/>
         <result column="school_name" property="schoolName" jdbcType="VARCHAR"/>
+        <result column="op_person" property="opPerson" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="java.lang.Integer">
@@ -288,13 +289,14 @@
         sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,c.grade,st.nickname as
         teacher_name,sca.begin_of_select_time,sca.end_of_select_time,sca.max_num,COUNT(scc.id) as student_num,
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = COUNT(scc.id) THEN 1 else 0 end
-        is_sign,sca.order_remark
+        is_sign,sca.order_remark,h.nickname as op_person
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         left join hklk_school hs on hs.id = sca.school_id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
+        left join hklk_user h on sca.order_op_user_id = h.id
         where sca.status in (2,3)
         <if test="queryParam != null">
             and c.name like CONCAT('%',#{queryParam}, '%')
