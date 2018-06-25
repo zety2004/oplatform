@@ -23,6 +23,8 @@ public class CurriculumOrderVo implements Serializable {
     private Integer isSign;
 
     private String orderRemark;
+    private Integer curriculumId;
+    private String schoolName;
 
     private static final long serialVersionUID = 1L;
 
@@ -105,5 +107,21 @@ public class CurriculumOrderVo implements Serializable {
 
     public void setOrderRemark(String orderRemark) {
         this.orderRemark = orderRemark;
+    }
+
+    public Integer getCurriculumId() {
+        return curriculumId;
+    }
+
+    public void setCurriculumId(Integer curriculumId) {
+        this.curriculumId = curriculumId;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 }
