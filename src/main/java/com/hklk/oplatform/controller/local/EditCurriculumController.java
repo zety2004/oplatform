@@ -48,13 +48,13 @@ public class EditCurriculumController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
-    @ResponseBody
+/*    @ResponseBody
     @RequestMapping("/queryCurriculumOrder")
     public String queryCurriculumOrder(Integer isHandle, int pageNum, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
         PageTableForm<CurriculumOrderVo> curriculumPageTableForm = scApplyService.queryCurriculumOrder(isHandle, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
-    }
+    }*/
 
     @ResponseBody
     @RequestMapping("/selectCurriculumById")

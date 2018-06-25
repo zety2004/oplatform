@@ -285,6 +285,9 @@
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
         where sca.status in (2,3)
+        <if test="queryParam != null">
+            and c.name like CONCAT('%',#{queryParam}, '%')
+        </if>
         <if test="isHandle == 0">
             and sca.order_op_user_id is null
         </if>

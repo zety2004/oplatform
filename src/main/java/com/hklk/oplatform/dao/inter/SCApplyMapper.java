@@ -25,5 +25,5 @@ public interface SCApplyMapper {
 
     List<StudentPay> queryStudentBySCAId(Integer scaId);
 
-    List<CurriculumOrderVo> queryCurriculumOrder(Integer isHandle);
+    List<CurriculumOrderVo> queryCurriculumOrder(Map<String, Object> param);
 }

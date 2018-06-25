@@ -83,7 +83,7 @@ public class serviceTest extends AbstractTestCase {
     @Test
     public void queryCurriculumOrder() {
 
-        scApplyService.queryCurriculumOrder(null, 1, 10);
+        scApplyService.queryCurriculumOrder("",0, 1, 10);
     }
 
 }

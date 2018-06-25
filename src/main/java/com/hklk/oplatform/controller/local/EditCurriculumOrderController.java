@@ -30,9 +30,9 @@ public class EditCurriculumOrderController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/queryCurriculumOrder")
-    public String queryCurriculumOrder(Integer isHandle, int pageNum, HttpServletRequest request,
+    public String queryCurriculumOrder(String queryParam,Integer isHandle, int pageNum, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
-        PageTableForm<CurriculumOrderVo> curriculumPageTableForm = scApplyService.queryCurriculumOrder(isHandle, pageNum, pageSize);
+        PageTableForm<CurriculumOrderVo> curriculumPageTableForm = scApplyService.queryCurriculumOrder(queryParam,isHandle, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
@@ -57,7 +57,7 @@ public class EditCurriculumOrderController extends BaseController {
     @ResponseBody
     @RequestMapping("/queryOrderPlayFor")
     public String queryOrderPlayFor(Integer scaId, HttpServletRequest request,
-                                      HttpServletResponse response, HttpSession session) {
+                                    HttpServletResponse response, HttpSession session) {
         List<StudentPay> studentPays = scApplyService.queryStudentBySCAId(scaId);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), studentPays);
     }
