@@ -30,6 +30,7 @@ public class serviceTest extends AbstractTestCase {
     @Autowired
     FeedBackService feedBackService;
 
+
     @Test
     public void loginTest() {
         Map<String, String> param = new HashMap<>();
@@ -83,7 +84,7 @@ public class serviceTest extends AbstractTestCase {
     @Test
     public void queryCurriculumOrder() {
 
-        scApplyService.queryCurriculumOrder("",0, 1, 10);
+        //scApplyService.updateByPrimaryKeySelective("",0, 1, 10);
     }
 
 }

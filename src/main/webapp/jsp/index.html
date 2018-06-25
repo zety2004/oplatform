@@ -37,15 +37,12 @@
     })
 
     var addUser = function () {
-
-        var data = {'username': '测试'}
-        console.log(token)
+        var data = {'remark': '1111', 'id': 2}
         $.ajax({
-            url: "http://192.168.0.129:8080/editUser/updateUser",
+            url: "editcmo/handleCurriculumOrder",
             type: 'POST',
             headers: {
-                Accept: "application/json; charset=utf-8",
-                "Access-Toke": token
+                "Access-Toke": "93cf478f416b4cd7ac56bd39744e4093"
             },
             traditional: true,
             data: data,
@@ -70,5 +67,6 @@
     <label>上传文件</label><input name="uploadfile" type="file"/>
     <button type="submit">提交</button>
 </form>
+<button  onclick="addUser()">测试</button>
 </body>
 </html>

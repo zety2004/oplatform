@@ -15,6 +15,8 @@
         <result column="class_place" property="classPlace" jdbcType="VARCHAR"/>
         <result column="max_num" property="maxNum" jdbcType="INTEGER"/>
         <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
+        <result column="order_op_user_id" property="orderOpUserId" jdbcType="INTEGER"/>
+        <result column="order_remark" property="orderRemark" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, curriculum_id, apply_time, apply_remark, teacher_id, status, operator_id, begin_of_select_time, 
@@ -151,6 +153,12 @@
             </if>
             <if test="maxNum != null">
                 max_num = #{maxNum,jdbcType=INTEGER},
+            </if>
+            <if test="orderOpUserId != null">
+                order_op_user_id = #{orderOpUserId,jdbcType=INTEGER},
+            </if>
+            <if test="orderRemark != null">
+                order_remark = #{orderRemark,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
