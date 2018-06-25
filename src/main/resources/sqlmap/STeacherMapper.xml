@@ -14,7 +14,7 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, t_name, phone, sex, remark, status, pwd, school_id, head_ico,create_time
+    id, nickname as t_name, phone, sex, remark, status, pwd, school_id, head_ico,create_time
   </sql>
     <select id="selectBySTeacher" resultMap="BaseResultMap" parameterType="com.hklk.oplatform.entity.table.STeacher">
         select
@@ -34,7 +34,7 @@
             and remark = like CONCAT('%', #{remark}, '%')
         </if>
         <if test="tName != null">
-            and t_name = like CONCAT('%', #{tName}, '%')
+            and nickname = like CONCAT('%', #{tName}, '%')
         </if>
 
     </select>
@@ -50,7 +50,7 @@
                 id,
             </if>
             <if test="tName != null">
-                t_name,
+                nickname,
             </if>
             <if test="phone != null">
                 phone,
@@ -108,7 +108,7 @@
         update hklk_school_teacher
         <set>
             <if test="tName != null">
-                t_name = #{tName,jdbcType=VARCHAR},
+                nickname = #{tName,jdbcType=VARCHAR},
             </if>
             <if test="phone != null">
                 phone = #{phone,jdbcType=VARCHAR},
@@ -141,7 +141,7 @@
         from hklk_school_teacher
         where school_id = #{schoolId,jdbcType=INTEGER}
         <if test="param != null">
-            and t_name like CONCAT('%',#{param}, '%') or phone like CONCAT('%',#{param}, '%')
+            and nickname like CONCAT('%',#{param}, '%') or phone like CONCAT('%',#{param}, '%')
         </if>
         order by id desc
     </select>

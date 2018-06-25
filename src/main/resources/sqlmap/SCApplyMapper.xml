@@ -174,7 +174,7 @@
     </resultMap>
 
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
-        select sca.id,CONCAT(st.t_name,'/',st.phone) as apply_person,
+        select sca.id,CONCAT(st.nickname,'/',st.phone) as apply_person,
         c.`name` as apply_curriculum, SUM(cs.num*cs.unit_price) as total_price,
         c.grade,c.class_hours
         ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,sca.end_of_select_time,sca.curr_start_time
@@ -217,7 +217,7 @@
         c.`name` AS curriculum_name,
         c.grade,
         sca.curriculum_id,
-        CONCAT(st.t_name,'/',st.phone) AS teacher_name,
+        CONCAT(st.nickname,'/',st.phone) AS teacher_name,
         sca.curr_start_time,
         sca.max_num,
         sca.class_place,
@@ -275,7 +275,7 @@
 
     <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="java.lang.Integer">
         SELECT
-        sca.id,c.`name` as curriculum_name,c.grade,st.t_name as
+        sca.id,c.`name` as curriculum_name,c.grade,st.nickname as
         teacher_name,sca.begin_of_select_time,sca.end_of_select_time,sca.max_num,COUNT(scc.id) as student_num,
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = COUNT(scc.id) THEN 1 else 0 end
         is_sign,sca.order_remark

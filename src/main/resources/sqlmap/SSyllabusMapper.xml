@@ -116,7 +116,7 @@
         sca.curr_start_time as currStartTime,
         sca.teacher_id as teacherId,
         c.grade,
-        st.t_name as teacherName,
+        st.nickname as teacherName,
         sca.max_num as maxNum,
         c.`name` as curriculumName,
         sca.curriculum_id as curriculumId,
