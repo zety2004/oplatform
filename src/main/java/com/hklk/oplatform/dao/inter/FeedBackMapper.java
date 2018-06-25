@@ -2,6 +2,9 @@ package com.hklk.oplatform.dao.inter;
 
 import com.hklk.oplatform.entity.table.FeedBack;
 
+import java.util.List;
+import java.util.Map;
+
 public interface FeedBackMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +17,8 @@ public interface FeedBackMapper {
     int updateByPrimaryKeySelective(FeedBack record);
 
     int updateByPrimaryKey(FeedBack record);
+
+    List<FeedBack> queryFeedBackList();
+
+    Map<String ,String> selectFeedBack(Map<String, Object> params);
 }

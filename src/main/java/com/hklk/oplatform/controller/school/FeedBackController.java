@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
+@SchoolLoginRepository
+@RequestMapping("/feedBackForSchool")
+@Controller
 public class FeedBackController extends BaseController {
     @Autowired
     FeedBackService feedBackService;

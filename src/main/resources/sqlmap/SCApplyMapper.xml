@@ -284,11 +284,11 @@
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
-        where sca.status in (2,3);
-        <if test="isHandle != null">
+        where sca.status in (2,3)
+        <if test="isHandle == 0">
             and sca.order_op_user_id is null
         </if>
-        <if test="isHandle == null">
+        <if test="isHandle == 1">
             and sca.order_op_user_id is not null
         </if>
         GROUP BY sca.id

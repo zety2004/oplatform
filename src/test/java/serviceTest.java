@@ -27,6 +27,8 @@ public class serviceTest extends AbstractTestCase {
     SCApplyService scApplyService;
     @Autowired
     SStudentService sStudentService;
+    @Autowired
+    FeedBackService feedBackService;
 
     @Test
     public void loginTest() {
@@ -59,17 +61,29 @@ public class serviceTest extends AbstractTestCase {
 
     @Test
     public void queryMapByWeekType() {
-        List<Map<String, String>> result = sSyllabusService.queryMapByWeekType(1,1);
+        List<Map<String, String>> result = sSyllabusService.queryMapByWeekType(1, 1);
     }
 
     @Test
     public void queryCurriculumApply() {
         PageTableForm<CurriculumApplyVo> pageTableForm = scApplyService.queryCurriculumApply(1, null, 1, 10);
     }
+
     @Test
     public void queryStudent() {
-         sStudentService.queryStudentByClassId("", 24);
+        sStudentService.queryStudentByClassId("", 24);
     }
 
+    @Test
+    public void selectFeedBack() {
+
+        Map<String,String> temp = feedBackService.selectFeedBack(1, "hklk_school_admin");
+    }
+
+    @Test
+    public void queryCurriculumOrder() {
+
+        scApplyService.queryCurriculumOrder(null, 1, 10);
+    }
 
 }
