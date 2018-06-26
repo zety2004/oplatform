@@ -112,7 +112,7 @@
 
     <select id="queryFeedBackList" resultType="map" parameterType="java.lang.Integer">
         select
-        id, category, content, for_table as tableName, create_time as createTime
+        id, category, content, for_table as tableName, create_time as createTime,sign
         from hklk_feedback
         where 1=1
         <if test="_parameter != null">
