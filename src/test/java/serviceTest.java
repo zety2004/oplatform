@@ -78,7 +78,7 @@ public class serviceTest extends AbstractTestCase {
     @Test
     public void selectFeedBack() {
 
-        PageTableForm<Map<String, Object>> queryFeedBackList = feedBackService.queryFeedBackList(1, 10);
+        PageTableForm<Map<String, Object>> queryFeedBackList = feedBackService.queryFeedBackList(0, 1, 10);
     }
 
     @Test

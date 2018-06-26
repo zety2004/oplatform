@@ -27,19 +27,24 @@ public class FeedBackServiceImpl implements FeedBackService {
     }
 
     @Override
-    public PageTableForm<Map<String, Object>> queryFeedBackList(Integer pageNum, Integer pageSize) {
+    public PageTableForm<Map<String, Object>> queryFeedBackList(Integer sign, Integer pageNum, Integer pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
-        feedBackMapper.queryFeedBackList();
+        feedBackMapper.queryFeedBackList(sign);
         PageTableForm<Map<String, Object>> pageTableForm = new PageTableForm(page);
 
         for (Map<String, Object> obj : pageTableForm.getObjList()) {
             Map<String, String> temp = selectFeedBack((Integer) obj.get("id"), (String) obj.get("tableName"));
-            if(temp!=null){
+            if (temp != null) {
                 obj.remove("tableName");
                 obj.putAll(temp);
             }
         }
         return pageTableForm;
+    }
+
+    @Override
+    public int updateByPrimaryKeySelective(FeedBack record) {
+        return feedBackMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

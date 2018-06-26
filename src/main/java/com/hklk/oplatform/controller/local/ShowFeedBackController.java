@@ -1,6 +1,7 @@
 package com.hklk.oplatform.controller.local;
 
 import com.hklk.oplatform.controller.BaseController;
+import com.hklk.oplatform.entity.table.FeedBack;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.FeedBackService;
@@ -25,9 +26,20 @@ public class ShowFeedBackController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/queryFeedBack")
-    public String queryFeedBack(int pageNum, HttpServletRequest request,
+    public String queryFeedBack(Integer sign, int pageNum, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {
-        PageTableForm<Map<String, Object>> pageTableForm = feedBackService.queryFeedBackList(pageNum, pageSize);
+        PageTableForm<Map<String, Object>> pageTableForm = feedBackService.queryFeedBackList(sign, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
+    }
+
+    @ResponseBody
+    @RequestMapping("/updateFeedBackSign")
+    public String updateFeedBackSign(Integer sign, Integer id, int pageNum, HttpServletRequest request,
+                                     HttpServletResponse response, HttpSession session) {
+        FeedBack feedBack = new FeedBack();
+        feedBack.setId(id);
+        feedBack.setSign(sign);
+        feedBackService.updateByPrimaryKeySelective(feedBack);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 }

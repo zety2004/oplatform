@@ -18,7 +18,7 @@ public interface FeedBackMapper {
 
     int updateByPrimaryKey(FeedBack record);
 
-    List<Map<String,String>> queryFeedBackList();
+    List<Map<String,String>> queryFeedBackList(Integer sign);
 
     Map<String ,String> selectFeedBack(Map<String, Object> params);
 }

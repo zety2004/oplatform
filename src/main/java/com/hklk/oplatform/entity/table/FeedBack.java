@@ -16,6 +16,8 @@ public class FeedBack implements Serializable {
 
     private Date createTime;
 
+    private Integer sign;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -64,5 +66,13 @@ public class FeedBack implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getSign() {
+        return sign;
+    }
+
+    public void setSign(Integer sign) {
+        this.sign = sign;
     }
 }

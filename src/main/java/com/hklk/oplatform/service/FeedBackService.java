@@ -10,7 +10,9 @@ public interface FeedBackService {
 
     int insertSelective(FeedBack record);
 
-    PageTableForm<Map<String, Object>> queryFeedBackList(Integer pageNum,Integer pageSize);
+    int updateByPrimaryKeySelective(FeedBack record);
+
+    PageTableForm<Map<String, Object>> queryFeedBackList(Integer sign,Integer pageNum,Integer pageSize);
 
     Map<String, String> selectFeedBack(Integer id,String tableName);
 }
