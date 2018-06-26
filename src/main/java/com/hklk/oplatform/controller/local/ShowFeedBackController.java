@@ -34,7 +34,7 @@ public class ShowFeedBackController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/updateFeedBackSign")
-    public String updateFeedBackSign(Integer sign, Integer id, int pageNum, HttpServletRequest request,
+    public String updateFeedBackSign(Integer sign, Integer id, HttpServletRequest request,
                                      HttpServletResponse response, HttpSession session) {
         FeedBack feedBack = new FeedBack();
         feedBack.setId(id);
