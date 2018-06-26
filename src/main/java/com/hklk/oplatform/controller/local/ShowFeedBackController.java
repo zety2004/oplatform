@@ -2,6 +2,7 @@ package com.hklk.oplatform.controller.local;
 
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.FeedBackService;
 import com.hklk.oplatform.util.StatusCode;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
-@SchoolLoginRepository
+@LocalLoginRepository
 @RequestMapping("/feedBack")
 @Controller
 public class ShowFeedBackController extends BaseController {
