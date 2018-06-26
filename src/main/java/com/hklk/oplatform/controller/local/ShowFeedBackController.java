@@ -26,8 +26,8 @@ public class ShowFeedBackController extends BaseController {
     @ResponseBody
     @RequestMapping("/queryFeedBack")
     public String queryFeedBack(int pageNum, HttpServletRequest request,
-                              HttpServletResponse response, HttpSession session) {
-        PageTableForm<Map<String, Object>> pageTableForm = feedBackService.queryFeedBackList(pageNum,pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+                                HttpServletResponse response, HttpSession session) {
+        PageTableForm<Map<String, Object>> pageTableForm = feedBackService.queryFeedBackList(pageNum, pageSize);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
     }
 }
