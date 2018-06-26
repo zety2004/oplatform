@@ -78,13 +78,13 @@ public class serviceTest extends AbstractTestCase {
     @Test
     public void selectFeedBack() {
 
-        Map<String,String> temp = feedBackService.selectFeedBack(1, "hklk_school_admin");
+        PageTableForm<Map<String, Object>> queryFeedBackList = feedBackService.queryFeedBackList(1, 10);
     }
 
     @Test
     public void queryCurriculumOrder() {
 
-        //scApplyService.updateByPrimaryKeySelective("",0, 1, 10);
+        scApplyService.queryStudentBySCAId(17);
     }
 
 }

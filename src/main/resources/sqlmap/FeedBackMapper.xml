@@ -108,13 +108,22 @@
 
     <select id="queryFeedBackList" resultType="map">
         select
-        <include refid="Base_Column_List"/>
+        id, category, content, for_table as tableName, create_time as createTime
         from hklk_feedback
     </select>
 
     <select id="selectFeedBack" resultType="map" parameterType="map">
         select
-        t.nickName
+        t.nickname
+        <if test='tableName == "hklk_school_admin"'>
+            ,'学校管理' as birth ,account as phone
+        </if>
+        <if test='tableName == "hklk_school_student"'>
+            ,'家长' as birth ,parent_phone as phone
+        </if>
+        <if test='tableName == "hklk_school_teacher"'>
+            ,'老师' as birth ,phone
+        </if>
         from hklk_feedback f left join ${tableName} t on f.feedback_user = t.id where f.id = #{id}
     </select>
 
