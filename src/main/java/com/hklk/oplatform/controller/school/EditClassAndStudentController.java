@@ -167,7 +167,7 @@ public class EditClassAndStudentController extends BaseController {
                     importStudentVo.setReason("缺少关键字段，请检查后重新导入");
                     errorInsert.add(importStudentVo);
                     index++;
-                    break;
+                    continue;
                 }
                 SStudent temp = sStudentService.selectBySNumForValidate(schoolId, sStudent.getsNum());
                 if (sStudent.getId() == null && temp != null) {
@@ -190,7 +190,7 @@ public class EditClassAndStudentController extends BaseController {
 
                 return ToolUtil.buildResultStr(StatusCode.IMPORTERROR_STUDENT, StatusCode.getStatusMsg(StatusCode.IMPORTERROR_STUDENT), result);
             } else {
-                return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+                return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), sStudents.size());
             }
         } catch (Exception e) {
             e.printStackTrace();
