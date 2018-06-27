@@ -27,7 +27,7 @@ public class FeedBackController extends BaseController {
     public String addFeedBack(String content, Integer category, HttpServletRequest request,
                               HttpServletResponse response, HttpSession session) {
         FeedBack feedBack = new FeedBack();
-        feedBack.setForTable("hklk_School_admin");
+        feedBack.setForTable("hklk_school_admin");
         feedBack.setFeedbackUser(getLoginSchool(request).getSchoolAdminId());
         feedBack.setContent(content);
         feedBack.setCategory(category);
