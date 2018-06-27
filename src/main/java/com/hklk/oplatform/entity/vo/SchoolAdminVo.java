@@ -19,6 +19,10 @@ public class SchoolAdminVo implements Serializable {
 
     private Integer schoolStatus;
 
+    private String schoolName;
+    
+    private String schoolLogo;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -83,5 +87,21 @@ public class SchoolAdminVo implements Serializable {
 
     public void setSchoolStatus(Integer schoolStatus) {
         this.schoolStatus = schoolStatus;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public String getSchoolLogo() {
+        return schoolLogo;
+    }
+
+    public void setSchoolLogo(String schoolLogo) {
+        this.schoolLogo = schoolLogo;
     }
 }

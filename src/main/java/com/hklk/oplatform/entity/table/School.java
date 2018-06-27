@@ -16,7 +16,8 @@ public class School implements Serializable {
 
     private String schoolNum;
 
-    private static final long serialVersionUID = 1L;
+    private String schoolLogo;
+
 
     public Integer getId() {
         return id;
@@ -64,5 +65,13 @@ public class School implements Serializable {
 
     public void setSchoolNum(String schoolNum) {
         this.schoolNum = schoolNum;
+    }
+
+    public String getSchoolLogo() {
+        return schoolLogo;
+    }
+
+    public void setSchoolLogo(String schoolLogo) {
+        this.schoolLogo = schoolLogo;
     }
 }

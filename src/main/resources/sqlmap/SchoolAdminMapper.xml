@@ -30,10 +30,12 @@
         <result column="account" property="account" jdbcType="VARCHAR"/>
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
         <result column="school_status" property="schoolStatus" jdbcType="INTEGER"/>
+        <result column="schoolName" property="schoolName" jdbcType="VARCHAR"/>
+        <result column="schoolLogo" property="schoolLogo" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="loginSchool" resultMap="BaseResultVoMap" parameterType="map">
-        select a.*,s.`status` as school_status from hklk_school_admin a left join hklk_school s on a.school_id = s.id
+        select a.*,s.`status` as school_status,s.name as schoolName,s.school_logo as schoolLogo from hklk_school_admin a left join hklk_school s on a.school_id = s.id
         where account = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
     </select>
 

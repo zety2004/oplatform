@@ -8,10 +8,11 @@
         <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="school_num" property="schoolNum" jdbcType="VARCHAR"/>
+        <result column="school_logo" property="schoolLogo" jdbcType="VARCHAR"/>
 
     </resultMap>
     <sql id="Base_Column_List">
-        id, name, create_time, remarks, status,school_num
+        id, name, create_time, remarks, status,school_num,school_logo
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -25,9 +26,9 @@
     </delete>
     <insert id="insert" parameterType="com.hklk.oplatform.entity.table.School">
         insert into hklk_school (id, name, create_time,
-          remarks, status,school_num)
+          remarks, status,school_num,school_logo)
         values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-          #{remarks,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{schoolNum,jdbcType=VARCHAR})
+          #{remarks,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{schoolNum,jdbcType=VARCHAR}, #{schoolLogo,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.School">
         insert into hklk_school
@@ -50,6 +51,9 @@
             <if test="schoolNum != null">
                 school_num,
             </if>
+            <if test="schoolLogo != null">
+                school_logo,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -69,6 +73,9 @@
             </if>
             <if test="schoolNum != null">
                 #{schoolNum,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolLogo != null">
+                #{schoolLogo,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -90,6 +97,9 @@
             <if test="schoolNum != null">
                 school_num = #{schoolNum,jdbcType=VARCHAR},
             </if>
+            <if test="schoolLogo != null">
+                school_logo = #{schoolLogo,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -100,7 +110,8 @@
           name = #{name,jdbcType=VARCHAR},
           remarks = #{remarks,jdbcType=VARCHAR},
           status = #{status,jdbcType=INTEGER},
-          school_num = #{schoolNum,jdbcType=VARCHAR}
+          school_num = #{schoolNum,jdbcType=VARCHAR},
+          school_logo = #{schoolLogo,jdbcType=VARCHAR}
         where id = #{id,jdbcType=INTEGER}
   </update>
 

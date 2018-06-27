@@ -37,11 +37,13 @@ public class LoginSchoolController extends BaseController {
                               HttpServletResponse response, HttpSession session) {
         SchoolAdminVo schoolAdmin = schoolAdminService.loginSchool(account, pwd);
         if (schoolAdmin != null && schoolAdmin.getStatus() == 1 && schoolAdmin.getSchoolStatus() == 1) {
-            LoginSchool loginSchool = new LoginSchool(schoolAdmin.getId(), schoolAdmin.getAccount(), schoolAdmin.getNickname(), "", schoolAdmin.getSchoolId());
+            LoginSchool loginSchool = new LoginSchool(schoolAdmin.getId(), schoolAdmin.getAccount(), schoolAdmin.getNickname(), "", schoolAdmin.getSchoolId(), schoolAdmin.getSchoolName(), schoolAdmin.getSchoolLogo());
             String token = createToken(loginSchool);
             Map<String, String> result = new HashMap<>();
             result.put("token", token);
             result.put("nickName", schoolAdmin.getNickname());
+            result.put("schoolName", schoolAdmin.getSchoolName());
+            result.put("schoolLogo", schoolAdmin.getSchoolLogo());
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
         } else if (schoolAdmin != null && schoolAdmin.getSchoolStatus() != 1) {
             return ToolUtil.buildResultStr(StatusCode.SCHOOL_STATUS, StatusCode.getStatusMsg(StatusCode.SCHOOL_STATUS));

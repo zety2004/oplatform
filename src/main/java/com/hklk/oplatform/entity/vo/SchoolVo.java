@@ -18,7 +18,9 @@ public class SchoolVo implements Serializable {
 
     private Integer status;
 
-    private String shoolNum;
+    private String schoolNum;
+
+    private String schoolLogo;
 
     private List<SchoolAdmin> list;
 
@@ -28,7 +30,7 @@ public class SchoolVo implements Serializable {
         this.createTime = school.getCreateTime();
         this.remarks = school.getRemarks();
         this.status = school.getStatus();
-        this.shoolNum = school.getSchoolNum();
+        this.schoolNum = school.getSchoolNum();
         this.list = list;
     }
 
@@ -74,11 +76,27 @@ public class SchoolVo implements Serializable {
         this.status = status;
     }
 
-    public String getShoolNum() {
-        return shoolNum;
+    public String getSchoolNum() {
+        return schoolNum;
     }
 
-    public void setShoolNum(String shoolNum) {
-        this.shoolNum = shoolNum;
+    public void setSchoolNum(String schoolNum) {
+        this.schoolNum = schoolNum;
+    }
+
+    public String getSchoolLogo() {
+        return schoolLogo;
+    }
+
+    public void setSchoolLogo(String schoolLogo) {
+        this.schoolLogo = schoolLogo;
+    }
+
+    public List<SchoolAdmin> getList() {
+        return list;
+    }
+
+    public void setList(List<SchoolAdmin> list) {
+        this.list = list;
     }
 }
