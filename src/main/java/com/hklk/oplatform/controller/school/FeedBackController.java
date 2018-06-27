@@ -34,5 +34,4 @@ public class FeedBackController extends BaseController {
         feedBackService.insertSelective(feedBack);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
-
 }

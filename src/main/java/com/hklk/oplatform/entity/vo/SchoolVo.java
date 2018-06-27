@@ -31,6 +31,7 @@ public class SchoolVo implements Serializable {
         this.remarks = school.getRemarks();
         this.status = school.getStatus();
         this.schoolNum = school.getSchoolNum();
+        this.schoolLogo = school.getSchoolLogo();
         this.list = list;
     }
 
