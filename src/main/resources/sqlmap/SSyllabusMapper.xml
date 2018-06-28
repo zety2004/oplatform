@@ -194,7 +194,7 @@
         4 /*已结束*/
         END AS applyStatus,
         ]]>
-        (select count(tss.id) from hklk_school_syllabus tss where tss.school_id=1 and tss.sca_id = sca.id) as weeklyNum
+        (select count(tss.id) from hklk_school_syllabus tss where tss.school_id=ss.school_id and tss.sca_id = sca.id) as weeklyNum
         FROM
         hklk_school_syllabus ss
         LEFT JOIN hklk_school_curriculum_apply sca ON ss.sca_id = sca.id
