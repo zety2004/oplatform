@@ -183,7 +183,7 @@
 
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
         select sca.id,CONCAT(st.nickname,'/',st.phone) as apply_person,
-        c.`name` as apply_curriculum, SUM(cs.num*cs.unit_price) as total_price,
+        c.`name` as apply_curriculum, IFNULL(SUM(cs.num*cs.unit_price),0) as total_price,
         c.grade,c.class_hours
         ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,sca.end_of_select_time,sca.curr_start_time
         from hklk_school_curriculum_apply sca
