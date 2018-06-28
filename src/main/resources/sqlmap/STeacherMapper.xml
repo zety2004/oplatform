@@ -141,7 +141,7 @@
         from hklk_school_teacher
         where school_id = #{schoolId,jdbcType=INTEGER}
         <if test="param != null">
-            and nickname like CONCAT('%',#{param}, '%') or phone like CONCAT('%',#{param}, '%')
+            and (nickname like CONCAT('%',#{param}, '%') or phone like CONCAT('%',#{param}, '%'))
         </if>
         order by id desc
     </select>
