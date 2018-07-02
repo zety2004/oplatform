@@ -183,14 +183,14 @@ public class EditClassAndStudentController extends BaseController {
                     sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
                 }
             }
-            if (index > 0) {
-                Map<String, Object> result = new HashMap<>();
-                result.put("total", sStudents.size());
-                result.put("failList", errorInsert);
 
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", sStudents.size());
+            result.put("failList", errorInsert);
+            if (index > 0) {
                 return ToolUtil.buildResultStr(StatusCode.IMPORTERROR_STUDENT, StatusCode.getStatusMsg(StatusCode.IMPORTERROR_STUDENT), result);
             } else {
-                return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), sStudents.size());
+                return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
             }
         } catch (Exception e) {
             e.printStackTrace();

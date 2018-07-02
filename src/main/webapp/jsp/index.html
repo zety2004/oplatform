@@ -9,7 +9,19 @@
 
 </head>
 <script>
-    var data = {'username': "test1", 'password': 'hklk123456', 'pageNum': 1}
+    var data = {
+        "schoolName": "测试学校",
+        "principalName": "测试校长",
+        "principalPhone": "测试校长电话",
+        "chooseType": "2,3",
+        "tempMeetingDetails": [
+            {
+                "typeId": 1,
+                "personLiable": "测试负责人",
+                "phone": "负责人电话"
+            }
+        ]
+    }
 
     function setCookie(name, value) {
         var Days = 30;
@@ -20,15 +32,15 @@
 
     var token;
     $.ajax({
-        url: "loginUser/login",
+        url: "http://192.168.0.130:8082/meeting/addRecord",
         type: 'POST',
         traditional: true,
-        data: data,
+        data: JSON.stringify(data),
         dataType: "json",
         success: function (data) {
             console.log(data.resultData);
             token = data.resultData;
-            setCookie("token", data.resultData);
+            //setCookie("token", data.resultData);
             $('body').append('<td>' + JSON.stringify(data) + '</td>')
         },
         error: function (returndata) {

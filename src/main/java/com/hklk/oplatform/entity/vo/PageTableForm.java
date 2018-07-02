@@ -10,7 +10,7 @@ public class PageTableForm<T> {
     private int beginIndex;
     private int endIndex;
     private long pageCount;
-    private long totleCount;
+    private long totalCount;
     private List<T> objList;
 
     public PageTableForm(Page<T> page) {
@@ -19,7 +19,7 @@ public class PageTableForm<T> {
         this.beginIndex = page.getStartRow();
         this.endIndex = page.getEndRow();
         this.pageCount = page.getPages();
-        this.totleCount = page.getTotal();
+        this.totalCount = page.getTotal();
         this.objList = page.getResult();
     }
 
@@ -29,7 +29,7 @@ public class PageTableForm<T> {
         this.beginIndex = page.getStartRow();
         this.endIndex = page.getEndRow();
         this.pageCount = page.getPages();
-        this.totleCount = page.getTotal();
+        this.totalCount = page.getTotal();
         this.objList = list;
     }
 
@@ -73,12 +73,12 @@ public class PageTableForm<T> {
         this.pageCount = pageCount;
     }
 
-    public long getTotleCount() {
-        return totleCount;
+    public long getTotalCount() {
+        return totalCount;
     }
 
-    public void setTotleCount(long totleCount) {
-        this.totleCount = totleCount;
+    public void setTotalCount(long totalCount) {
+        this.totalCount = totalCount;
     }
 
     public List<T> getObjList() {
