@@ -9,7 +9,7 @@
 
 </head>
 <script>
-    var data = {'account': "18745214598", 'pwd': '123456', 'pageNum': 1}
+    var data = {'account': "firstName", 'pwd': '12345678', 'pageNum': 1}
 
     function setCookie(name, value) {
         var Days = 30;
@@ -23,7 +23,7 @@
 
     var token;
     $.ajax({
-        url: "loginTeacher/login",
+        url: "loginSchool/login",
         type: 'POST',
         traditional: true,
         data: data,

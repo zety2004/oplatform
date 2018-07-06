@@ -32,6 +32,8 @@ public class CurriculumApplyVo implements Serializable {
 
     private Date currStartTime;
 
+    private Integer isFineQuality;
+
     private static final long serialVersionUID = 1L;
 
 
@@ -145,5 +147,13 @@ public class CurriculumApplyVo implements Serializable {
 
     public void setCurrStartTime(Date currStartTime) {
         this.currStartTime = currStartTime;
+    }
+
+    public Integer getIsFineQuality() {
+        return isFineQuality;
+    }
+
+    public void setIsFineQuality(Integer isFineQuality) {
+        this.isFineQuality = isFineQuality;
     }
 }

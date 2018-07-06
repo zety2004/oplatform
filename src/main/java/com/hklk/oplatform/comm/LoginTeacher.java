@@ -16,7 +16,10 @@ public class LoginTeacher implements Serializable {
 
     private Integer schoolId;
 
+    private String schoolName;
+
     private String schoolLogo;
+
     private String headIco;
 
     private String rolePage;
@@ -24,13 +27,14 @@ public class LoginTeacher implements Serializable {
     public LoginTeacher() {
     }
 
-    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId, String schoolLogo, String headIco) {
+    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId,String schoolName, String schoolLogo, String headIco) {
         super();
         this.teacherId = teacherId;
         this.account = account;
         this.nickName = nickName;
         this.rolePage = rolePage;
         this.schoolId = schoolId;
+        this.schoolName = schoolName;
         this.schoolLogo = schoolLogo;
         this.headIco = headIco;
     }
@@ -106,5 +110,13 @@ public class LoginTeacher implements Serializable {
 
     public void setHeadIco(String headIco) {
         this.headIco = headIco;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 }

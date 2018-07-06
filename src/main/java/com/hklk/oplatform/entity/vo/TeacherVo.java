@@ -15,6 +15,8 @@ public class TeacherVo implements Serializable {
 
     private Integer schoolId;
 
+    private String schoolName;
+
     private Integer schoolStatus;
 
     private String headIco;
@@ -95,5 +97,13 @@ public class TeacherVo implements Serializable {
 
     public void setSchoolLogo(String schoolLogo) {
         this.schoolLogo = schoolLogo;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 }

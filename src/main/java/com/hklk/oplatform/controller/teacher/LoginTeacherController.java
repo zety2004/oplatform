@@ -57,13 +57,14 @@ public class LoginTeacherController extends BaseController {
                                HttpServletResponse response, HttpSession session) {
         TeacherVo teacherVo = sTeacherService.loginTeacher(account, pwd);
         if (teacherVo != null && teacherVo.getStatus() == 1 && teacherVo.getSchoolStatus() == 1) {
-            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolLogo(),teacherVo.getHeadIco());
+            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(),teacherVo.getSchoolName(), teacherVo.getSchoolLogo(),teacherVo.getHeadIco());
             String token = createToken(loginTeacher);
 
             Map<String, String> result = new HashMap<>();
             result.put("token", token);
             result.put("nickName", loginTeacher.getNickName());
             result.put("schoolLogo", loginTeacher.getSchoolLogo());
+            result.put("schoolName", loginTeacher.getSchoolName());
             result.put("headIco", loginTeacher.getHeadIco());
 
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
