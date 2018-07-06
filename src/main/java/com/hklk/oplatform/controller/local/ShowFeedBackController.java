@@ -17,6 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
+/**
+ * 用户反馈管理
+ * @author 曹良峰
+ * @since 1.0
+ */
 @LocalLoginRepository
 @RequestMapping("/feedBack")
 @Controller
@@ -24,6 +29,14 @@ public class ShowFeedBackController extends BaseController {
     @Autowired
     FeedBackService feedBackService;
 
+    /**
+     * 2018/7/4 18:04
+     * 查询用户反馈
+     * @param sign      标记
+     * @param pageNum   分页参数
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/queryFeedBack")
     public String queryFeedBack(Integer sign, int pageNum, HttpServletRequest request,
@@ -31,7 +44,14 @@ public class ShowFeedBackController extends BaseController {
         PageTableForm<Map<String, Object>> pageTableForm = feedBackService.queryFeedBackList(sign, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
     }
-
+    /**
+     * 2018/7/4 18:04
+     * 处理用户反馈
+     * @param sign  标记
+     * @param id    主键
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/updateFeedBackSign")
     public String updateFeedBackSign(Integer sign, Integer id, HttpServletRequest request,

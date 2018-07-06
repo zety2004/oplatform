@@ -9,19 +9,7 @@
 
 </head>
 <script>
-    var data = {
-        "schoolName": "测试学校",
-        "principalName": "测试校长",
-        "principalPhone": "测试校长电话",
-        "chooseType": "2,3",
-        "tempMeetingDetails": [
-            {
-                "typeId": 1,
-                "personLiable": "测试负责人",
-                "phone": "负责人电话"
-            }
-        ]
-    }
+    var data = {'account': "18745214598", 'pwd': '123456', 'pageNum': 1}
 
     function setCookie(name, value) {
         var Days = 30;
@@ -30,17 +18,20 @@
         document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
     }
 
+
+
+
     var token;
     $.ajax({
-        url: "http://192.168.0.130:8082/meeting/addRecord",
+        url: "loginTeacher/login",
         type: 'POST',
         traditional: true,
-        data: JSON.stringify(data),
+        data: data,
         dataType: "json",
         success: function (data) {
             console.log(data.resultData);
             token = data.resultData;
-            //setCookie("token", data.resultData);
+            setCookie("token", data.resultData);
             $('body').append('<td>' + JSON.stringify(data) + '</td>')
         },
         error: function (returndata) {
@@ -49,7 +40,7 @@
     })
 
     var addUser = function () {
-        var data = {'sign':0,'pageNum': 1, 'scaId': 17}
+        var data = {'sign': 0, 'pageNum': 1, 'scaId': 17}
         $.ajax({
             url: "feedBack/queryFeedBack",
             type: 'POST',
@@ -79,6 +70,6 @@
     <label>上传文件</label><input name="uploadfile" type="file"/>
     <button type="submit">提交</button>
 </form>
-<button  onclick="addUser()">测试</button>
+<button onclick="addUser()">测试</button>
 </body>
 </html>

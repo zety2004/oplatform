@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-public class SchoolLoginInterceptor implements HandlerInterceptor {
+public class SchoolLoginInterceptor extends BaseInterceptor implements HandlerInterceptor {
     @Autowired
     AuthenticationRpcService authenticationRpcService;
 
@@ -36,15 +36,6 @@ public class SchoolLoginInterceptor implements HandlerInterceptor {
         } else {
             return false;
         }
-    }
-
-    private void responseJson(HttpServletResponse response, int code, String message) throws IOException {
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpStatus.OK.value());
-        PrintWriter writer = response.getWriter();
-        writer.write(ToolUtil.buildResultStr(code, message));
-        writer.flush();
-        writer.close();
     }
 
     //Action之前执行:

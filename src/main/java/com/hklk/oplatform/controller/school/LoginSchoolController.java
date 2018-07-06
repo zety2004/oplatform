@@ -23,6 +23,12 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *  学校登陆
+ *
+ * @author 曹良峰
+ * @since 1.0
+ */
 @RequestMapping("/loginSchool")
 @Controller
 public class LoginSchoolController extends BaseController {
@@ -31,6 +37,13 @@ public class LoginSchoolController extends BaseController {
     @Resource
     private TokenManager tokenManager;
 
+    /**
+     *  学校登陆
+     * @author 曹良峰
+     * @param account   账号
+     * @param pwd       密码
+     * @return     code: 200 成功  1008 学校禁用  1000 账号禁用  1001 登陆名或密码错误
+     */
     @ResponseBody
     @RequestMapping("/login")
     public String loginSchool(@RequestParam(value = "account") String account, @RequestParam(value = "pwd") String pwd, HttpServletRequest request,
@@ -54,6 +67,14 @@ public class LoginSchoolController extends BaseController {
         }
     }
 
+    /**
+     * 2018/7/4 16:02
+     * 描述一下方法的作用
+     * @param oldPassword   旧密码
+     * @param newPassword   新密码
+     * @author 曹良峰
+     * @return code : 1011 账号不纯在  200 成功  1012 原密码错误  1006 token过期
+     */
     @ResponseBody
     @RequestMapping("/updateSchoolAdminPassword")
     public String updateSchoolAdminPassword(String oldPassword, String newPassword, HttpServletRequest request,
@@ -76,7 +97,13 @@ public class LoginSchoolController extends BaseController {
         }
     }
 
-
+    /**
+     * 2018/7/4 16:05
+     * 找回密码
+     * @param account   账号
+     * @author 曹良峰
+     * @return code ：1011 账号不存在 200 成功
+     */
     @ResponseBody
     @RequestMapping("/findAccountForSchoolAdmin")
     public String findAccountForSchoolAdmin(String account, HttpServletRequest request,
@@ -88,7 +115,13 @@ public class LoginSchoolController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }
-
+    /**
+     * 2018/7/4 16:06
+     * 修改昵称
+     * @param nickName  昵称
+     * @author 曹良峰
+     * @return code:200 成功  1006 token过期
+     */
     @ResponseBody
     @RequestMapping("/updateSchoolNickName")
     public String updateSchoolNickName(String nickName, HttpServletRequest request,
@@ -103,7 +136,13 @@ public class LoginSchoolController extends BaseController {
         schoolAdminService.updateByPrimaryKeySelective(param);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
-
+    
+    /**
+     * 2018/7/4 16:07
+     * 退出登陆
+     * @author 曹良峰
+     * @return code :200 成功
+     */
     @ResponseBody
     @RequestMapping("/loginOut")
     public String loginOut(HttpServletRequest request,

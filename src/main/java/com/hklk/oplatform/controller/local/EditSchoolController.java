@@ -19,6 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ * 管理学校
+ * @author 曹良峰
+ * @since 1.0
+ */
 @LocalLoginRepository
 @RequestMapping("/editSchool")
 @Controller
@@ -28,6 +33,14 @@ public class EditSchoolController extends BaseController {
     @Autowired
     SchoolAdminService schoolAdminService;
 
+    /**
+     * 2018/7/4 17:50
+     * 查询学校
+     * @param param     学校查询参数
+     * @param pageNum   分页参数
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/querySchool")
     public String querySchool(String param, int pageNum, HttpServletRequest request,
@@ -36,6 +49,13 @@ public class EditSchoolController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), schoolPageTableForm);
     }
 
+    /**
+     * 2018/7/4 17:52
+     * 根据学校id查询学校
+     * @param id    学校id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/selectSchoolById")
     public String selectSchoolById(int id, HttpServletRequest request,
@@ -45,6 +65,13 @@ public class EditSchoolController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), school);
     }
 
+    /**
+     * 2018/7/4 17:52
+     * 验证学校名称
+     * @param school    学校对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/validateSchoolName")
     public String validateSchoolName(School school, HttpServletRequest request,
@@ -57,6 +84,13 @@ public class EditSchoolController extends BaseController {
         }
     }
 
+    /**
+     * 2018/7/4 17:52
+     * 添加学校
+     * @param school    学校对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/addSchool")
     public String addSchool(School school, HttpServletRequest request,
@@ -70,6 +104,13 @@ public class EditSchoolController extends BaseController {
         }
     }
 
+    /**
+     * 2018/7/4 17:54
+     * 修改学校
+     * @param school
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/updateSchool")
     public String updateSchool(School school, HttpServletRequest request,
@@ -83,6 +124,13 @@ public class EditSchoolController extends BaseController {
         }
     }
 
+    /**
+     * 2018/7/4 17:54
+     * 删除学校
+     * @param id    学校id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/deleteSchool")
     public String deleteSchool(int id, HttpServletRequest request,
@@ -91,6 +139,13 @@ public class EditSchoolController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    /**
+     * 2018/7/4 17:54
+     * 查询学校管理
+     * @param schoolId 学校id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/querySchoolAdmin")
     public String querySchoolAdmin(int schoolId, HttpServletRequest request,
@@ -99,6 +154,13 @@ public class EditSchoolController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    /**
+     * 2018/7/4 17:54
+     * 根据id查询学校管理员
+     * @param id    管理员主键
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/selectSchoolAdminById")
     public String selectSchoolAdminById(int id, HttpServletRequest request,
@@ -107,6 +169,13 @@ public class EditSchoolController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), schoolAdmin);
     }
 
+    /**
+     * 2018/7/4 17:55
+     * 添加学校管理员
+     * @param schoolAdmin   管理员对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/addSchoolAdmin")
     public String addSchoolAdmin(SchoolAdmin schoolAdmin, HttpServletRequest request,
@@ -124,7 +193,13 @@ public class EditSchoolController extends BaseController {
         }
     }
 
-
+    /**
+     * 2018/7/4 17:55
+     * 修改学校管理员
+     * @param schoolAdmin   管理员对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/updateSchoolAdmin")
     public String updateSchoolAdmin(SchoolAdmin schoolAdmin, HttpServletRequest request,
@@ -137,6 +212,13 @@ public class EditSchoolController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    /**
+     * 2018/7/4 17:56
+     * 删除学校管理员
+     * @param id    管理员id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/deleteSchoolAdmin")
     public String deleteSchoolAdmin(Integer id, HttpServletRequest request,

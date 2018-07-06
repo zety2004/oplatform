@@ -23,6 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ * 运营账号管理
+ * @author 曹良峰
+ * @since 1.0
+ */
 @LocalLoginRepository
 @RequestMapping("/editUser")
 @Controller
@@ -33,6 +38,14 @@ public class EditUserController extends BaseController {
     @Autowired
     UserRoleService userRoleService;
 
+    /**
+     * 2018/7/4 17:57
+     * 查询管理员账号
+     * @param user      筛选参数
+     * @param pageNum   分页参数
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/queryUsers")
     public String queryUsers(User user, int pageNum, HttpServletRequest request,
@@ -41,6 +54,13 @@ public class EditUserController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), users);
     }
 
+    /**
+     * 2018/7/4 17:57
+     * 根据id查询管理员
+     * @param id    主键
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/selectUserById")
     public String queryUsers(int id, HttpServletRequest request,
@@ -49,7 +69,13 @@ public class EditUserController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), user);
     }
 
-
+    /**
+     * 2018/7/4 17:58
+     * 添加运营管理
+     * @param user  管理员对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/addUser")
     public String addUser(User user, HttpServletRequest request,
@@ -63,7 +89,14 @@ public class EditUserController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, StatusCode.getStatusMsg(StatusCode.ADDUSER_USERNAME_EX));
         }
     }
-
+    
+    /**
+     * 2018/7/4 17:58
+     * 更新运营信息
+     * @param user  运营对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/updateUser")
     public String updateUser(User user, HttpServletRequest request,
@@ -77,6 +110,14 @@ public class EditUserController extends BaseController {
         }
     }
 
+    /**
+     * 2018/7/4 17:59
+     * 修改密码
+     * @param oldPassword   旧密码
+     * @param newPassword   新密码
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/updateUserPassword")
     public String updateUserPassword(String oldPassword, String newPassword, HttpServletRequest request,
@@ -99,6 +140,13 @@ public class EditUserController extends BaseController {
         }
     }
 
+    /**
+     * 2018/7/4 18:00
+     * 重置密码
+     * @param user  运营用户
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/resetUserPassword")
     public String resetUserPassword(User user, HttpServletRequest request,
@@ -108,7 +156,13 @@ public class EditUserController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
-
+    /**
+     * 2018/7/4 18:00
+     * 删除密码
+     * @param id    运营id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/deleteUser")
     public String deleteUser(int id, HttpServletRequest request,
@@ -117,6 +171,13 @@ public class EditUserController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    /**
+     * 2018/7/4 18:01
+     * 查询运营权限
+     * @param userId    用户id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/queryUserRole")
     public String queryUserRole(Integer userId, HttpServletRequest request,
@@ -125,6 +186,13 @@ public class EditUserController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), users);
     }
 
+    /**
+     * 2018/7/4 18:01
+     * 删除用户权限
+     * @param userRoleKey  运营权限中间对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/deleteUserRole")
     public String deleteUserRole(UserRoleKey userRoleKey, HttpServletRequest request,

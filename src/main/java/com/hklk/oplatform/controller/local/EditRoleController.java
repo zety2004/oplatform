@@ -18,6 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ * 用户权限管理
+ *
+ * @author 曹良峰
+ * @since 1.0
+ */
 @LocalLoginRepository
 @RequestMapping("/editRole")
 @Controller

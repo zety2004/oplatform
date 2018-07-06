@@ -17,10 +17,11 @@
         <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
         <result column="order_op_user_id" property="orderOpUserId" jdbcType="INTEGER"/>
         <result column="order_remark" property="orderRemark" jdbcType="VARCHAR"/>
+        <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, curriculum_id, apply_time, apply_remark, teacher_id, status, operator_id, begin_of_select_time, 
-    end_of_select_time, curr_start_time, class_place, max_num,school_id
+    end_of_select_time, curr_start_time, class_place, max_num,school_id,is_fine_quality
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -160,6 +161,9 @@
             <if test="orderRemark != null">
                 order_remark = #{orderRemark,jdbcType=VARCHAR},
             </if>
+            <if test="isFineQuality != null">
+                is_fine_quality = #{isFineQuality,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -179,13 +183,14 @@
         <result column="begin_of_select_time" property="beginOfSelectTime" jdbcType="TIMESTAMP"/>
         <result column="end_of_select_time" property="endOfSelectTime" jdbcType="TIMESTAMP"/>
         <result column="curr_start_time" property="currStartTime" jdbcType="TIMESTAMP"/>
+        <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
         select sca.id,CONCAT(st.nickname,'/',st.phone) as apply_person,
         c.`name` as apply_curriculum, IFNULL(SUM(cs.num*cs.unit_price),0) as total_price,
         c.grade,c.class_hours
-        ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,sca.end_of_select_time,sca.curr_start_time
+        ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,sca.end_of_select_time,sca.curr_start_time,sca.is_fine_quality
         from hklk_school_curriculum_apply sca
         LEFT JOIN hklk_curriculum c on sca.curriculum_id = c.id
         LEFT JOIN hklk_school_teacher st on sca.teacher_id = st.id

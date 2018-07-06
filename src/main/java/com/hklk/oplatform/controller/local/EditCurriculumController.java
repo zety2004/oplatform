@@ -27,6 +27,12 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.List;
 
+/**
+ * 运营课程管理
+ *
+ * @author 曹良峰
+ * @since 1.0
+ */
 @LocalLoginRepository
 @RequestMapping("/editcm")
 @Controller
@@ -40,6 +46,14 @@ public class EditCurriculumController extends BaseController {
 
     protected int pageSize = 12;
 
+    /**
+     * 2018/7/4 17:15
+     * 查询课程列表
+     * @param curriculum    课程对象
+     * @param pageNum       分页参数
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
@@ -48,14 +62,13 @@ public class EditCurriculumController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
-/*    @ResponseBody
-    @RequestMapping("/queryCurriculumOrder")
-    public String queryCurriculumOrder(Integer isHandle, int pageNum, HttpServletRequest request,
-                                       HttpServletResponse response, HttpSession session) {
-        PageTableForm<CurriculumOrderVo> curriculumPageTableForm = scApplyService.queryCurriculumOrder(isHandle, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
-    }*/
-
+    /**
+     * 2018/7/4 17:16
+     * 查询课程详情
+     * @param id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/selectCurriculumById")
     public String selectCurriculumById(Integer id, HttpServletRequest request,
@@ -64,6 +77,13 @@ public class EditCurriculumController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 
+    /**
+     * 2018/7/4 17:17
+     * 添加课程
+     * @param curriculum 课程对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/addCurriculum")
     public String addCurriculum(Curriculum curriculum, HttpServletRequest request,
@@ -73,7 +93,7 @@ public class EditCurriculumController extends BaseController {
         curriculumService.addCurriculum(curriculum);
         Curriculum result = curriculumService.selectIdByUniqueNum(curriculum.getUniqueNum());
         System.out.println(curriculum.getUniqueNum());
-        Object returnMessage = new Object();
+        Object returnMessage;
         if (result == null || result.getId() == null) {
             returnMessage = "未找到返回记录";
         } else {
@@ -82,6 +102,13 @@ public class EditCurriculumController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), returnMessage);
     }
 
+    /**
+     * 2018/7/4 17:17
+     * 修改课程
+     * @param curriculum    课程对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/updateCurriculum")
     public String updateCurriculum(Curriculum curriculum, HttpServletRequest request,
@@ -90,6 +117,13 @@ public class EditCurriculumController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    /**
+     * 2018/7/4 17:17
+     * 上传文件
+     * @param request （uploadfile）
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @RequestMapping("/uploadCurriculumCover")
     @ResponseBody
     public String uploadCurriculumCover(MultipartHttpServletRequest request) {
@@ -110,6 +144,13 @@ public class EditCurriculumController extends BaseController {
         }
     }
 
+    /**
+     * 2018/7/4 17:18
+     * 删除课程
+     * @param id    课程id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/deleteCurriculum")
     public String deleteCurriculum(Integer id, HttpServletRequest request,
@@ -117,7 +158,13 @@ public class EditCurriculumController extends BaseController {
         curriculumService.deleteCurriculum(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
-
+    /**
+     * 2018/7/4 17:25
+     * 查询课程耗材
+     * @param curId 课程id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/queryConsumablesByCurId")
     public String queryConsumablesByCurId(Integer curId, HttpServletRequest request,
@@ -125,7 +172,13 @@ public class EditCurriculumController extends BaseController {
         List<Consumables> consumablesList = consumablesService.queryConsumablesByCurId(curId);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), consumablesList);
     }
-
+    /**
+     * 2018/7/4 17:26
+     * 添加耗材
+     * @param consumables   耗材对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/addConsumables")
     public String addConsumables(Consumables consumables, HttpServletRequest request,
@@ -134,6 +187,13 @@ public class EditCurriculumController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    /**
+     * 2018/7/4 17:26
+     * 修改耗材对象
+     * @param consumables   修改耗材对象
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/updateConsumables")
     public String updateConsumables(Consumables consumables, HttpServletRequest request,
@@ -142,6 +202,13 @@ public class EditCurriculumController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    /**
+     * 2018/7/4 17:27
+     * 删除耗材
+     * @param id    耗材id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/deleteConsumables")
     public String deleteConsumables(Integer id, HttpServletRequest request,

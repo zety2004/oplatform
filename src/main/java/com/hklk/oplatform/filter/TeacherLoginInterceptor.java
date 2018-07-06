@@ -1,10 +1,12 @@
 package com.hklk.oplatform.filter;
 
-import com.hklk.oplatform.comm.LoginUser;
+import com.hklk.oplatform.comm.LoginSchool;
 import com.hklk.oplatform.comm.TokenManager;
-import com.hklk.oplatform.filter.repo.LocalLoginRepository;
+import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
+import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
 import com.hklk.oplatform.service.AuthenticationRpcService;
 import com.hklk.oplatform.util.StatusCode;
+import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
@@ -17,7 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-public class LocalLoginInterceptor extends BaseInterceptor implements HandlerInterceptor {
+public class TeacherLoginInterceptor extends BaseInterceptor implements HandlerInterceptor {
     @Autowired
     AuthenticationRpcService authenticationRpcService;
 
@@ -30,37 +32,23 @@ public class LocalLoginInterceptor extends BaseInterceptor implements HandlerInt
         String token = getLocalToken(request);
         if (token == null) {
             return false;
-        } else if (authenticationRpcService.validate(TokenManager.userTokenKey, token, LoginUser.class)) {// 验证token是否有效
+        } else if (authenticationRpcService.validate(TokenManager.teacherTokenKey, token, LoginSchool.class)) {// 验证token是否有效
             return true;
         } else {
             return false;
         }
     }
 
-
-    private void addResponseHead(HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS");
-        response.setHeader("X-Powered-By", "3.2.1");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with,Content-Type, Access-Control-Allow-Headers, Authorization, Access-Toke");
-        String method = request.getMethod();
-        if (method.equals("OPTIONS")) {
-            response.setStatus(204);
-        }
-    }
-
-
     //Action之前执行:
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        addResponseHead(request, response);
         // 如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
-        LocalLoginRepository classAnnotation = handlerMethod.getBean().getClass().getAnnotation(LocalLoginRepository.class);
-        // 有 @LocalLoginRepository 注解，需要认证
+        TeacherLoginRepository classAnnotation = handlerMethod.getBean().getClass().getAnnotation(TeacherLoginRepository.class);
+        // 有 @TeacherLoginRepository 注解，需要认证
         if (null != classAnnotation) {
             if (!isAccessAllowed(request, response)) {
                 responseJson(response, StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));

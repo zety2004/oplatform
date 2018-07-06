@@ -19,6 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ * 运营课订单管理
+ *
+ * @author 曹良峰
+ * @since 1.0
+ */
 @LocalLoginRepository
 @RequestMapping("/editcmo")
 @Controller
@@ -28,6 +34,15 @@ public class EditCurriculumOrderController extends BaseController {
 
     protected int pageSize = 12;
 
+    /**
+     * 2018/7/4 17:28
+     * 查询订单
+     * @param queryParam    筛选条件
+     * @param isHandle      可否操作
+     * @param pageNum       分页参数
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/queryCurriculumOrder")
     public String queryCurriculumOrder(String queryParam,Integer isHandle, int pageNum, HttpServletRequest request,
@@ -36,6 +51,14 @@ public class EditCurriculumOrderController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
+    /**
+     * 2018/7/4 17:28
+     * 处理订单
+     * @param remark    订单备注
+     * @param id        订单id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/handleCurriculumOrder")
     public String handleCurriculumOrder(String remark, Integer id, HttpServletRequest request,
@@ -53,7 +76,13 @@ public class EditCurriculumOrderController extends BaseController {
         }
     }
 
-
+    /**
+     * 2018/7/4 17:29
+     * 查询订单支付情况
+     * @param scaId 订单id
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/queryOrderPlayFor")
     public String queryOrderPlayFor(Integer scaId, HttpServletRequest request,

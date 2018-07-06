@@ -23,12 +23,25 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ * 运营登陆管理
+ * @author 曹良峰
+ * @since 1.0
+ */
 @RequestMapping("/loginUser")
 @Controller
 public class LoginUserController extends BaseController {
     @Autowired
     UserService userService;
 
+    /**
+     * 2018/7/4 18:02
+     * 用户登陆
+     * @param username  用户名
+     * @param password  用户密码
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/login")
     public String loginUser(@RequestParam(value = "username", required = false) String username, @RequestParam(value = "password", required = false) String password, HttpServletRequest request,
@@ -76,6 +89,12 @@ public class LoginUserController extends BaseController {
         response.addCookie(cookie);
     }
 
+    /**
+     * 2018/7/4 18:03
+     * 退出登陆
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/loginOut")
     public String loginOut(HttpServletRequest request,

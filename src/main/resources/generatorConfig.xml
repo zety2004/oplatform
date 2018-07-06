@@ -36,7 +36,7 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 		<!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
-		<table tableName="hklk_feedback" domainObjectName="FeedBack" enableCountByExample="false"
+		<table tableName="hklk_school_teacher_message" domainObjectName="TeacherMessage" enableCountByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="fasle" selectByExampleQueryId="false">
 <!-- 			<generatedKey column="YDS_ID" sqlStatement="SELECT SEQ_DATA_STATISTICS.NEXTVAL AS YDS_ID FROM DUAL"/> -->
 		</table>

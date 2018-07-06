@@ -1,16 +1,13 @@
 package com.hklk.oplatform.controller.teacher;
 
-import com.hklk.oplatform.comm.LoginSchool;
 import com.hklk.oplatform.comm.LoginTeacher;
 import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.table.SchoolAdmin;
-import com.hklk.oplatform.entity.vo.SchoolAdminVo;
 import com.hklk.oplatform.entity.vo.TeacherVo;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
-import com.hklk.oplatform.service.AuthenticationRpcService;
 import com.hklk.oplatform.service.STeacherService;
 import com.hklk.oplatform.service.SchoolAdminService;
 import com.hklk.oplatform.util.StatusCode;
@@ -25,7 +22,16 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
+
+/**
+ *  老师登陆模块
+ *
+ * @author 曹良峰
+ * @since 1.0
+ */
 @RequestMapping("/loginTeacher")
 @Controller
 public class LoginTeacherController extends BaseController {
@@ -36,17 +42,33 @@ public class LoginTeacherController extends BaseController {
     @Autowired
     SchoolAdminService schoolAdminService;
 
+    /**
+     * 登陆
+     * 账号的登陆，登陆成功后保存token发送到前端。
+     *
+     * @param account 用户名
+     * @param pwd  密码
+     * @return {"resultCode":200,"resultMsg":"成功"}  code: 1008 学校禁用  1000 账号禁用 1001 账号或密码错误
+     * @since 1.0
+     */
     @ResponseBody
     @RequestMapping("/login")
     public String loginTeacher(@RequestParam(value = "account") String account, @RequestParam(value = "pwd") String pwd, HttpServletRequest request,
                                HttpServletResponse response, HttpSession session) {
         TeacherVo teacherVo = sTeacherService.loginTeacher(account, pwd);
         if (teacherVo != null && teacherVo.getStatus() == 1 && teacherVo.getSchoolStatus() == 1) {
-            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.gettName(), "", teacherVo.getSchoolId());
+            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolLogo(),teacherVo.getHeadIco());
             String token = createToken(loginTeacher);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), token);
+
+            Map<String, String> result = new HashMap<>();
+            result.put("token", token);
+            result.put("nickName", loginTeacher.getNickName());
+            result.put("schoolLogo", loginTeacher.getSchoolLogo());
+            result.put("headIco", loginTeacher.getHeadIco());
+
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
         } else if (teacherVo != null && teacherVo.getSchoolStatus() != 1) {
-            System.out.println("学校停用");
+            System.out.println(1);
             return ToolUtil.buildResultStr(StatusCode.SCHOOL_STATUS, StatusCode.getStatusMsg(StatusCode.SCHOOL_STATUS));
         } else if (teacherVo != null && teacherVo.getStatus() != 1) {
             return ToolUtil.buildResultStr(StatusCode.LOGIN_DISABLE, StatusCode.getStatusMsg(StatusCode.LOGIN_DISABLE));
@@ -55,6 +77,15 @@ public class LoginTeacherController extends BaseController {
         }
     }
 
+    /**
+     * 修改密码
+     *
+     *
+     * @param oldPassword 旧密码
+     * @param newPassword  新密码
+     * @return 200 成功  1012 原密码错误
+     * @since 1.0
+     */
     @ResponseBody
     @RequestMapping("/updateTeacherPassword")
     public String updateUserPassword(String oldPassword, String newPassword, HttpServletRequest request,
@@ -79,6 +110,12 @@ public class LoginTeacherController extends BaseController {
         }
     }
 
+    /**
+     * 退出登陆
+     *
+     * @return 200 成功
+     * @since 1.0
+     */
     @ResponseBody
     @RequestMapping("/loginOut")
     public String loginOut(HttpServletRequest request,
@@ -88,6 +125,14 @@ public class LoginTeacherController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
+    /**
+     * 忘记密码
+     * 返回学校管理员手机号
+     *
+     * @param account 账号
+     * @return 200 成功
+     * @since 1.0
+     */
     @ResponseBody
     @RequestMapping("/forgetPassword")
     public String forgetPassword(String account, HttpServletRequest request,

@@ -16,18 +16,23 @@ public class LoginTeacher implements Serializable {
 
     private Integer schoolId;
 
+    private String schoolLogo;
+    private String headIco;
+
     private String rolePage;
 
     public LoginTeacher() {
     }
 
-    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId) {
+    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId, String schoolLogo, String headIco) {
         super();
         this.teacherId = teacherId;
         this.account = account;
         this.nickName = nickName;
         this.rolePage = rolePage;
         this.schoolId = schoolId;
+        this.schoolLogo = schoolLogo;
+        this.headIco = headIco;
     }
 
     public Integer getTeacherId() {
@@ -85,5 +90,21 @@ public class LoginTeacher implements Serializable {
 
     public void setRolePage(String rolePage) {
         this.rolePage = rolePage;
+    }
+
+    public String getSchoolLogo() {
+        return schoolLogo;
+    }
+
+    public void setSchoolLogo(String schoolLogo) {
+        this.schoolLogo = schoolLogo;
+    }
+
+    public String getHeadIco() {
+        return headIco;
+    }
+
+    public void setHeadIco(String headIco) {
+        this.headIco = headIco;
     }
 }

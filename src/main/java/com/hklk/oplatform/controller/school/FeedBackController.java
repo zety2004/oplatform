@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ *  学校反馈接口
+ *
+ * @author 曹良峰
+ * @since 1.0
+ */
 @SchoolLoginRepository
 @RequestMapping("/feedBackForSchool")
 @Controller
@@ -22,6 +28,14 @@ public class FeedBackController extends BaseController {
     @Autowired
     FeedBackService feedBackService;
 
+    /**
+     * 2018/7/4 16:08
+     * 添加反馈信息
+     * @param content   内容
+     * @param category  类型
+     * @author 曹良峰
+     * @return code ：200 成功
+     */
     @ResponseBody
     @RequestMapping("/addFeedBack")
     public String addFeedBack(String content, Integer category, HttpServletRequest request,

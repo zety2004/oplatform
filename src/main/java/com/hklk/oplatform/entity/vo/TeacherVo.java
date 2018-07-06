@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class TeacherVo implements Serializable {
     private Integer id;
 
-    private String tName;
+    private String nickname;
 
     private String phone;
 
@@ -17,6 +17,10 @@ public class TeacherVo implements Serializable {
 
     private Integer schoolStatus;
 
+    private String headIco;
+
+    private String schoolLogo;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -25,14 +29,6 @@ public class TeacherVo implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String gettName() {
-        return tName;
-    }
-
-    public void settName(String tName) {
-        this.tName = tName;
     }
 
     public String getPhone() {
@@ -75,5 +71,29 @@ public class TeacherVo implements Serializable {
 
     public void setSchoolStatus(Integer schoolStatus) {
         this.schoolStatus = schoolStatus;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getHeadIco() {
+        return headIco;
+    }
+
+    public void setHeadIco(String headIco) {
+        this.headIco = headIco;
+    }
+
+    public String getSchoolLogo() {
+        return schoolLogo;
+    }
+
+    public void setSchoolLogo(String schoolLogo) {
+        this.schoolLogo = schoolLogo;
     }
 }

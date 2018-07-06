@@ -152,11 +152,14 @@
         <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="head_ico" property="headIco" jdbcType="VARCHAR"/>
+        <result column="school_logo" property="schoolLogo" jdbcType="VARCHAR"/>
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
         <result column="school_status" property="schoolStatus" jdbcType="INTEGER"/>
     </resultMap>
     <select id="loginTeacher" resultMap="BaseResultVoMap" parameterType="map">
-        select a.*,s.`status` as school_status from hklk_school_teacher a left join hklk_school s on a.school_id = s.id
+        select a.*,s.`status` as school_status, s.school_logo from hklk_school_teacher a left join hklk_school s on a.school_id = s.id
         where phone = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
     </select>
 
