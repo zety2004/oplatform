@@ -264,5 +264,4 @@ public class EditClassAndStudentByTeacherController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
         }
     }
-
 }
