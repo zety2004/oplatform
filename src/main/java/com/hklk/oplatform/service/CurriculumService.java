@@ -5,6 +5,8 @@ import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 
+import java.util.Map;
+
 
 public interface CurriculumService {
 
@@ -24,7 +26,7 @@ public interface CurriculumService {
      * @Param [id]
      * @Return com.hklk.oplatform.entity.vo.CurriculumVo
      **/
-    CurriculumVo selectByPrimaryKey(Integer id);
+    Map<String, Object> selectByPrimaryKey(Integer id);
 
     int addCurriculum(Curriculum curriculum);
 

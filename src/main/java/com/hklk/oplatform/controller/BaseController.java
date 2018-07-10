@@ -46,10 +46,7 @@ public abstract class BaseController {
 
     public LoginTeacher getLoginTeacher(HttpServletRequest request) {
         String token = request.getHeader("Access-Toke");
-        // LoginTeacher loginTeacher = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token);
-        LoginTeacher loginTeacher = new LoginTeacher();
-        loginTeacher.setSchoolId(1);
-        loginTeacher.setTeacherId(1);
+        LoginTeacher loginTeacher = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token,LoginTeacher.class);
         return loginTeacher;
     }
 

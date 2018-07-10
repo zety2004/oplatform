@@ -27,7 +27,7 @@ import java.util.Map;
 
 
 /**
- *  老师登陆模块
+ * 老师登陆模块
  *
  * @author 曹良峰
  * @since 1.0
@@ -47,7 +47,7 @@ public class LoginTeacherController extends BaseController {
      * 账号的登陆，登陆成功后保存token发送到前端。
      *
      * @param account 用户名
-     * @param pwd  密码
+     * @param pwd     密码
      * @return {"resultCode":200,"resultMsg":"成功"}  code: 1008 学校禁用  1000 账号禁用 1001 账号或密码错误
      * @since 1.0
      */
@@ -57,7 +57,7 @@ public class LoginTeacherController extends BaseController {
                                HttpServletResponse response, HttpSession session) {
         TeacherVo teacherVo = sTeacherService.loginTeacher(account, pwd);
         if (teacherVo != null && teacherVo.getStatus() == 1 && teacherVo.getSchoolStatus() == 1) {
-            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(),teacherVo.getSchoolName(), teacherVo.getSchoolLogo(),teacherVo.getHeadIco());
+            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolName(), teacherVo.getSchoolLogo(), teacherVo.getHeadIco(), teacherVo.getRemark());
             String token = createToken(loginTeacher);
 
             Map<String, String> result = new HashMap<>();
@@ -65,6 +65,7 @@ public class LoginTeacherController extends BaseController {
             result.put("nickName", loginTeacher.getNickName());
             result.put("schoolLogo", loginTeacher.getSchoolLogo());
             result.put("schoolName", loginTeacher.getSchoolName());
+            result.put("remark", loginTeacher.getRemark());
             result.put("headIco", loginTeacher.getHeadIco());
 
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
@@ -81,16 +82,15 @@ public class LoginTeacherController extends BaseController {
     /**
      * 修改密码
      *
-     *
      * @param oldPassword 旧密码
-     * @param newPassword  新密码
+     * @param newPassword 新密码
      * @return 200 成功  1012 原密码错误
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/updateTeacherPassword")
-    public String updateUserPassword(String oldPassword, String newPassword, HttpServletRequest request,
-                                     HttpServletResponse response, HttpSession session) {
+    public String updateTeacherPassword(String oldPassword, String newPassword, HttpServletRequest request,
+                                        HttpServletResponse response, HttpSession session) {
         LoginTeacher loginTeacher = getLoginTeacher(request);
         if (loginTeacher == null) {
             return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
@@ -109,6 +109,32 @@ public class LoginTeacherController extends BaseController {
         } else {
             return ToolUtil.buildResultStr(StatusCode.PASSWORD_ERROR, StatusCode.getStatusMsg(StatusCode.PASSWORD_ERROR));
         }
+    }
+
+    /**
+     * 2018/7/9 18:56
+     * 修改老师个人信息
+     * @param headIco      头像
+     * @param nickName     昵称
+     * @param remark       备注
+     * @author 曹良峰
+     * @return java.lang.String
+     */
+    @ResponseBody
+    @RequestMapping("/updateTeacher")
+    public String updateUserPassword(String headIco,String nickName,String remark, HttpServletRequest request,
+                                     HttpServletResponse response, HttpSession session) {
+        LoginTeacher loginTeacher = getLoginTeacher(request);
+        if (loginTeacher == null) {
+            return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
+        }
+        STeacher param = new STeacher();
+        param.setId(loginTeacher.getTeacherId());
+        param.setHeadIco(headIco);
+        param.settName(nickName);
+        param.setRemark(remark);
+        sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
     /**

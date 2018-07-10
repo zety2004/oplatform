@@ -20,19 +20,18 @@
         <result column="des" property="des" jdbcType="LONGVARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, cover, name, subject, grade, learning_style, class_hours, collection_num, author, 
-    enclosure, enc_des, status,unique_num
+    id, cover, name, subject, grade, learning_style , class_hours , collection_num , author,
+    enclosure, enc_des , status,unique_num
     </sql>
     <sql id="Blob_Column_List">
     des
   </sql>
-    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+    <select id="selectByPrimaryKey" resultType="map" parameterType="java.lang.Integer">
         select
-        <include refid="Base_Column_List"/>
-        ,
-        <include refid="Blob_Column_List"/>
-        from hklk_curriculum
-        where id = #{id,jdbcType=INTEGER}
+        cc.id, cc.cover, cc.name, cc.subject, cc.grade, cc.learning_style learningStyle, cc.class_hours classHours, cc.collection_num collectionNum, cc.author,
+        cc.enclosure, cc.enc_des encDes, cc.status, cc.unique_num uniqueNum, cc.des, IFNULL(SUM(cu.num*cu.unit_price),0) as totalPrice
+        from hklk_curriculum cc left join hklk_consumables cu on cc.id = cu.curriculum_id
+        where cc.id = #{id,jdbcType=INTEGER} group by cc.id
     </select>
 
 

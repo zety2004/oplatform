@@ -12,7 +12,7 @@ public interface SClassService {
 
     int insertOrUpdateByPrimaryKeySelective(SClass sClass);
 
-    PageTableForm<SClassVo> queryClasses(String param,Integer schoolId, int pageNum, int pageSize);
+    PageTableForm<SClassVo> queryClasses(String param,Integer schoolId, Integer teacherId, int pageNum, int pageSize);
 
     SClass selectByNameForValidate(String name,Integer schoolId);
 

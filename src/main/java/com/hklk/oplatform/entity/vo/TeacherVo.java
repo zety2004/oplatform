@@ -23,6 +23,8 @@ public class TeacherVo implements Serializable {
 
     private String schoolLogo;
 
+    private String remark;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -105,5 +107,13 @@ public class TeacherVo implements Serializable {
 
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

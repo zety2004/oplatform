@@ -60,7 +60,7 @@ public class EditClassAndStudentController extends BaseController {
     @RequestMapping("/queryClasses")
     public String queryClasses(String param, int pageNum, HttpServletRequest request,
                                HttpServletResponse response, HttpSession session) {
-        PageTableForm<SClassVo> pageTableForm = sClassService.queryClasses(param, getLoginSchool(request).getSchoolId(), pageNum, pageSize);
+        PageTableForm<SClassVo> pageTableForm = sClassService.queryClasses(param, getLoginSchool(request).getSchoolId(),null, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
     }
 

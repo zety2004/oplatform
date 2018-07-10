@@ -31,9 +31,12 @@ public class SCApply implements Serializable {
     private Integer schoolId;
 
     private Integer orderOpUserId;
+
     private Integer isFineQuality;
 
     private String orderRemark;
+
+    private String grade;
 
     private static final long serialVersionUID = 1L;
 
@@ -163,5 +166,13 @@ public class SCApply implements Serializable {
 
     public void setIsFineQuality(Integer isFineQuality) {
         this.isFineQuality = isFineQuality;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }

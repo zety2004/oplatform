@@ -16,6 +16,8 @@ public interface SCApplyMapper {
     int insertSelective(SCApply record);
 
     SCApply selectByPrimaryKey(Integer id);
+    
+    SCApply selectByTeacherId(Map<String, Object> param);
 
     int updateByPrimaryKeySelective(SCApply record);
 

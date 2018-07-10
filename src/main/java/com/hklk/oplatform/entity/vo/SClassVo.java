@@ -16,6 +16,8 @@ public class SClassVo implements Serializable {
 
     private Integer createBy;
 
+    private Integer isOperable;
+
     private Date createTime;
 
     private Integer studentNum;
@@ -84,5 +86,13 @@ public class SClassVo implements Serializable {
 
     public void setStudentNum(Integer studentNum) {
         this.studentNum = studentNum;
+    }
+
+    public Integer getIsOperable() {
+        return isOperable;
+    }
+
+    public void setIsOperable(Integer isOperable) {
+        this.isOperable = isOperable;
     }
 }

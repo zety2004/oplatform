@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -25,7 +26,7 @@ public class CurriculumServiceImpl implements CurriculumService {
     ConsumablesMapper consumablesMapper;
 
     @Override
-    public PageTableForm<CurriculumForListVo> queryCurriculums(Curriculum curriculum,int pageNum, int pageSize) {
+    public PageTableForm<CurriculumForListVo> queryCurriculums(Curriculum curriculum, int pageNum, int pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         curriculumMapper.queryCurriculums(curriculum);
         PageTableForm<CurriculumForListVo> pageTableForm = new PageTableForm(page);
@@ -33,10 +34,11 @@ public class CurriculumServiceImpl implements CurriculumService {
     }
 
     @Override
-    public CurriculumVo selectByPrimaryKey(Integer id) {
-        Curriculum curriculum = curriculumMapper.selectByPrimaryKey(id);
-        List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId(curriculum.getId());
-        return new CurriculumVo(curriculum, consumables);
+    public Map<String, Object> selectByPrimaryKey(Integer id) {
+        Map<String, Object> curriculum = curriculumMapper.selectByPrimaryKey(id);
+        List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId((Integer) curriculum.get("id"));
+        curriculum.put("consumables",consumables);
+        return curriculum;
     }
 
     @Override

@@ -21,4 +21,6 @@ public interface SStudentMapper {
     List<SStudent> queryStudentByClassId(Map<String, Object> params);
 
     SStudent selectBySNumForValidate(Map<String, Object> map);
+
+    List<Map<String,Object>> queryStudentByPhoneNum(Map<String, Object> params);
 }

@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/show")
 @Controller
@@ -47,8 +48,8 @@ public class showPageController extends BaseController {
     @RequestMapping("/selectCurriculumById")
     public String selectCurriculumById(Integer id, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
-        CurriculumVo curriculum = curriculumService.selectByPrimaryKey(id);
-        curriculum.setEnclosure(null);
+        Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(id);
+        curriculum.put("enclosure",null);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 }

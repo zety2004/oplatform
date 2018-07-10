@@ -69,7 +69,7 @@ public class SchoolCurriculumController extends BaseController {
     @RequestMapping("/selectCurriculumById")
     public String selectCurriculumById(Integer id, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
-        CurriculumVo curriculum = curriculumService.selectByPrimaryKey(id);
+        Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 
@@ -77,7 +77,6 @@ public class SchoolCurriculumController extends BaseController {
      * 2018/7/4 15:52
      * 查询申报课程
      *
-     * @param param   筛选参数
      * @param status  申报状态
      * @param pageNum 分页参数
      * @return java.lang.String
@@ -85,7 +84,7 @@ public class SchoolCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryCurriculumApply")
-    public String queryCurriculumApply(String param, Integer status, int pageNum, HttpServletRequest request,
+    public String queryCurriculumApply(Integer status, int pageNum, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
         if (status == null) {
             status = 0;

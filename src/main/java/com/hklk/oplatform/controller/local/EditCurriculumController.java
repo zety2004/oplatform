@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 运营课程管理
@@ -73,7 +74,7 @@ public class EditCurriculumController extends BaseController {
     @RequestMapping("/selectCurriculumById")
     public String selectCurriculumById(Integer id, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
-        CurriculumVo curriculum = curriculumService.selectByPrimaryKey(id);
+        Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 

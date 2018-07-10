@@ -4,6 +4,7 @@ import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CurriculumMapper {
     int deleteByPrimaryKey(Integer id);
@@ -12,7 +13,7 @@ public interface CurriculumMapper {
 
     int insertSelective(Curriculum record);
 
-    Curriculum selectByPrimaryKey(Integer id);
+    Map<String,Object> selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Curriculum record);
 

@@ -5,6 +5,7 @@ import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.vo.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SCApplyService {
     /**
@@ -26,7 +27,11 @@ public interface SCApplyService {
 
     PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize);
 
+    PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer teacherId,Integer schoolId, Integer status, int pageNum, int pageSize);
+
     PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId,String param,int pageNum, int pageSize);
 
     List<StudentPay> queryStudentBySCAId(Integer scaId);
+
+    SCApply selectByTeacherId(Integer teacherId,Integer curriculumId);
 }

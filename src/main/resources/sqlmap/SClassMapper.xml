@@ -122,11 +122,17 @@
         <result column="create_by" property="createBy" jdbcType="INTEGER"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="student_num" property="studentNum" jdbcType="INTEGER"/>
+        <result column="is_operable" property="isOperable" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryClasses" resultMap="BaseResultVoMap" parameterType="map">
         select
         sc.*,count(h.id) as student_num
+        <if test="createBy!=null">
+            <![CDATA[
+        ,CASE when sc.create_by <=> #{createBy} then 1 ELSE 0 END as is_operable
+        ]]>
+        </if>
         from hklk_school_class sc left join hklk_school_student h on sc.id = h.class_id
         where school_id = #{schoolId,jdbcType=INTEGER}
         <if test="param != null">

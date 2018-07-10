@@ -157,6 +157,7 @@
         <result column="head_ico" property="headIco" jdbcType="VARCHAR"/>
         <result column="school_logo" property="schoolLogo" jdbcType="VARCHAR"/>
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="school_status" property="schoolStatus" jdbcType="INTEGER"/>
     </resultMap>
     <select id="loginTeacher" resultMap="BaseResultVoMap" parameterType="map">

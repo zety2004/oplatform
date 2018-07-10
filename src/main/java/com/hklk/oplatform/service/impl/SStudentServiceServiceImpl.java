@@ -37,10 +37,10 @@ public class SStudentServiceServiceImpl implements SStudentService {
     }
 
     @Override
-    public List<SStudent> queryStudentByClassId(String param,Integer classId) {
-        Map<String ,Object> params = new HashMap<>();
-        params.put("param",param);
-        params.put("classId",classId);
+    public List<SStudent> queryStudentByClassId(String param, Integer classId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("param", param);
+        params.put("classId", classId);
         return sStudentMapper.queryStudentByClassId(params);
     }
 
@@ -50,5 +50,13 @@ public class SStudentServiceServiceImpl implements SStudentService {
         param.put("schoolId", schoolId);
         param.put("sNum", sNum);
         return sStudentMapper.selectBySNumForValidate(param);
+    }
+
+    @Override
+    public List<Map<String,Object>> queryStudentByPhoneNum(String phone, String wechatId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("phone", phone);
+        param.put("wechatId", wechatId);
+        return sStudentMapper.queryStudentByPhoneNum(param);
     }
 }

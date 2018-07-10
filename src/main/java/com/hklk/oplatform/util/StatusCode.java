@@ -64,6 +64,9 @@ public class StatusCode {
     //您选择的文件不符合模板规则，导入失败！
     public final static int FILE_IS_NOT_RIGHT = 1019;
 
+    //未找到对应的学生信息,请先绑定微信或联系学校方更正您的手机号！
+    public final static int ERROR_MSG = 1020;
+
     public static String getStatusMsg(Object code) {
 
         Map<Object, String> map = new HashMap<Object, String>();
@@ -97,6 +100,7 @@ public class StatusCode {
         map.put(VALIDATE_CLASS_IS_TEACHER_CREATE, "该班级不是自己创建的，不能删除！");
         map.put(TEACHER_IS_NOT_EX, "您输入的账号不存在！");
         map.put(FILE_IS_NOT_RIGHT, "您选择的文件不符合模板规则，导入失败！");
+        map.put(ERROR_MSG, "未找到对应的学生信息,请先绑定微信或联系学校方更正您的手机号！");
         return map.get(code);
     }
 }

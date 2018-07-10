@@ -36,10 +36,11 @@ public class SClassServiceServiceImpl implements SClassService {
     }
 
     @Override
-    public PageTableForm<SClassVo> queryClasses(String param, Integer schoolId, int pageNum, int pageSize) {
+    public PageTableForm<SClassVo> queryClasses(String param, Integer schoolId, Integer teacherId, int pageNum, int pageSize) {
         Map<String, Object> params = new HashMap<>();
         params.put("schoolId", schoolId);
         params.put("param", param);
+        params.put("createBy", teacherId);
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         sClassMapper.queryClasses(params);
         PageTableForm<SClassVo> sClassPageTableForm = new PageTableForm<>(page);

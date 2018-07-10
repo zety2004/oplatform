@@ -18,10 +18,11 @@
         <result column="order_op_user_id" property="orderOpUserId" jdbcType="INTEGER"/>
         <result column="order_remark" property="orderRemark" jdbcType="VARCHAR"/>
         <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
+        <result column="applicable_grade" property="grade" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, curriculum_id, apply_time, apply_remark, teacher_id, status, operator_id, begin_of_select_time, 
-    end_of_select_time, curr_start_time, class_place, max_num,school_id,is_fine_quality
+    id, curriculum_id, apply_time, apply_remark, teacher_id, status, operator_id, begin_of_select_time,
+    end_of_select_time, curr_start_time, class_place, max_num,school_id,is_fine_quality,applicable_grade
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -189,7 +190,7 @@
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
         select sca.id,CONCAT(st.nickname,'/',st.phone) as apply_person,
         c.`name` as apply_curriculum, IFNULL(SUM(cs.num*cs.unit_price),0) as total_price,
-        c.grade,c.class_hours
+        sca.applicable_grade as grade,c.class_hours
         ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,sca.end_of_select_time,sca.curr_start_time,sca.is_fine_quality
         from hklk_school_curriculum_apply sca
         LEFT JOIN hklk_curriculum c on sca.curriculum_id = c.id
@@ -204,6 +205,9 @@
                 and sca.status = #{status,jdbcType=INTEGER}
             </otherwise>
         </choose>
+        <if test="teacherId != null">
+            and st.id = #{teacherId,jdbcType=INTEGER}
+        </if>
 
         group by sca.id
     </select>
@@ -228,7 +232,7 @@
         SELECT
         sca.id,
         c.`name` AS curriculum_name,
-        c.grade,
+        sca.applicable_grade as grade,
         sca.curriculum_id,
         CONCAT(st.nickname,'/',st.phone) AS teacher_name,
         sca.curr_start_time,
@@ -264,7 +268,7 @@
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
-        left join hklk_school_syllabus h on sca.id = h.sca_id
+        RIGHT JOIN hklk_school_syllabus h on sca.id = h.sca_id
         WHERE
         sca. STATUS = 3 and sca.school_id = #{schoolId,jdbcType=INTEGER}
         <if test="param != null">
@@ -291,7 +295,7 @@
 
     <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="java.lang.Integer">
         SELECT
-        sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,c.grade,st.nickname as
+        sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,sca.applicable_grade as grade,st.nickname as
         teacher_name,sca.begin_of_select_time,sca.end_of_select_time,sca.max_num,COUNT(scc.id) as student_num,
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = COUNT(scc.id) THEN 1 else 0 end
         is_sign,sca.order_remark,h.nickname as op_person
@@ -339,5 +343,20 @@
         left join hklk_school_class h on ss.class_id = h.id
         where scc.sca_id = #{scaId,jdbcType=INTEGER}
     </select>
+
+    <select id="selectByTeacherId" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_school_curriculum_apply
+        where 1=1
+        <if test="teacherId != null">
+           and teacher_id = #{teacherId,jdbcType=INTEGER}
+        </if>
+        <if test="curriculumId != null">
+            and curriculum_id = #{curriculumId,jdbcType=INTEGER}
+        </if>
+
+    </select>
+
 
 </mapper>
