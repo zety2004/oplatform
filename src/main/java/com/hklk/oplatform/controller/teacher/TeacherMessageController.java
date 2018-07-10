@@ -23,9 +23,9 @@ import java.util.List;
  * @author 曹良峰
  * @since 1.0
  */
-/*@TeacherLoginRepository
-@RequestMapping("/teacherMessage")*/
-/*@Controller*/
+@TeacherLoginRepository
+@RequestMapping("/teacherMessage")
+@Controller
 public class TeacherMessageController extends BaseController {
 
     @Autowired
