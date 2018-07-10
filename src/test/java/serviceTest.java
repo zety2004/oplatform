@@ -30,6 +30,9 @@ public class serviceTest extends AbstractTestCase {
     @Autowired
     FeedBackService feedBackService;
 
+    @Autowired
+    TeacherMessageService teacherMessageService;
+
 
     @Test
     public void loginTest() {
@@ -87,4 +90,10 @@ public class serviceTest extends AbstractTestCase {
         scApplyService.queryStudentBySCAId(17);
     }
 
+
+    @Test
+    public void queryTeacherMessage() {
+
+        teacherMessageService.queryTeacherMessage(40);
+    }
 }

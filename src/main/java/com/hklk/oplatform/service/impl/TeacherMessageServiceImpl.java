@@ -3,8 +3,10 @@ package com.hklk.oplatform.service.impl;
 import com.hklk.oplatform.entity.table.TeacherMessage;
 import com.hklk.oplatform.service.TeacherMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 public class TeacherMessageServiceImpl implements TeacherMessageService {
 
