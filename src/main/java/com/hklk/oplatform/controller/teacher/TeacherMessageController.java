@@ -40,9 +40,9 @@ public class TeacherMessageController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryTeacherMessage")
-    public String queryTeacherMessage(HttpServletRequest request,
-                                       HttpServletResponse response, HttpSession session) {
-        List <TeacherMessage> teacherMessages = teacherMessageService.queryTeacherMessage(getLoginTeacher(request).getTeacherId());
+    public String queryTeacherMessage(Integer isRead, HttpServletRequest request,
+                                      HttpServletResponse response, HttpSession session) {
+        List<TeacherMessage> teacherMessages = teacherMessageService.queryTeacherMessage(getLoginTeacher(request).getTeacherId(), isRead);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), teacherMessages);
     }
 }

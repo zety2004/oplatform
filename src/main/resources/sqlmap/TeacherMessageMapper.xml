@@ -92,10 +92,13 @@
   </update>
 
 
-  <select id="queryTeacherMessage" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="queryTeacherMessage" resultMap="BaseResultMap" parameterType="map" >
     select
     <include refid="Base_Column_List" />
     from hklk_school_teacher_message
     where teacher_id = #{teacherId,jdbcType=INTEGER}
+    <if test="isRead !=null">
+      and is_read = #{isRead,jdbcType=INTEGER}
+    </if>
   </select>
 </mapper>

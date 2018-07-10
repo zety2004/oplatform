@@ -6,7 +6,9 @@ import com.hklk.oplatform.service.TeacherMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TeacherMessageServiceImpl implements TeacherMessageService {
@@ -35,7 +37,10 @@ public class TeacherMessageServiceImpl implements TeacherMessageService {
     }
 
     @Override
-    public List<TeacherMessage> queryTeacherMessage(Integer teacherId) {
-        return teacherMessageMapper.queryTeacherMessage(teacherId);
+    public List<TeacherMessage> queryTeacherMessage(Integer teacherId,Integer isRead) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("teacherId", teacherId);
+        params.put("isRead", isRead);
+        return teacherMessageMapper.queryTeacherMessage(params);
     }
 }

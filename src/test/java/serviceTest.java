@@ -93,6 +93,6 @@ public class serviceTest extends AbstractTestCase {
 
     @Test
     public void queryTeacherMessage() {
-        teacherMessageService.queryTeacherMessage(40);
+        teacherMessageService.queryTeacherMessage(40,1);
     }
 }

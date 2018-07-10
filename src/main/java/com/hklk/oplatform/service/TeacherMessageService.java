@@ -13,5 +13,5 @@ public interface TeacherMessageService {
 
     int updateByPrimaryKeySelective(TeacherMessage teacherMessage);
 
-    List<TeacherMessage> queryTeacherMessage(Integer teacherId);
+    List<TeacherMessage> queryTeacherMessage(Integer teacherId,Integer isRead);
 }
