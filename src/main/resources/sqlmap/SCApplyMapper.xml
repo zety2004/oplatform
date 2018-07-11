@@ -77,6 +77,12 @@
             <if test="schoolId != null">
                 school_id,
             </if>
+            <if test="isFineQuality != null">
+                is_fine_quality,
+            </if>
+            <if test="grade != null">
+                applicable_grade,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -117,6 +123,12 @@
             </if>
             <if test="schoolId != null">
                 #{schoolId,jdbcType=INTEGER},
+            </if>
+            <if test="isFineQuality != null">
+                #{isFineQuality,jdbcType=INTEGER},
+            </if>
+            <if test="grade != null">
+                #{grade,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -165,6 +177,9 @@
             <if test="isFineQuality != null">
                 is_fine_quality = #{isFineQuality,jdbcType=INTEGER},
             </if>
+            <if test="grade != null">
+                applicable_grade = #{grade,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -185,13 +200,15 @@
         <result column="end_of_select_time" property="endOfSelectTime" jdbcType="TIMESTAMP"/>
         <result column="curr_start_time" property="currStartTime" jdbcType="TIMESTAMP"/>
         <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
+        <result column="student_num" property="studentNum" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
         select sca.id,CONCAT(st.nickname,'/',st.phone) as apply_person,
         c.`name` as apply_curriculum, IFNULL(SUM(cs.num*cs.unit_price),0) as total_price,
         sca.applicable_grade as grade,c.class_hours
-        ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,sca.end_of_select_time,sca.curr_start_time,sca.is_fine_quality
+        ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,
+        sca.end_of_select_time,sca.curr_start_time,sca.is_fine_quality
         from hklk_school_curriculum_apply sca
         LEFT JOIN hklk_curriculum c on sca.curriculum_id = c.id
         LEFT JOIN hklk_school_teacher st on sca.teacher_id = st.id
@@ -208,7 +225,6 @@
         <if test="teacherId != null">
             and st.id = #{teacherId,jdbcType=INTEGER}
         </if>
-
         group by sca.id
     </select>
 
@@ -226,6 +242,7 @@
         <result column="apply_status" property="applyStatus" jdbcType="VARCHAR"/>
         <result column="class_time" property="classTime" jdbcType="VARCHAR"/>
         <result column="curriculum_id" property="curriculumId" jdbcType="INTEGER"/>
+        <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryCurriculumChoice" resultMap="CurriculumChoiceMap" parameterType="map">
@@ -239,7 +256,7 @@
         sca.max_num,
         sca.class_place,
         CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
-        choose_time,
+        choose_time,sca.is_fine_quality,
         COUNT(scc.id) AS student_num,
         <![CDATA[
         CASE
@@ -291,14 +308,16 @@
         <result column="order_remark" property="orderRemark" jdbcType="VARCHAR"/>
         <result column="school_name" property="schoolName" jdbcType="VARCHAR"/>
         <result column="op_person" property="opPerson" jdbcType="VARCHAR"/>
+        <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="java.lang.Integer">
         SELECT
-        sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,sca.applicable_grade as grade,st.nickname as
+        sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,sca.applicable_grade as
+        grade,st.nickname as
         teacher_name,sca.begin_of_select_time,sca.end_of_select_time,sca.max_num,COUNT(scc.id) as student_num,
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = COUNT(scc.id) THEN 1 else 0 end
-        is_sign,sca.order_remark,h.nickname as op_person
+        is_sign,sca.order_remark,h.nickname as op_person,sca.is_fine_quality
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
@@ -350,13 +369,125 @@
         from hklk_school_curriculum_apply
         where 1=1
         <if test="teacherId != null">
-           and teacher_id = #{teacherId,jdbcType=INTEGER}
+            and teacher_id = #{teacherId,jdbcType=INTEGER}
         </if>
         <if test="curriculumId != null">
             and curriculum_id = #{curriculumId,jdbcType=INTEGER}
         </if>
-
     </select>
 
-
+    <select id="queryCurriculumForParent" resultMap="BaseResultMap" parameterType="map">
+        SELECT * FROM
+        (
+        SELECT
+        sca.id,
+        sca.is_fine_quality,
+        c.`name` AS curriculum_name,
+        sca.applicable_grade AS grade,
+        sca.curriculum_id,
+        CONCAT(st.nickname, '/', st.phone) AS teacher_name,
+        sca.curr_start_time,
+        sca.max_num,
+        sca.class_place,
+        CONCAT(
+        DATE_FORMAT(
+        sca.begin_of_select_time,
+        '%Y-%m-%d'
+        ),
+        ' 至 ',
+        DATE_FORMAT(
+        sca.end_of_select_time,
+        '%Y-%m-%d'
+        )
+        ) AS choose_time,
+        <![CDATA[
+        CASE
+        WHEN sca.begin_of_select_time > SYSDATE() THEN
+        0 /*未开课*/
+        WHEN sca.begin_of_select_time < SYSDATE()
+        AND SYSDATE() < sca.end_of_select_time THEN
+        1 /*开始选课*/
+        WHEN sca.end_of_select_time < SYSDATE()
+        AND SYSDATE() < sca.curr_start_time THEN
+        2 /*备课中*/
+        WHEN SYSDATE() > sca.curr_start_time
+        AND SYSDATE() < date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(
+        tc.class_hours / count(ts.id)
+        ) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        3 /*开始上课*/
+        WHEN SYSDATE() > date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(
+        tc.class_hours / count(ts.id)
+        ) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        4 /*已结束*/
+        END AS apply_status,
+        ]]>
+        concat(
+        group_concat(h.week_type),
+        '|',
+        max(h.class_time)
+        ) class_time,
+        COUNT(h.id) AS student_num,
+        (sca.max_num - COUNT(h.id)) AS surplus
+        FROM
+        hklk_school_curriculum_apply sca
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
+        RIGHT JOIN hklk_school_syllabus h ON sca.id = h.sca_id
+        WHERE
+        sca. STATUS = 3
+        AND sca.school_id = #{schoolId,jdbcType=INTEGER}
+        GROUP BY
+        sca.id
+        ) h
+        where h.apply_status in (1,2,3)
+        <if test="isFineQuality==-1">/*查询精品*/
+            <choose>
+                <when test="grade!=null">
+                    and h.grade like CONCAT('%', #{grade}, '%')
+                </when>
+                <otherwise>
+                    ORDER BY h.apply_status,h.curr_start_time DESC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="isFineQuality==1">/*查询精品*/
+            and h.is_fine_quality = 1
+            ORDER BY h.surplus DESC
+            LIMIT 0,10
+        </if>
+        <if test="isFineQuality==0">/*查询热门课程*/
+            and h.is_fine_quality = 0
+            ORDER BY h.surplus
+            LIMIT 0,10
+        </if>
+    </select>
 </mapper>

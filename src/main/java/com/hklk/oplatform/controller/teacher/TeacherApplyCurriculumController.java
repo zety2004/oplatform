@@ -1,5 +1,6 @@
 package com.hklk.oplatform.controller.teacher;
 
+import com.hklk.oplatform.comm.LoginTeacher;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.SCApply;
@@ -139,6 +140,9 @@ public class TeacherApplyCurriculumController extends BaseController {
     @RequestMapping("/addOrUpdateCurriculumApply")
     public String addOrUpdateCurriculumApply(SCApply scApply, HttpServletRequest request,
                                              HttpServletResponse response, HttpSession session) {
+        LoginTeacher loginTeacher = getLoginTeacher(request);
+        scApply.setSchoolId(loginTeacher.getSchoolId());
+        scApply.setTeacherId(loginTeacher.getTeacherId());
         if (scApply.getId() == null) {
             scApplyService.insertSelective(scApply);
         } else {

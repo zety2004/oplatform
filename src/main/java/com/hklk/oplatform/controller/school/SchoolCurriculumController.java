@@ -3,11 +3,13 @@ package com.hklk.oplatform.controller.school;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.SCApply;
+import com.hklk.oplatform.entity.table.TeacherMessage;
 import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.SCApplyService;
 import com.hklk.oplatform.service.SSyllabusService;
+import com.hklk.oplatform.service.TeacherMessageService;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,8 @@ public class SchoolCurriculumController extends BaseController {
     SCApplyService scApplyService;
     @Autowired
     SSyllabusService sSyllabusService;
+    @Autowired
+    TeacherMessageService teacherMessageService;
 
     /**
      * 2018/7/4 15:50
@@ -140,7 +144,12 @@ public class SchoolCurriculumController extends BaseController {
         if (temp.getOperatorId() != null && scApply.getStatus() != 0) {
             return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
         } else {
+            scApply.setOperatorId(getLoginSchool(request).getSchoolAdminId());
             scApplyService.updateByPrimaryKeySelective(scApply);
+            TeacherMessage teacherMessage = new TeacherMessage();
+            teacherMessage.setTeacherId(temp.getTeacherId());
+            teacherMessage.setMessage("您申报的课程已经通过审批,进入排课阶段！");
+            teacherMessageService.insertSelective(teacherMessage);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }

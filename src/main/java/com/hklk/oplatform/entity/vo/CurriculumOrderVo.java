@@ -23,8 +23,13 @@ public class CurriculumOrderVo implements Serializable {
     private Integer isSign;
 
     private String orderRemark;
+
     private Integer curriculumId;
+
+    private Integer isFineQuality;
+
     private String schoolName;
+
     private String opPerson;
 
     private static final long serialVersionUID = 1L;
@@ -132,5 +137,13 @@ public class CurriculumOrderVo implements Serializable {
 
     public void setOpPerson(String opPerson) {
         this.opPerson = opPerson;
+    }
+
+    public Integer getIsFineQuality() {
+        return isFineQuality;
+    }
+
+    public void setIsFineQuality(Integer isFineQuality) {
+        this.isFineQuality = isFineQuality;
     }
 }

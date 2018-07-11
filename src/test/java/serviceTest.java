@@ -4,6 +4,7 @@ import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.service.*;
+import com.hklk.oplatform.util.JsonUtil;
 import comm.AbstractTestCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,6 @@ public class serviceTest extends AbstractTestCase {
 
     @Test
     public void queryTeacherMessage() {
-        teacherMessageService.queryTeacherMessage(40,1);
+        System.out.println(JsonUtil.toJson(scApplyService.queryCurriculumForParent(1,"3")));
     }
 }

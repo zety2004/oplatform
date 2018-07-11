@@ -28,6 +28,8 @@ public class CurriculumChoiceVo implements Serializable {
 
     private Integer curriculumId;
 
+    private Integer isFineQuality;
+
     private static final long serialVersionUID = 1L;
 
 
@@ -125,5 +127,13 @@ public class CurriculumChoiceVo implements Serializable {
 
     public void setCurriculumId(Integer curriculumId) {
         this.curriculumId = curriculumId;
+    }
+
+    public Integer getIsFineQuality() {
+        return isFineQuality;
+    }
+
+    public void setIsFineQuality(Integer isFineQuality) {
+        this.isFineQuality = isFineQuality;
     }
 }

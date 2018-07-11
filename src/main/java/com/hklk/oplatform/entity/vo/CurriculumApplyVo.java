@@ -34,6 +34,8 @@ public class CurriculumApplyVo implements Serializable {
 
     private Integer isFineQuality;
 
+    private Integer studentNum;
+
     private static final long serialVersionUID = 1L;
 
 
@@ -155,5 +157,13 @@ public class CurriculumApplyVo implements Serializable {
 
     public void setIsFineQuality(Integer isFineQuality) {
         this.isFineQuality = isFineQuality;
+    }
+
+    public Integer getStudentNum() {
+        return studentNum;
+    }
+
+    public void setStudentNum(Integer studentNum) {
+        this.studentNum = studentNum;
     }
 }

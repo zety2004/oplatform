@@ -98,4 +98,22 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         param.put("curriculumId", curriculumId);
         return scApplyMapper.selectByTeacherId(param);
     }
+
+    @Override
+    public Map<String, List<CurriculumApplyVo>> queryCurriculumForParent(Integer schoolId, String grade) {
+        Map<String, List<CurriculumApplyVo>> result = new HashMap<>();
+        Map<String, Object> param = new HashMap<>();
+        param.put("schoolId", schoolId);
+        param.put("isFineQuality", 1);
+        List<CurriculumApplyVo> jpList = scApplyMapper.queryCurriculumForParent(param);
+        param.put("isFineQuality", 0);
+        List<CurriculumApplyVo> hotList = scApplyMapper.queryCurriculumForParent(param);
+        param.put("isFineQuality", -1);
+        param.put("grade", grade);
+        List<CurriculumApplyVo> allList = scApplyMapper.queryCurriculumForParent(param);
+        result.put("fineQuality",jpList);
+        result.put("Hot",hotList);
+        result.put("all",allList);
+        return result;
+    }
 }

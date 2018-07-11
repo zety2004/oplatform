@@ -21,17 +21,19 @@ public interface SCApplyService {
 
     int insertSelective(SCApply scApply);
 
-    PageTableForm<CurriculumOrderVo> queryCurriculumOrder(String queryParam,Integer isHandle,int pageNum, int pageSize);
+    PageTableForm<CurriculumOrderVo> queryCurriculumOrder(String queryParam, Integer isHandle, int pageNum, int pageSize);
 
     SCApply selectByPrimaryKey(Integer id);
 
     PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize);
 
-    PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer teacherId,Integer schoolId, Integer status, int pageNum, int pageSize);
+    PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer teacherId, Integer schoolId, Integer status, int pageNum, int pageSize);
 
-    PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId,String param,int pageNum, int pageSize);
+    PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int pageNum, int pageSize);
 
     List<StudentPay> queryStudentBySCAId(Integer scaId);
 
-    SCApply selectByTeacherId(Integer teacherId,Integer curriculumId);
+    SCApply selectByTeacherId(Integer teacherId, Integer curriculumId);
+
+    Map<String, List<CurriculumApplyVo>> queryCurriculumForParent(Integer schoolId,String grade);
 }
