@@ -32,10 +32,11 @@ public class TeacherMessageController extends BaseController {
     TeacherMessageService teacherMessageService;
 
     /**
-     * 2018/7/4 12:11
-     * 查询教师消息
+     * 2018/7/11 9:43
+     * 查询老师消息
      *
-     * @return {"resultData":{"id":68,"cover":"http://oss-cn-hklk.oss-cn-beijing.aliyuncs.com/KCGXe92d624c22d76d35683e1f1f08b433f8.jpg","name":"用积木学科学","subject":"20","grade":"3","learningStyle":"18","classHours":"11","collectionNum":0,"author":"好课乐课教育","enclosure":"http://oss-cn-hklk.oss-cn-beijing.aliyuncs.com/KCGX43743b8d4baee12223be9382e13c2736.zip","encDes":"附件包含《用积木学科学》（教师用书）《用积木学科学》（学生用书）\n《用积木学科学》（课程纲要）；","status":1,"des":"","consumables":[]},"resultCode":200,"resultMsg":"成功"}
+     * @param isRead
+     * @return java.lang.String
      * @author 曹良峰
      */
     @ResponseBody
@@ -44,5 +45,35 @@ public class TeacherMessageController extends BaseController {
                                       HttpServletResponse response, HttpSession session) {
         List<TeacherMessage> teacherMessages = teacherMessageService.queryTeacherMessage(getLoginTeacher(request).getTeacherId(), isRead);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), teacherMessages);
+    }
+
+    /**
+     * 2018/7/11 9:43
+     * 修改老师全部消息为已读
+     *
+     * @return code: 200  成功
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/updateMessageIsReadByTeacher")
+    public String updateMessageIsReadByTeacher(HttpServletRequest request,
+                                               HttpServletResponse response, HttpSession session) {
+        teacherMessageService.updateIsReadByTeacherId(getLoginTeacher(request).getTeacherId());
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/11 9:43
+     * 修改老师单个消息为已读
+     *
+     * @return code: 200  成功
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/updateMessageIsReadById")
+    public String updateMessageIsReadById(Integer id, HttpServletRequest request,
+                                          HttpServletResponse response, HttpSession session) {
+        teacherMessageService.updateIsReadById(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 }

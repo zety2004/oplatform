@@ -22,11 +22,13 @@ public interface SSyllabusService {
 
     int delAndbatchSaveSyllabus(String param, Integer schoolId);
 
-    List<Map<String, String>> queryMapByWeekType(Integer weekType ,Integer schoolId);
+    List<Map<String, String>> queryMapByWeekType(Integer weekType, Integer schoolId);
 
-    List<Map<String, String>> queryMapByTimeType(Integer timeType ,Integer schoolId);
+    List<Map<String, String>> queryMapByTimeType(Integer timeType, Integer schoolId);
 
     List<Map<String, String>> queryMapByTimeTypeForEnd(Integer weekType, Integer schoolId);
+
+    List<Map<String, String>> querySyllabusByTeacher(Integer weekType, Integer teacherId);
 
     int selectMaxTimeType(Integer schoolId);
 }

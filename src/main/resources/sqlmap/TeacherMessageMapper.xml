@@ -64,31 +64,15 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.TeacherMessage" >
+  <update id="updateIsReadById" parameterType="java.lang.Integer" >
     update hklk_school_teacher_message
-    <set >
-      <if test="message != null" >
-        message = #{message,jdbcType=VARCHAR},
-      </if>
-      <if test="sendTime != null" >
-        send_time = #{sendTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="teacherId != null" >
-        teacher_id = #{teacherId,jdbcType=INTEGER},
-      </if>
-      <if test="isRead != null" >
-        is_read = #{isRead,jdbcType=INTEGER},
-      </if>
-    </set>
+    set is_read = 1
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.TeacherMessage" >
+  <update id="updateIsReadByTeacherId" parameterType="java.lang.Integer" >
     update hklk_school_teacher_message
-    set message = #{message,jdbcType=VARCHAR},
-      send_time = #{sendTime,jdbcType=TIMESTAMP},
-      teacher_id = #{teacherId,jdbcType=INTEGER},
-      is_read = #{isRead,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+    set is_read = 1
+    where teacher_id = #{teacherId,jdbcType=INTEGER}
   </update>
 
 

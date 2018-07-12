@@ -71,6 +71,14 @@ public class SSyllabusServiceServiceImpl implements SSyllabusService {
     }
 
     @Override
+    public List<Map<String, String>> querySyllabusByTeacher(Integer weekType, Integer teacherId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("weekType", weekType);
+        param.put("teacherId", teacherId);
+        return sSyllabusMapper.querySyllabusByTeacher(param);
+    }
+
+    @Override
     public int selectMaxTimeType(Integer schoolId) {
         return sSyllabusMapper.selectMaxTimeType(schoolId);
     }

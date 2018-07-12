@@ -69,6 +69,10 @@
             <mvc:mapping path="/**"/>
             <bean class="com.hklk.oplatform.filter.SchoolLoginInterceptor"></bean>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.hklk.oplatform.filter.TeacherLoginInterceptor"></bean>
+        </mvc:interceptor>
     </mvc:interceptors>
 
 

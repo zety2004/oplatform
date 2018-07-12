@@ -24,7 +24,11 @@ public class CurriculumChoiceVo implements Serializable {
 
     private Integer applyStatus;
 
+    private Integer status;
+
     private String classTime;
+
+    private String cover;
 
     private Integer curriculumId;
 
@@ -135,5 +139,21 @@ public class CurriculumChoiceVo implements Serializable {
 
     public void setIsFineQuality(Integer isFineQuality) {
         this.isFineQuality = isFineQuality;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }

@@ -16,7 +16,9 @@ public interface TeacherMessageMapper {
 
     int updateByPrimaryKeySelective(TeacherMessage record);
 
-    int updateByPrimaryKey(TeacherMessage record);
+    int updateIsReadByTeacherId(Integer teacherId);
+
+    int updateIsReadById(Integer id);
 
     List<TeacherMessage> queryTeacherMessage(Map<String, Object> param);
 }

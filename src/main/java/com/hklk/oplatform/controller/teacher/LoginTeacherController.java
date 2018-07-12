@@ -10,18 +10,20 @@ import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.STeacherService;
 import com.hklk.oplatform.service.SchoolAdminService;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,6 +81,8 @@ public class LoginTeacherController extends BaseController {
         }
     }
 
+
+
     /**
      * 修改密码
      *
@@ -103,7 +107,7 @@ public class LoginTeacherController extends BaseController {
         } else if (temp != null && temp.getPwd().equals(PasswordProvider.encrypt(oldPassword))) {
             STeacher param = new STeacher();
             param.setId(loginTeacher.getTeacherId());
-            param.setPwd(newPassword);
+            param.setPwd(PasswordProvider.encrypt(newPassword));
             sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         } else {
@@ -114,15 +118,16 @@ public class LoginTeacherController extends BaseController {
     /**
      * 2018/7/9 18:56
      * 修改老师个人信息
-     * @param headIco      头像
-     * @param nickName     昵称
-     * @param remark       备注
-     * @author 曹良峰
+     *
+     * @param headIco  头像
+     * @param nickName 昵称
+     * @param remark   备注
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateTeacher")
-    public String updateUserPassword(String headIco,String nickName,String remark, HttpServletRequest request,
+    public String updateUserPassword(String headIco, String nickName, String remark, HttpServletRequest request,
                                      HttpServletResponse response, HttpSession session) {
         LoginTeacher loginTeacher = getLoginTeacher(request);
         if (loginTeacher == null) {

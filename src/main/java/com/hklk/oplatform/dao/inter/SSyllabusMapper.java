@@ -25,6 +25,8 @@ public interface SSyllabusMapper {
     List<Map<String, String>> queryMapByTimeType(Map<String, Object> param);
 
     List<Map<String, String>> queryMapByTimeTypeForEnd(Map<String, Object> param);
+    
+    List<Map<String, String>> querySyllabusByTeacher(Map<String, Object> param);
 
     int selectMaxTimeType(Integer schoolId);
 }

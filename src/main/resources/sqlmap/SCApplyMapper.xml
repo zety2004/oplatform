@@ -240,6 +240,8 @@
         <result column="choose_time" property="chooseTime" jdbcType="VARCHAR"/>
         <result column="class_place" property="classPlace" jdbcType="VARCHAR"/>
         <result column="apply_status" property="applyStatus" jdbcType="VARCHAR"/>
+        <result column="cover" property="cover" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="class_time" property="classTime" jdbcType="VARCHAR"/>
         <result column="curriculum_id" property="curriculumId" jdbcType="INTEGER"/>
         <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
@@ -366,8 +368,9 @@
     <select id="selectByTeacherId" resultMap="BaseResultMap" parameterType="map">
         select
         <include refid="Base_Column_List"/>
-        from hklk_school_curriculum_apply
-        where 1=1
+        from hklk_school_curriculum_apply sca
+        where
+        sca.status !=4
         <if test="teacherId != null">
             and teacher_id = #{teacherId,jdbcType=INTEGER}
         </if>
@@ -376,7 +379,64 @@
         </if>
     </select>
 
-    <select id="queryCurriculumForParent" resultMap="BaseResultMap" parameterType="map">
+
+    <select id="queryByTeacherId" resultMap="CurriculumChoiceMap" parameterType="map">
+        SELECT
+        sca.id,
+        c.`name` AS curriculum_name,
+        c.cover,
+        sca.applicable_grade as grade,
+        sca.curriculum_id,
+        CONCAT(st.nickname,'/',st.phone) AS teacher_name,
+        sca.curr_start_time,
+        sca.max_num,
+        sca.class_place,
+        CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
+        choose_time,sca.is_fine_quality,
+        sca.status,
+        COUNT(scc.id) AS student_num,
+        <![CDATA[
+        CASE
+        WHEN sca.begin_of_select_time > SYSDATE()  THEN
+        0/*未开课*/
+        WHEN sca.begin_of_select_time < SYSDATE() and SYSDATE() < sca.end_of_select_time THEN
+        1/*开始选课*/
+        WHEN sca.end_of_select_time < SYSDATE() and SYSDATE() < sca.curr_start_time THEN
+        2/*备课中*/
+        WHEN SYSDATE() > sca.curr_start_time and SYSDATE() < date_add(
+        sca.curr_start_time,
+        INTERVAL (SELECT CEILING(tc.class_hours/count(ts.id))*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
+        ) THEN
+        3/*开始上课*/
+        WHEN SYSDATE() > date_add(
+        sca.curr_start_time,
+        INTERVAL (SELECT CEILING(tc.class_hours/count(ts.id))*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
+        ) THEN
+        4/*已结束*/
+        END as apply_status
+        ]]>
+        ,
+        concat(group_concat(h.week_type),'|',max(h.class_time)) class_time
+        FROM
+        hklk_school_curriculum_apply sca
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
+        LEFT JOIN hklk_school_syllabus h on sca.id = h.sca_id
+        WHERE sca.teacher_id = #{teacherId,jdbcType=INTEGER}
+        <choose>
+            <when test="status!=null">
+                and sca.status = #{status,jdbcType=INTEGER}
+            </when>
+            <otherwise>
+                and sca.status !=4
+            </otherwise>
+        </choose>
+        GROUP BY sca.id
+        order by sca.apply_time desc
+    </select>
+
+    <select id="queryCurriculumForParent" resultMap="CurriculumChoiceMap" parameterType="map">
         SELECT * FROM
         (
         SELECT

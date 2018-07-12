@@ -92,7 +92,7 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public SCApply selectByTeacherId(Integer teacherId, Integer curriculumId) {
+    public List<SCApply> selectByTeacherId(Integer teacherId, Integer curriculumId) {
         Map<String, Object> param = new HashMap<>();
         param.put("teacherId", teacherId);
         param.put("curriculumId", curriculumId);
@@ -100,20 +100,31 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public Map<String, List<CurriculumApplyVo>> queryCurriculumForParent(Integer schoolId, String grade) {
-        Map<String, List<CurriculumApplyVo>> result = new HashMap<>();
+    public PageTableForm<CurriculumChoiceVo> queryByTeacherId(Integer teacherId,Integer status,Integer pageNum,Integer pageSize) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("teacherId", teacherId);
+        param.put("status", status);
+        Page page = PageHelper.startPage(pageNum, pageSize, true);
+        scApplyMapper.queryByTeacherId(param);
+        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = new PageTableForm<>(page);
+        return curriculumChoiceVoPageTableForm;
+    }
+
+    @Override
+    public Map<String, List<CurriculumChoiceVo>> queryCurriculumForParent(Integer schoolId, String grade) {
+        Map<String, List<CurriculumChoiceVo>> result = new HashMap<>();
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("isFineQuality", 1);
-        List<CurriculumApplyVo> jpList = scApplyMapper.queryCurriculumForParent(param);
+        List<CurriculumChoiceVo> jpList = scApplyMapper.queryCurriculumForParent(param);
         param.put("isFineQuality", 0);
-        List<CurriculumApplyVo> hotList = scApplyMapper.queryCurriculumForParent(param);
+        List<CurriculumChoiceVo> hotList = scApplyMapper.queryCurriculumForParent(param);
         param.put("isFineQuality", -1);
         param.put("grade", grade);
-        List<CurriculumApplyVo> allList = scApplyMapper.queryCurriculumForParent(param);
-        result.put("fineQuality",jpList);
-        result.put("Hot",hotList);
-        result.put("all",allList);
+        List<CurriculumChoiceVo> allList = scApplyMapper.queryCurriculumForParent(param);
+        result.put("fineQuality", jpList);
+        result.put("Hot", hotList);
+        result.put("all", allList);
         return result;
     }
 }

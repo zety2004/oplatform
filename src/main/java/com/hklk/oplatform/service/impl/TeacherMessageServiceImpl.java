@@ -37,7 +37,17 @@ public class TeacherMessageServiceImpl implements TeacherMessageService {
     }
 
     @Override
-    public List<TeacherMessage> queryTeacherMessage(Integer teacherId,Integer isRead) {
+    public int updateIsReadByTeacherId(Integer teacherId) {
+        return teacherMessageMapper.updateIsReadByTeacherId(teacherId);
+    }
+
+    @Override
+    public int updateIsReadById(Integer id) {
+        return teacherMessageMapper.updateIsReadById(id);
+    }
+
+    @Override
+    public List<TeacherMessage> queryTeacherMessage(Integer teacherId, Integer isRead) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId", teacherId);
         params.put("isRead", isRead);

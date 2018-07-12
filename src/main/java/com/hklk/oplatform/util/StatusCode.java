@@ -58,7 +58,6 @@ public class StatusCode {
     public final static int ORDER_IS_HANDLE = 1016;
     //该班级非自己创建无法删除
     public final static int VALIDATE_CLASS_IS_TEACHER_CREATE = 1017;
-
     //老师不存在
     public final static int TEACHER_IS_NOT_EX = 1018;
     //您选择的文件不符合模板规则，导入失败！
@@ -66,6 +65,10 @@ public class StatusCode {
 
     //未找到对应的学生信息,请先绑定微信或联系学校方更正您的手机号！
     public final static int ERROR_MSG = 1020;
+    //操作失败，该记录已被审核！
+    public final static int UPDATE_ERROR_FOR_IS_EXAMINE = 1021;
+    //添加失败，您已经申报过该课程
+    public final static int INSERT_ERROR_FOR_IS_APPLY = 1022;
 
     public static String getStatusMsg(Object code) {
 
@@ -100,6 +103,8 @@ public class StatusCode {
         map.put(VALIDATE_CLASS_IS_TEACHER_CREATE, "该班级不是自己创建的，不能删除！");
         map.put(TEACHER_IS_NOT_EX, "您输入的账号不存在！");
         map.put(FILE_IS_NOT_RIGHT, "您选择的文件不符合模板规则，导入失败！");
+        map.put(UPDATE_ERROR_FOR_IS_EXAMINE, "操作失败，该记录已被审核！");
+        map.put(INSERT_ERROR_FOR_IS_APPLY, "添加失败，您已申报过该课程！");
         map.put(ERROR_MSG, "未找到对应的学生信息,请先绑定微信或联系学校方更正您的手机号！");
         return map.get(code);
     }

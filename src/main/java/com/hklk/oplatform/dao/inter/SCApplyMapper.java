@@ -16,8 +16,8 @@ public interface SCApplyMapper {
     int insertSelective(SCApply record);
 
     SCApply selectByPrimaryKey(Integer id);
-    
-    SCApply selectByTeacherId(Map<String, Object> param);
+
+    List<SCApply> selectByTeacherId(Map<String, Object> param);
 
     int updateByPrimaryKeySelective(SCApply record);
 
@@ -29,5 +29,7 @@ public interface SCApplyMapper {
 
     List<CurriculumOrderVo> queryCurriculumOrder(Map<String, Object> param);
 
-    List<CurriculumApplyVo> queryCurriculumForParent(Map<String, Object> param);
+    List<CurriculumChoiceVo> queryByTeacherId(Map<String, Object> param);
+
+    List<CurriculumChoiceVo> queryCurriculumForParent(Map<String, Object> param);
 }

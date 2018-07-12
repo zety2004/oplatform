@@ -6,19 +6,24 @@ import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
+import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.SCApplyService;
+import com.hklk.oplatform.service.SSyllabusService;
 import com.hklk.oplatform.service.STeacherService;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +45,36 @@ public class TeacherApplyCurriculumController extends BaseController {
 
     @Autowired
     STeacherService sTeacherService;
+    @Autowired
+    SSyllabusService sSyllabusService;
+
+    /**
+     * 2018/7/4 17:17
+     * 上传文件
+     *
+     * @param request （uploadfile）
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @RequestMapping("/uploadFile")
+    @ResponseBody
+    public String uploadFile(MultipartHttpServletRequest request) {
+        try {
+            MultipartFile file = request.getFile("uploadfile");// 与页面input的name相同
+            String savePath = request.getSession().getServletContext().getRealPath("/")
+                    + "/uploadTempDirectory/" + file.getOriginalFilename();
+            File fileTemp = new File(savePath);
+            file.transferTo(fileTemp);
+            System.out.println(PasswordProvider.getMd5ByFile(fileTemp));
+            String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + FileUtils.getFilenameExtension(file.getOriginalFilename());
+            OssUtil.uploadFile(fileKey, fileTemp);
+            String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+        }
+    }
 
     /**
      * 2018/7/4 12:03
@@ -144,10 +179,76 @@ public class TeacherApplyCurriculumController extends BaseController {
         scApply.setSchoolId(loginTeacher.getSchoolId());
         scApply.setTeacherId(loginTeacher.getTeacherId());
         if (scApply.getId() == null) {
-            scApplyService.insertSelective(scApply);
+            List<SCApply> temp = scApplyService.selectByTeacherId(scApply.getTeacherId(), scApply.getCurriculumId());
+            if (temp.size() > 0) {
+                return ToolUtil.buildResultStr(StatusCode.INSERT_ERROR_FOR_IS_APPLY, StatusCode.getStatusMsg(StatusCode.INSERT_ERROR_FOR_IS_APPLY));
+            } else {
+                scApplyService.insertSelective(scApply);
+            }
         } else {
-            scApplyService.updateByPrimaryKeySelective(scApply);
+            SCApply temp = scApplyService.selectByPrimaryKey(scApply.getId());
+            if (temp.getOperatorId() != null && temp.getStatus() != 0) {
+                return ToolUtil.buildResultStr(StatusCode.UPDATE_ERROR_FOR_IS_EXAMINE, StatusCode.getStatusMsg(StatusCode.UPDATE_ERROR_FOR_IS_EXAMINE));
+            } else {
+                scApplyService.updateByPrimaryKeySelective(scApply);
+            }
         }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/11 10:22
+     * 查询我的课程
+     *
+     * @param id 课程主键
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/delCurriculumApply")
+    public String delCurriculumApply(Integer id, HttpServletRequest request,
+                                     HttpServletResponse response, HttpSession session) {
+        SCApply temp = scApplyService.selectByPrimaryKey(id);
+        if (temp.getOperatorId() != null && temp.getStatus() == 3) {
+            return ToolUtil.buildResultStr(StatusCode.UPDATE_ERROR_FOR_IS_EXAMINE, StatusCode.getStatusMsg(StatusCode.UPDATE_ERROR_FOR_IS_EXAMINE));
+        } else {
+            scApplyService.deleteByPrimaryKey(id);
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/11 10:22
+     * 查询我的课程
+     *
+     * @param pageNum 分页参数
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/queryCurriculumApplyByTeacherId")
+    public String queryCurriculumApplyByTeacherId(Integer status, int pageNum, HttpServletRequest request,
+                                                  HttpServletResponse response, HttpSession session) {
+        pageSize = 10;
+        PageTableForm<CurriculumChoiceVo> curriculumChoiceVos = scApplyService.queryByTeacherId(getLoginTeacher(request).getTeacherId(), status, pageNum, pageSize);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVos);
+    }
+
+    /**
+     * 2018/7/11 10:22
+     * 查询我的课程表
+     *
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/querySyllabusByTeacherId")
+    public String querySyllabusByTeacherId(HttpServletRequest request,
+                                           HttpServletResponse response, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+        for (int i = 1; i < 6; i++) {
+            result.put("week" + i, sSyllabusService.querySyllabusByTeacher(i, getLoginTeacher(request).getTeacherId()));
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
     }
 }
