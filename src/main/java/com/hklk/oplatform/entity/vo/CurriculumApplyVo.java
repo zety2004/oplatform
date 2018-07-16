@@ -6,6 +6,8 @@ import java.util.Date;
 public class CurriculumApplyVo implements Serializable {
     private Integer id;
 
+    private Integer applyCurriculumId;
+
     private String applyPerson;
 
     private String teacherId;
@@ -165,5 +167,13 @@ public class CurriculumApplyVo implements Serializable {
 
     public void setStudentNum(Integer studentNum) {
         this.studentNum = studentNum;
+    }
+
+    public Integer getApplyCurriculumId() {
+        return applyCurriculumId;
+    }
+
+    public void setApplyCurriculumId(Integer applyCurriculumId) {
+        this.applyCurriculumId = applyCurriculumId;
     }
 }

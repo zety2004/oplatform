@@ -188,6 +188,7 @@
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="apply_person" property="applyPerson" jdbcType="VARCHAR"/>
         <result column="apply_curriculum" property="applyCurriculum" jdbcType="VARCHAR"/>
+        <result column="apply_curriculum_id" property="applyCurriculumId" jdbcType="INTEGER"/>
         <result column="total_price" property="totalPrice" jdbcType="VARCHAR"/>
         <result column="grade" property="grade" jdbcType="VARCHAR"/>
         <result column="class_hours" property="classHours" jdbcType="VARCHAR"/>
@@ -205,7 +206,7 @@
 
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
         select sca.id,CONCAT(st.nickname,'/',st.phone) as apply_person,
-        c.`name` as apply_curriculum, IFNULL(SUM(cs.num*cs.unit_price),0) as total_price,
+        c.`name` as apply_curriculum,c.id as apply_curriculum_id, IFNULL(SUM(cs.num*cs.unit_price),0) as total_price,
         sca.applicable_grade as grade,c.class_hours
         ,sca.apply_remark,sca.apply_time,sca.max_num,sca.class_place,sca.teacher_id,sca.begin_of_select_time,
         sca.end_of_select_time,sca.curr_start_time,sca.is_fine_quality
