@@ -132,6 +132,9 @@
         <if test='tableName == "hklk_school_teacher"'>
             t.nickname ,'老师' as birth ,phone
         </if>
+        <if test='tableName == "hklk_school_student"'>
+            t.full_name as nickname ,'家长' as birth ,parent_phone as phone
+        </if>
         from hklk_feedback f left join ${tableName} t on f.feedback_user = t.id where f.id = #{id}
     </select>
 

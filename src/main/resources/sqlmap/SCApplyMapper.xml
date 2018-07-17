@@ -533,7 +533,7 @@
         <if test="isFineQuality==-1">/*查询精品*/
             <choose>
                 <when test="grade!=null">
-                    and h.grade like CONCAT('%', #{grade}, '%')
+                    and h.grade like CONCAT('%', #{grade}, '%') ORDER BY h.apply_status,h.curr_start_time DESC
                 </when>
                 <otherwise>
                     ORDER BY h.apply_status,h.curr_start_time DESC

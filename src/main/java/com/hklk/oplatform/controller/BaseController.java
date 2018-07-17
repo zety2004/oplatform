@@ -1,9 +1,6 @@
 package com.hklk.oplatform.controller;
 
-import com.hklk.oplatform.comm.LoginSchool;
-import com.hklk.oplatform.comm.LoginTeacher;
-import com.hklk.oplatform.comm.LoginUser;
-import com.hklk.oplatform.comm.TokenManager;
+import com.hklk.oplatform.comm.*;
 import com.hklk.oplatform.service.AuthenticationRpcService;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
@@ -46,8 +43,14 @@ public abstract class BaseController {
 
     public LoginTeacher getLoginTeacher(HttpServletRequest request) {
         String token = request.getHeader("Access-Toke");
-        LoginTeacher loginTeacher = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token,LoginTeacher.class);
+        LoginTeacher loginTeacher = authenticationRpcService.findAuthInfo(tokenManager.teacherTokenKey, token, LoginTeacher.class);
         return loginTeacher;
+    }
+
+    public LoginParent getLoginParent(HttpServletRequest request) {
+        String token = request.getHeader("Access-Toke");
+        LoginParent loginParent = authenticationRpcService.findAuthInfo(tokenManager.parentTokenKey, token, LoginParent.class);
+        return loginParent;
     }
 
     public LoginUser getLoginUser(HttpServletRequest request) {

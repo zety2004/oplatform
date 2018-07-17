@@ -26,7 +26,7 @@ import java.util.Map;
 
 
 /**
- * 老师登陆模块
+ * 家长登陆模块
  *
  * @author 曹良峰
  * @since 1.0

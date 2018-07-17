@@ -69,6 +69,8 @@ public class StatusCode {
     public final static int UPDATE_ERROR_FOR_IS_EXAMINE = 1021;
     //添加失败，您已经申报过该课程
     public final static int INSERT_ERROR_FOR_IS_APPLY = 1022;
+    //选课失败，您申报的课程存在时间冲突。
+    public final static int INSERT_ERROR_FOR_PARENT_APPLY = 1023;
 
     public static String getStatusMsg(Object code) {
 
@@ -106,6 +108,7 @@ public class StatusCode {
         map.put(UPDATE_ERROR_FOR_IS_EXAMINE, "操作失败，该记录已被审核！");
         map.put(INSERT_ERROR_FOR_IS_APPLY, "添加失败，您已申报过该课程！");
         map.put(ERROR_MSG, "未找到对应的学生信息,请先绑定微信或联系学校方更正您的手机号！");
+        map.put(INSERT_ERROR_FOR_PARENT_APPLY, "选课失败，您申报的课程存在时间冲突!");
         return map.get(code);
     }
 }

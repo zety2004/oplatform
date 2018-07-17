@@ -39,6 +39,16 @@ public class ParentMessageServiceImpl implements ParentMessageService {
     }
 
     @Override
+    public int updateIsReadByStudentId(Integer studentId) {
+        return parentMessageMapper.updateIsReadByStudentId(studentId);
+    }
+
+    @Override
+    public int updateIsReadById(Integer id) {
+        return parentMessageMapper.updateIsReadById(id);
+    }
+
+    @Override
     public List<ParentMessage> queryParentMessage(Integer studentId,Integer isRead) {
         Map<String, Object> params = new HashMap<>();
         params.put("studentId", studentId);

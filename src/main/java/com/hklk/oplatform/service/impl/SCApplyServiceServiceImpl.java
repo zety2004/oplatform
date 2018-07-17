@@ -100,7 +100,7 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public PageTableForm<CurriculumChoiceVo> queryByTeacherId(Integer teacherId,Integer status,Integer pageNum,Integer pageSize) {
+    public PageTableForm<CurriculumChoiceVo> queryByTeacherId(Integer teacherId, Integer status, Integer pageNum, Integer pageSize) {
         Map<String, Object> param = new HashMap<>();
         param.put("teacherId", teacherId);
         param.put("status", status);
@@ -111,7 +111,7 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public Map<String, List<CurriculumChoiceVo>> queryCurriculumForParent(Integer schoolId, String grade) {
+    public Map<String, List<CurriculumChoiceVo>> queryHotCurriculumForParent(Integer schoolId, Integer grade) {
         Map<String, List<CurriculumChoiceVo>> result = new HashMap<>();
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
@@ -126,5 +126,14 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         result.put("Hot", hotList);
         result.put("all", allList);
         return result;
+    }
+
+    @Override
+    public List<CurriculumChoiceVo> queryAllCurriculumForParent(Integer schoolId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("schoolId", schoolId);
+        param.put("isFineQuality", -1);
+        List<CurriculumChoiceVo> allList = scApplyMapper.queryCurriculumForParent(param);
+        return allList;
     }
 }

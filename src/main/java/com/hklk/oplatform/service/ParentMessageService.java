@@ -14,5 +14,9 @@ public interface ParentMessageService {
 
     int updateByPrimaryKeySelective(ParentMessage parentMessage);
 
+    int updateIsReadByStudentId(Integer studentId);
+
+    int updateIsReadById(Integer id);
+
     List<ParentMessage> queryParentMessage(Integer studentId, Integer isRead);
 }

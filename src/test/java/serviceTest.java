@@ -94,6 +94,6 @@ public class serviceTest extends AbstractTestCase {
 
     @Test
     public void queryTeacherMessage() {
-        System.out.println(JsonUtil.toJson(scApplyService.queryCurriculumForParent(1,"3")));
+        System.out.println(JsonUtil.toJson(scApplyService.queryHotCurriculumForParent(1,3)));
     }
 }
