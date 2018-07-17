@@ -26,10 +26,14 @@ public class LoginParent implements Serializable {
 
     private String schoolLogo;
 
+    private String openid;
+
+    private String session_key;
+
     public LoginParent() {
     }
 
-    public LoginParent(Integer studentId, String phone, String childName, Integer classId, String className, Integer schoolId, String schoolName, Integer grade, String schoolLogo) {
+    public LoginParent(Integer studentId, String phone, String childName, Integer classId, String className, Integer schoolId, String schoolName, Integer grade, String schoolLogo, String openid, String session_key) {
         this.studentId = studentId;
         this.phone = phone;
         this.childName = childName;
@@ -128,5 +132,21 @@ public class LoginParent implements Serializable {
 
     public void setSchoolLogo(String schoolLogo) {
         this.schoolLogo = schoolLogo;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
+
+    public String getSession_key() {
+        return session_key;
+    }
+
+    public void setSession_key(String session_key) {
+        this.session_key = session_key;
     }
 }

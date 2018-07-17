@@ -17,7 +17,7 @@ public interface SStudentService {
 
     List<SStudent> queryStudentByClassId(String param,Integer classId);
 
-    List<Map<String,Object>> queryStudentByPhoneNum(String phone,String wechatId);
+    List<Map<String,Object>> queryStudentByPhoneNum(String phone,String wechatId,String sNum);
 
     SStudent selectBySNumForValidate(Integer schoolId, String sNum);
 }

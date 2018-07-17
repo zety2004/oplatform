@@ -151,15 +151,21 @@
     <select id="queryStudentByPhoneNum" resultType="map" parameterType="map">
         SELECT
         st.id,st.parent_phone as phone,st.full_name as childName,st.class_id as classId,sc.`name` as
-        className,sc.create_time as createTime,sc.grade,sc.school_id as schoolId,s.`name` as schoolName, s.school_logo as schoolLogo
+        className,sc.create_time as createTime,sc.grade,sc.school_id as schoolId,s.`name` as schoolName, s.school_logo
+        as schoolLogo
         FROM
         hklk_school_student st
         LEFT JOIN hklk_school_class sc ON st.class_id = sc.id
         LEFT JOIN hklk_school s ON sc.school_id = s.id
-        WHERE
-        st.parent_phone = #{phone,jdbcType=VARCHAR}
+        WHERE 1=1
+        <if test="phone != null">
+            and st.parent_phone = #{phone,jdbcType=VARCHAR}
+        </if>
         <if test="wechatId != null">
             and st.wechat_id = #{wechatId,jdbcType=VARCHAR}
+        </if>
+        <if test="sNum != null">
+            and st.s_num = #{sNum,jdbcType=VARCHAR}
         </if>
     </select>
 </mapper>

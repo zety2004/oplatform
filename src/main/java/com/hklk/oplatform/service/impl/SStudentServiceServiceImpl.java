@@ -53,10 +53,11 @@ public class SStudentServiceServiceImpl implements SStudentService {
     }
 
     @Override
-    public List<Map<String,Object>> queryStudentByPhoneNum(String phone, String wechatId) {
+    public List<Map<String, Object>> queryStudentByPhoneNum(String phone, String wechatId, String sNum) {
         Map<String, Object> param = new HashMap<>();
         param.put("phone", phone);
         param.put("wechatId", wechatId);
+        param.put("sNum", sNum);
         return sStudentMapper.queryStudentByPhoneNum(param);
     }
 }

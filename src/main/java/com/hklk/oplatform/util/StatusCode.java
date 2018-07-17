@@ -63,7 +63,7 @@ public class StatusCode {
     //您选择的文件不符合模板规则，导入失败！
     public final static int FILE_IS_NOT_RIGHT = 1019;
 
-    //未找到对应的学生信息,请先绑定微信或联系学校方更正您的手机号！
+    //您的账号暂未绑定，请先绑定用户！
     public final static int ERROR_MSG = 1020;
     //操作失败，该记录已被审核！
     public final static int UPDATE_ERROR_FOR_IS_EXAMINE = 1021;
@@ -107,7 +107,7 @@ public class StatusCode {
         map.put(FILE_IS_NOT_RIGHT, "您选择的文件不符合模板规则，导入失败！");
         map.put(UPDATE_ERROR_FOR_IS_EXAMINE, "操作失败，该记录已被审核！");
         map.put(INSERT_ERROR_FOR_IS_APPLY, "添加失败，您已申报过该课程！");
-        map.put(ERROR_MSG, "未找到对应的学生信息,请先绑定微信或联系学校方更正您的手机号！");
+        map.put(ERROR_MSG, "您的账号暂未绑定，请先绑定用户！");
         map.put(INSERT_ERROR_FOR_PARENT_APPLY, "选课失败，您申报的课程存在时间冲突!");
         return map.get(code);
     }
