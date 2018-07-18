@@ -43,6 +43,8 @@ public class LoginParent implements Serializable {
         this.schoolName = schoolName;
         this.grade = grade;
         this.schoolLogo = schoolLogo;
+        this.openid = openid;
+        this.session_key = session_key;
     }
 
     @Override

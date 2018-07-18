@@ -152,7 +152,7 @@
         SELECT
         st.id,st.parent_phone as phone,st.full_name as childName,st.class_id as classId,sc.`name` as
         className,sc.create_time as createTime,sc.grade,sc.school_id as schoolId,s.`name` as schoolName, s.school_logo
-        as schoolLogo
+        as schoolLogo,wechat_id as wechatId
         FROM
         hklk_school_student st
         LEFT JOIN hklk_school_class sc ON st.class_id = sc.id

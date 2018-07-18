@@ -96,7 +96,7 @@ public class LoginParentController extends BaseController {
      *
      * @param phone
      * @param sNum
-     * @return java.lang.String
+     * @return code: 200 成功  1025 学生已经被绑定  1024 未找到学生
      * @author 曹良峰
      */
     @ResponseBody
@@ -107,9 +107,11 @@ public class LoginParentController extends BaseController {
 
         List<Map<String, Object>> studentBinding = sStudentService.queryStudentByPhoneNum(phone, null, null);
         if (student != null && student.size() != 0) {
+            if (student.get(0).get("wechatId") != null && !"".equals(student.get(0).get("wechatId"))) {
+                return ToolUtil.buildResultStr(StatusCode.STUDENT_WAS_BINDING, StatusCode.getStatusMsg(StatusCode.STUDENT_WAS_BINDING));
+            }
             Map<String, Object> result = new HashMap<String, Object>();
             for (Map<String, Object> map : studentBinding) {
-
                 LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), getLoginParent(request).getOpenid(), getLoginParent(request).getSession_key());
                 String token = createToken(loginParent);
                 result.put("childName", loginParent.getChildName());
@@ -122,7 +124,7 @@ public class LoginParentController extends BaseController {
             }
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
         } else {
-            return ToolUtil.buildResultStr(StatusCode.ERROR_MSG, StatusCode.getStatusMsg(StatusCode.ERROR_MSG));
+            return ToolUtil.buildResultStr(StatusCode.NO_FOUND_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_FOUND_STUDENT));
         }
     }
 
