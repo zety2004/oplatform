@@ -1,7 +1,6 @@
 package com.hklk.oplatform.controller.parent;
 
 import com.hklk.oplatform.comm.LoginParent;
-import com.hklk.oplatform.comm.LoginTeacher;
 import com.hklk.oplatform.comm.TokenManager;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.SStudent;
@@ -63,24 +62,19 @@ public class LoginParentController extends BaseController {
             List<Map<String, Object>> student = sStudentService.queryStudentByPhoneNum(null, resultMap.get("openid"), null);
 
             if (student != null && student.size() != 0) {
-                Object result;
-                if (student.size() > 1) {
-                    result = new ArrayList<Map<String, Object>>();
-                    for (Map map : student) {
-                        Map<String, Object> temp = new HashMap<String, Object>();
-                        LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), resultMap.get("openid"), resultMap.get("session_key"));
-                        String token = createToken(loginParent);
-                        temp.put("childName", loginParent.getChildName());
-                        temp.put("token", token);
-
-                        ((ArrayList) result).add(temp);
-                    }
-                } else {
-                    result = new HashMap<String, Object>();
-                    LoginParent loginParent = new LoginParent((Integer) student.get(0).get("id"), (String) student.get(0).get("phone"), (String) student.get(0).get("childName"), (Integer) student.get(0).get("classId"), (String) student.get(0).get("className"), (Integer) student.get(0).get("schoolId"), (String) student.get(0).get("schoolName"), (Integer) student.get(0).get("grade"), (String) student.get(0).get("schoolLogo"), resultMap.get("openid"), resultMap.get("session_key"));
+                List result = new ArrayList<Map<String, Object>>();
+                for (Map map : student) {
+                    LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), resultMap.get("openid"), resultMap.get("session_key"));
                     String token = createToken(loginParent);
-                    ((HashMap) result).put("token", token);
+                    Map<String, Object> stu = new HashMap<>();
+                    stu.put("childName", loginParent.getChildName());
+                    stu.put("schoolName", map.get("schoolName"));
+                    stu.put("className", map.get("className"));
+                    stu.put("schoolLogo", map.get("schoolLogo"));
+                    stu.put("token", token);
+                    result.add(stu);
                 }
+
                 return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
             } else {
                 LoginParent loginParent = new LoginParent(null, null, null, null, null, null, null, null, null, resultMap.get("openid"), resultMap.get("session_key"));
@@ -110,17 +104,24 @@ public class LoginParentController extends BaseController {
             if (student.get(0).get("wechatId") != null && !"".equals(student.get(0).get("wechatId"))) {
                 return ToolUtil.buildResultStr(StatusCode.STUDENT_WAS_BINDING, StatusCode.getStatusMsg(StatusCode.STUDENT_WAS_BINDING));
             }
-            Map<String, Object> result = new HashMap<String, Object>();
+            List<Map<String, Object>> result = new ArrayList<>();
             for (Map<String, Object> map : studentBinding) {
+
                 LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), getLoginParent(request).getOpenid(), getLoginParent(request).getSession_key());
                 String token = createToken(loginParent);
-                result.put("childName", loginParent.getChildName());
-                result.put("token", token);
+                Map<String, Object> stu = new HashMap<>();
+                stu.put("childName", loginParent.getChildName());
+                stu.put("schoolName", map.get("schoolName"));
+                stu.put("className", map.get("className"));
+                stu.put("schoolLogo", map.get("schoolLogo"));
+                stu.put("token", token);
 
                 SStudent sStudent = new SStudent();
                 sStudent.setId((Integer) map.get("id"));
                 sStudent.setWechatId(getLoginParent(request).getOpenid());
                 sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
+
+                result.add(stu);
             }
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
         } else {
