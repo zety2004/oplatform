@@ -117,9 +117,10 @@ public class SchoolCurriculumController extends BaseController {
     /**
      * 2018/7/4 15:55
      * 申报课程选课情况
-     * @param scaId  课程申报id
-     * @author 曹良峰
+     *
+     * @param scaId 课程申报id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryStudentBySCAId")
@@ -132,16 +133,17 @@ public class SchoolCurriculumController extends BaseController {
     /**
      * 2018/7/4 15:56
      * 修改申报课程
-     * @param scApply   课程申报对象
-     * @author 曹良峰
+     *
+     * @param scApply 课程申报对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateCurriculumApply")
     public String updateCurriculumApply(SCApply scApply, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
         SCApply temp = scApplyService.selectByPrimaryKey(scApply.getId());
-        if (temp.getOperatorId() != null && scApply.getStatus() != 0) {
+        if (temp.getOperatorId() != null && temp.getStatus() != 0 && scApply.getStatus() != 0) {
             return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
         } else {
             scApply.setOperatorId(getLoginSchool(request).getSchoolAdminId());
@@ -157,9 +159,10 @@ public class SchoolCurriculumController extends BaseController {
     /**
      * 2018/7/4 15:57
      * 添加修改课程表
-     * @param param     table结构参数
-     * @author 曹良峰
+     *
+     * @param param table结构参数
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/addOrUpdateSyllabusAll")
@@ -168,11 +171,13 @@ public class SchoolCurriculumController extends BaseController {
         sSyllabusService.delAndbatchSaveSyllabus(param, getLoginSchool(request).getSchoolId());
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
+
     /**
      * 2018/7/4 15:58
      * 查询课程表
-     * @author 曹良峰
+     *
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/querySyllabusAll")
@@ -194,8 +199,9 @@ public class SchoolCurriculumController extends BaseController {
     /**
      * 2018/7/4 15:59
      * 按行查询课程表
-     * @author 曹良峰
+     *
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/querySyllabusByTimeType")
@@ -213,8 +219,9 @@ public class SchoolCurriculumController extends BaseController {
     /**
      * 2018/7/4 15:59
      * 查询结束课程表
-     * @author 曹良峰
+     *
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/querySyllabusByTimeTypeForEnd")

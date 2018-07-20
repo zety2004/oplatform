@@ -79,7 +79,7 @@
     </update>
 
     <select id="queryParentApplyForVerification" resultType="java.lang.Integer" parameterType="map">
-                select max(num) from (SELECT
+        select max(num) from (SELECT
             count(1) as num,sca.school_id
         FROM
             hklk_school_curriculum_apply sca
@@ -97,8 +97,94 @@
                 WHERE
                     student_id = #{studentId,jdbcType=INTEGER}
         )
+        GROUP BY ss.week_type) t GROUP BY t.school_id
+    </select>
+
+    <select id="queryMyCurriculum" resultType="map" parameterType="map">
+        SELECT * from (
+        SELECT
+        sca.id,
+        c.`name` AS curriculumName,
+        sca.applicable_grade AS grade,
+        sca.curriculum_id AS curriculumId,
+        st.nickname AS teacherName,
+        sca.curr_start_time AS currStartTime,
+        sca.max_num maxNum,
+        sca.class_place classPlace,
+        c.class_hours classHours,
+        (select GROUP_CONCAT(d.name) from hklk_dic d where FIND_IN_SET(d.id, c.learning_style)>0 GROUP BY d.typecode) as
+        learningStyle,
+        group_concat(h.week_type) classTime,
+        c.cover,
+        IFNULL(SUM(cs.num*cs.unit_price),0) as totalPrice,
+        <![CDATA[
+
+        CASE
+        WHEN sca.begin_of_select_time > SYSDATE() THEN
+        0 /*未开课*/
+        WHEN sca.begin_of_select_time < SYSDATE()
+        AND SYSDATE() < sca.end_of_select_time THEN
+        1 /*开始选课*/
+        WHEN sca.end_of_select_time < SYSDATE()
+        AND SYSDATE() < sca.curr_start_time THEN
+        2 /*备课中*/
+        WHEN SYSDATE() > sca.curr_start_time
+        AND SYSDATE() < date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(
+        tc.class_hours / count(ts.id)
+        ) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
         GROUP BY
-            ss.week_type) t GROUP BY t.school_id
+        tsca.id
+        ) DAY
+        ) THEN
+        3 /*开始上课*/
+        WHEN SYSDATE() > date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(
+        tc.class_hours / count(ts.id)
+        ) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        4 /*已结束*/
+        END AS applyStatus
+        ]]>
+        FROM
+        hklk_student_choice_curriculum scc
+        LEFT JOIN hklk_school_curriculum_apply sca ON scc.sca_id = sca.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        LEFT JOIN hklk_school_teacher st ON st.id = sca.teacher_id
+        LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
+        LEFT JOIN hklk_school_syllabus h on sca.id = h.sca_id
+        where scc.student_id = #{studentId,jdbcType=INTEGER}
+        GROUP BY sca.id) tmp where 1=1
+        <choose>
+            <when test="state != null">
+                and tmp.applyStatus = 4
+            </when>
+            <otherwise>
+                and tmp.applyStatus != 4
+            </otherwise>
+        </choose>
+
     </select>
 
 </mapper>

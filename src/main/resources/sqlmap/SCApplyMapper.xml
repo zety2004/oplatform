@@ -437,30 +437,25 @@
         order by sca.apply_time desc
     </select>
 
-    <select id="queryCurriculumForParent" resultMap="CurriculumChoiceMap" parameterType="map">
+    <select id="queryCurriculumForParent" resultType="map" parameterType="map">
         SELECT * FROM
         (
         SELECT
         sca.id,
-        sca.is_fine_quality,
-        c.`name` AS curriculum_name,
+        sca.is_fine_quality as isFineQuality,
+        c.`name` AS curriculumName,
+        c.cover,
         sca.applicable_grade AS grade,
-        sca.curriculum_id,
-        CONCAT(st.nickname, '/', st.phone) AS teacher_name,
-        sca.curr_start_time,
-        sca.max_num,
-        sca.class_place,
-        CONCAT(
-        DATE_FORMAT(
-        sca.begin_of_select_time,
-        '%Y-%m-%d'
-        ),
-        ' 至 ',
-        DATE_FORMAT(
-        sca.end_of_select_time,
-        '%Y-%m-%d'
-        )
-        ) AS choose_time,
+        sca.curriculum_id as curriculumId,
+        st.nickname AS teacherName,
+        sca.curr_start_time as currStartTime,
+        sca.max_num maxNum,
+        sca.class_place classPlace,
+        c.class_hours classHours,
+        (select GROUP_CONCAT(d.name) from hklk_dic d where FIND_IN_SET(d.id, c.learning_style)>0 GROUP BY d.typecode) as
+        learningStyle,
+        st.remark,
+        IFNULL(SUM(cs.num*cs.unit_price),0) as totalPrice,
         <![CDATA[
         CASE
         WHEN sca.begin_of_select_time > SYSDATE() THEN
@@ -508,47 +503,128 @@
         ) DAY
         ) THEN
         4 /*已结束*/
-        END AS apply_status,
+        END AS applyStatus,
         ]]>
-        concat(
-        group_concat(h.week_type),
-        '|',
-        max(h.class_time)
-        ) class_time,
-        COUNT(h.id) AS student_num,
-        (sca.max_num - COUNT(h.id)) AS surplus
+        group_concat(h.week_type) as classTime,
+        COUNT(scc.id) AS studentNum,
+        (sca.max_num - COUNT(scc.id)) AS surplus
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
         RIGHT JOIN hklk_school_syllabus h ON sca.id = h.sca_id
+        LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
         WHERE
-        sca. STATUS = 3
+        sca.status = 3
         AND sca.school_id = #{schoolId,jdbcType=INTEGER}
         GROUP BY
         sca.id
         ) h
-        where h.apply_status in (1,2,3)
+        where h.applyStatus in (1,2,3)
         <if test="isFineQuality==-1">/*查询精品*/
             <choose>
                 <when test="grade!=null">
-                    and h.grade like CONCAT('%', #{grade}, '%') ORDER BY h.apply_status,h.curr_start_time DESC
+                    and h.grade like CONCAT('%', #{grade}, '%') ORDER BY h.applyStatus,h.currStartTime DESC
                 </when>
                 <otherwise>
-                    ORDER BY h.apply_status,h.curr_start_time DESC
+                    ORDER BY h.applyStatus,h.currStartTime DESC
                 </otherwise>
             </choose>
         </if>
         <if test="isFineQuality==1">/*查询精品*/
-            and h.is_fine_quality = 1
+            and h.isFineQuality = 1
             ORDER BY h.surplus DESC
             LIMIT 0,10
         </if>
         <if test="isFineQuality==0">/*查询热门课程*/
-            and h.is_fine_quality = 0
+            and h.isFineQuality = 0
             ORDER BY h.surplus
             LIMIT 0,10
         </if>
+    </select>
+
+
+    <select id="selectByApplyCurriculmForParentById" resultType="map" parameterType="java.lang.Integer">
+        SELECT
+        sca.id,
+        sca.is_fine_quality as isFineQuality,
+        c.`name` AS curriculumName,
+        sca.applicable_grade AS grade,
+        sca.curriculum_id as curriculumId,
+        st.nickname AS teacherName,
+        sca.curr_start_time as currStartTime,
+        sca.max_num maxNum,
+        sca.class_place classPlace,
+        c.cover,
+        c.des,
+        CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as chooseTime,
+        c.class_hours classHours,
+        (select GROUP_CONCAT(d.name) from hklk_dic d where FIND_IN_SET(d.id, c.learning_style)>0 GROUP BY d.typecode) as learningStyle,
+        st.remark,
+        IFNULL(SUM(cs.num*cs.unit_price),0) as totalPrice,
+        <![CDATA[
+        CASE
+        WHEN sca.begin_of_select_time > SYSDATE() THEN
+        0 /*未开课*/
+        WHEN sca.begin_of_select_time < SYSDATE()
+        AND SYSDATE() < sca.end_of_select_time THEN
+        1 /*开始选课*/
+        WHEN sca.end_of_select_time < SYSDATE()
+        AND SYSDATE() < sca.curr_start_time THEN
+        2 /*备课中*/
+        WHEN SYSDATE() > sca.curr_start_time
+        AND SYSDATE() < date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(
+        tc.class_hours / count(ts.id)
+        ) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        3 /*开始上课*/
+        WHEN SYSDATE() > date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(
+        tc.class_hours / count(ts.id)
+        ) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        4 /*已结束*/
+        END AS applyStatus,
+        ]]>
+        group_concat(h.week_type) as classTime,
+        COUNT(scc.id) AS studentNum,
+        (sca.max_num - COUNT(scc.id)) AS surplus
+        FROM
+        hklk_school_curriculum_apply sca
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
+        RIGHT JOIN hklk_school_syllabus h ON sca.id = h.sca_id
+        LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
+        WHERE
+        sca.id = #{scaId,jdbcType=INTEGER}
+        GROUP BY
+        sca.id
     </select>
 </mapper>

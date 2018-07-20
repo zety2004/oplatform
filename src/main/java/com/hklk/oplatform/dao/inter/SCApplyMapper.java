@@ -31,5 +31,7 @@ public interface SCApplyMapper {
 
     List<CurriculumChoiceVo> queryByTeacherId(Map<String, Object> param);
 
-    List<CurriculumChoiceVo> queryCurriculumForParent(Map<String, Object> param);
+    List<Map<String, Object>> queryCurriculumForParent(Map<String, Object> param);
+
+    Map<String, Object> selectByApplyCurriculmForParentById(Integer id);
 }

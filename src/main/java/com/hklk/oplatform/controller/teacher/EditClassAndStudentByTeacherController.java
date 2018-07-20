@@ -85,9 +85,12 @@ public class EditClassAndStudentByTeacherController extends BaseController {
         } else if (sClass.getId() != null && temp != null && temp.getId() != sClass.getId()) {
             return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
         } else {
-            sClass.setCreateBy(getLoginTeacher(request).getTeacherId());
             sClass.setSchoolId(schoolId);
+            if (sClass.getId() != null) {
+                sClass.setCreateBy(getLoginTeacher(request).getTeacherId());
+            }
             sClassService.insertOrUpdateByPrimaryKeySelective(sClass);
+
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }

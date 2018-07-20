@@ -68,6 +68,7 @@ public class ParentMessageController extends BaseController {
      * 2018/7/11 9:43
      * 修改家长单个消息为已读
      *
+     * @param id
      * @return code: 200  成功
      * @author 曹良峰
      */
@@ -76,6 +77,22 @@ public class ParentMessageController extends BaseController {
     public String updateMessageIsReadById(Integer id, HttpServletRequest request,
                                           HttpServletResponse response, HttpSession session) {
         parentMessageService.updateIsReadById(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/20 11:32
+     * 描述一下方法的作用
+     *
+     * @param id
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/delMessageById")
+    public String delMessageById(Integer id, HttpServletRequest request,
+                                 HttpServletResponse response, HttpSession session) {
+        parentMessageService.deleteByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 }

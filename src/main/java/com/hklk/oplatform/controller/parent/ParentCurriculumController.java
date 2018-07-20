@@ -2,14 +2,12 @@ package com.hklk.oplatform.controller.parent;
 
 import com.hklk.oplatform.comm.LoginParent;
 import com.hklk.oplatform.controller.BaseController;
+import com.hklk.oplatform.entity.table.ParentMessage;
 import com.hklk.oplatform.entity.table.StudentChoice;
 import com.hklk.oplatform.entity.vo.CurriculumChoiceVo;
 import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
 import com.hklk.oplatform.provider.PasswordProvider;
-import com.hklk.oplatform.service.CurriculumService;
-import com.hklk.oplatform.service.SCApplyService;
-import com.hklk.oplatform.service.SSyllabusService;
-import com.hklk.oplatform.service.StudentChoiceService;
+import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,6 +42,8 @@ public class ParentCurriculumController extends BaseController {
     SSyllabusService sSyllabusService;
     @Autowired
     StudentChoiceService studentChoiceService;
+    @Autowired
+    ParentMessageService parentMessageService;
 
     /**
      * 2018/7/4 17:17
@@ -79,15 +79,15 @@ public class ParentCurriculumController extends BaseController {
      * 2018/7/4 12:11
      * 家长查询课程详情
      *
-     * @param id
+     * @param scaId
      * @return {"resultData":{"id":68,"cover":"http://oss-cn-hklk.oss-cn-beijing.aliyuncs.com/KCGXe92d624c22d76d35683e1f1f08b433f8.jpg","name":"用积木学科学","subject":"20","grade":"3","learningStyle":"18","classHours":"11","collectionNum":0,"author":"好课乐课教育","enclosure":"http://oss-cn-hklk.oss-cn-beijing.aliyuncs.com/KCGX43743b8d4baee12223be9382e13c2736.zip","encDes":"附件包含《用积木学科学》（教师用书）《用积木学科学》（学生用书）\n《用积木学科学》（课程纲要）；","status":1,"des":"","consumables":[]},"resultCode":200,"resultMsg":"成功"}
      * @author 曹良峰
      */
     @ResponseBody
-    @RequestMapping("/selectCurriculumById")
-    public String selectCurriculumById(Integer id, HttpServletRequest request,
-                                       HttpServletResponse response, HttpSession session) {
-        Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(id);
+    @RequestMapping("/selectApplyCurriculumById")
+    public String selectApplyCurriculumById(Integer scaId, HttpServletRequest request,
+                                            HttpServletResponse response, HttpSession session) {
+        Map<String, Object> curriculum = scApplyService.selectByApplyCurriculmForParentById(scaId);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 
@@ -103,7 +103,7 @@ public class ParentCurriculumController extends BaseController {
     public String queryHotCurriculumByParent(HttpServletRequest request,
                                              HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        Map<String, List<CurriculumChoiceVo>> curriculumPageTableForm = scApplyService.queryHotCurriculumForParent(loginParent.getSchoolId(), loginParent.getGrade());
+        Map<String, List<Map<String, Object>>> curriculumPageTableForm = scApplyService.queryHotCurriculumForParent(loginParent.getSchoolId(), loginParent.getGrade());
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
@@ -116,10 +116,15 @@ public class ParentCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryAllCurriculumByParent")
-    public String queryAllCurriculumByParent(HttpServletRequest request,
+    public String queryAllCurriculumByParent(Integer isAll, HttpServletRequest request,
                                              HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        List<CurriculumChoiceVo> curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId());
+        List<Map<String, Object>> curriculumChoiceVos;
+        if (isAll == null) {
+            curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), null);
+        } else {
+            curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), loginParent.getGrade());
+        }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVos);
     }
 
@@ -133,7 +138,7 @@ public class ParentCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/saveStudentChoice")
-    public String insertStudentChoice(Integer scaId, HttpServletRequest request,
+    public String insertStudentChoice(Integer scaId, String curriculumName, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
         Integer num = studentChoiceService.queryParentApplyForVerification(loginParent.getSchoolId(), scaId, loginParent.getStudentId());
@@ -144,9 +149,34 @@ public class ParentCurriculumController extends BaseController {
             studentChoice.setScaId(scaId);
             studentChoice.setStudentId(loginParent.getStudentId());
             studentChoiceService.insertSelective(studentChoice);
+            ParentMessage parentMessage = new ParentMessage();
+            parentMessage.setStudentId(loginParent.getStudentId());
+            parentMessage.setMessage("您为 " + loginParent.getChildName() + "同学报名成功 " + curriculumName + " 课程！");
+            parentMessageService.insertSelective(parentMessage);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }
 
+    /**
+     * 2018/7/16 15:25
+     * 家长查询课程页面
+     *
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/queryMyCurriculum")
+    public String queryMyCurriculum(Integer isEnd, HttpServletRequest request,
+                                    HttpServletResponse response, HttpSession session) {
+        LoginParent loginParent = getLoginParent(request);
+        List<Map<String, Object>> myCurriculum;
+        if (isEnd == null) {
+            myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null);
+        } else {
+            myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 1);
+        }
+
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), myCurriculum);
+    }
 
 }

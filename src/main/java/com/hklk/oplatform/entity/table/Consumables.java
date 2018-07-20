@@ -17,6 +17,8 @@ public class Consumables implements Serializable {
 
     private String pic;
 
+    private final boolean open = false;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {

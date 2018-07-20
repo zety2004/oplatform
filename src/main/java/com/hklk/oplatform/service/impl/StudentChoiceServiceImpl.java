@@ -53,4 +53,13 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
         params.put("studentId", studentId);
         return studentChoiceMapper.queryParentApplyForVerification(params);
     }
+
+    @Override
+    public List<Map<String, Object>> queryMyCurriculum(Integer studentId,Integer state) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("studentId", studentId);
+        params.put("state", state);
+
+        return studentChoiceMapper.queryMyCurriculum(params);
+    }
 }

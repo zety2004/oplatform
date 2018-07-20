@@ -2,6 +2,7 @@ package com.hklk.oplatform.service;
 
 import com.hklk.oplatform.entity.table.StudentChoice;
 
+import java.util.List;
 import java.util.Map;
 
 public interface StudentChoiceService {
@@ -14,4 +15,6 @@ public interface StudentChoiceService {
     int updateByPrimaryKeySelective(StudentChoice record);
 
     int queryParentApplyForVerification(Integer schoolId, Integer scaId, Integer studentId);
+
+    List<Map<String, Object>> queryMyCurriculum(Integer studentId,Integer state);
 }
