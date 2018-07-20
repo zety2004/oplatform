@@ -86,7 +86,7 @@ public class EditClassAndStudentByTeacherController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
         } else {
             sClass.setSchoolId(schoolId);
-            if (sClass.getId() != null) {
+            if (sClass.getId() == null) {
                 sClass.setCreateBy(getLoginTeacher(request).getTeacherId());
             }
             sClassService.insertOrUpdateByPrimaryKeySelective(sClass);
