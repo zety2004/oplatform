@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * 管理学校
+ *
  * @author 曹良峰
  * @since 1.0
  */
@@ -36,10 +37,11 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:50
      * 查询学校
-     * @param param     学校查询参数
-     * @param pageNum   分页参数
-     * @author 曹良峰
+     *
+     * @param param   学校查询参数
+     * @param pageNum 分页参数
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/querySchool")
@@ -52,9 +54,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:52
      * 根据学校id查询学校
-     * @param id    学校id
-     * @author 曹良峰
+     *
+     * @param id 学校id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/selectSchoolById")
@@ -68,9 +71,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:52
      * 验证学校名称
-     * @param school    学校对象
-     * @author 曹良峰
+     *
+     * @param school 学校对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/validateSchoolName")
@@ -87,9 +91,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:52
      * 添加学校
-     * @param school    学校对象
-     * @author 曹良峰
+     *
+     * @param school 学校对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/addSchool")
@@ -107,9 +112,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:54
      * 修改学校
+     *
      * @param school
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateSchool")
@@ -127,9 +133,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:54
      * 删除学校
-     * @param id    学校id
-     * @author 曹良峰
+     *
+     * @param id 学校id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/deleteSchool")
@@ -142,9 +149,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:54
      * 查询学校管理
+     *
      * @param schoolId 学校id
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/querySchoolAdmin")
@@ -157,9 +165,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:54
      * 根据id查询学校管理员
-     * @param id    管理员主键
-     * @author 曹良峰
+     *
+     * @param id 管理员主键
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/selectSchoolAdminById")
@@ -172,9 +181,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:55
      * 添加学校管理员
-     * @param schoolAdmin   管理员对象
-     * @author 曹良峰
+     *
+     * @param schoolAdmin 管理员对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/addSchoolAdmin")
@@ -186,7 +196,7 @@ public class EditSchoolController extends BaseController {
         } else {
             SchoolAdmin tmpAdmin = schoolAdminService.querySchoolAdminsByName(schoolAdmin.getAccount());
             if (tmpAdmin != null) {
-                return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, StatusCode.getStatusMsg(StatusCode.ADDUSER_USERNAME_EX));
+                return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, "手机号已存在!");
             }
             schoolAdminService.insertSelective(schoolAdmin);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
@@ -196,9 +206,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:55
      * 修改学校管理员
-     * @param schoolAdmin   管理员对象
-     * @author 曹良峰
+     *
+     * @param schoolAdmin 管理员对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateSchoolAdmin")
@@ -215,9 +226,10 @@ public class EditSchoolController extends BaseController {
     /**
      * 2018/7/4 17:56
      * 删除学校管理员
-     * @param id    管理员id
-     * @author 曹良峰
+     *
+     * @param id 管理员id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/deleteSchoolAdmin")

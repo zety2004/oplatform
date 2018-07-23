@@ -12,6 +12,7 @@ import com.hklk.oplatform.service.SCApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,37 +116,49 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public Map<String, List<Map<String,Object>>> queryHotCurriculumForParent(Integer schoolId, Integer grade) {
-        Map<String, List<Map<String,Object>>> result = new HashMap<>();
+    public Map<String, List<Map<String, Object>>> queryHotCurriculumForParent(Integer schoolId, Integer grade) {
+        Map<String, List<Map<String, Object>>> result = new HashMap<>();
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("isFineQuality", 1);
-        List<Map<String,Object>> jpList = scApplyMapper.queryCurriculumForParent(param);
+        List<Map<String, Object>> jpList = scApplyMapper.queryCurriculumForParent(param);
         param.put("isFineQuality", 0);
-        List<Map<String,Object>> hotList = scApplyMapper.queryCurriculumForParent(param);
+        List<Map<String, Object>> hotList = scApplyMapper.queryCurriculumForParent(param);
         param.put("isFineQuality", -1);
         param.put("grade", grade);
-        List<Map<String,Object>> allList = scApplyMapper.queryCurriculumForParent(param);
-        result.put("fineQuality", jpList);
-        result.put("Hot", hotList);
-        result.put("all", allList);
+        List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
+        if (jpList.get(0) == null) {
+            result.put("fineQuality", new ArrayList<>());
+        } else {
+            result.put("fineQuality", jpList);
+        }
+        if (hotList.get(0) == null) {
+            result.put("Hot", new ArrayList<>());
+        } else {
+            result.put("Hot", hotList);
+        }
+        if (allList.get(0) == null) {
+            result.put("all", new ArrayList<>());
+        } else {
+            result.put("all", allList);
+        }
         return result;
     }
 
     @Override
-    public List<Map<String,Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade) {
+    public List<Map<String, Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade) {
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("isFineQuality", -1);
-        List<Map<String,Object>> allList = scApplyMapper.queryCurriculumForParent(param);
+        List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
         return allList;
     }
 
     @Override
-    public Map<String,Object> selectByApplyCurriculmForParentById(Integer id) {
-        Map<String,Object> result = scApplyMapper.selectByApplyCurriculmForParentById(id);
+    public Map<String, Object> selectByApplyCurriculmForParentById(Integer id) {
+        Map<String, Object> result = scApplyMapper.selectByApplyCurriculmForParentById(id);
         List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId((Integer) result.get("curriculumId"));
-        result.put("consumables",consumables);
+        result.put("consumables", consumables);
         return result;
     }
 }

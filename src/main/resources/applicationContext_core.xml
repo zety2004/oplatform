@@ -1,111 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:aop="http://www.springframework.org/schema/aop"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:tx="http://www.springframework.org/schema/tx"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-	<description>Spring公共配置</description>
+    <description>Spring公共配置</description>
 
-	<!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
-	<context:component-scan base-package="com.hklk.oplatform.*">
-		<context:exclude-filter type="regex" expression="com.hklk.oplatform.comm.cache.*" />
-	</context:component-scan>
+    <!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
+    <context:component-scan base-package="com.hklk.oplatform.*">
+        <context:exclude-filter type="regex" expression="com.hklk.oplatform.comm.cache.*"/>
+    </context:component-scan>
 
-	<bean class="com.hklk.oplatform.util.SpringContextHolder" />
+    <bean class="com.hklk.oplatform.util.SpringContextHolder"/>
 
-	<context:property-placeholder location="classpath*:/application.properties" />
-	<!-- MyBatis配置 -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="druidDataSource" />
-		<!-- 自动扫描entity目录, 省掉xml里的手工配置 -->
-		<property name="typeAliasesPackage" value="com.hklk.platform.courses.entity" />
-		<!-- 显式指定Mapper文件位置 -->
-		<property name="mapperLocations" value="classpath:/sqlmap/*Mapper.xml" />
+    <context:property-placeholder location="classpath*:/application.properties"/>
+    <!-- MyBatis配置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="druidDataSource"/>
+        <!-- 自动扫描entity目录, 省掉xml里的手工配置 -->
+        <property name="typeAliasesPackage" value="com.hklk.platform.courses.entity"/>
+        <!-- 显式指定Mapper文件位置 -->
+        <property name="mapperLocations" value="classpath:/sqlmap/*Mapper.xml"/>
 
-		<property name="plugins">
-			<array>
-				<bean class="com.github.pagehelper.PageHelper">
-					<property name="properties">
-						<!-- config params as the following -->
-						<value>
-							dialect=mysql
-						</value>
-					</property>
-				</bean>
-			</array>
-		</property>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <property name="properties">
+                        <!-- config params as the following -->
+                        <value>
+                            dialect=mysql
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
 
-	</bean>
-	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口 -->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.hklk.oplatform.dao.inter" />
-		<!--<property name="annotationClass" value="com.hklk.oplatformrm.dao.inter.repo.MyBatisRepository" />-->
-	</bean>
+        <property name="configurationProperties">
+            <props>
+                <prop key="cacheEnabled">true</prop>
+                <prop key="callSettersOnNulls">true</prop>
+            </props>
+        </property>
+    </bean>
+    <!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hklk.oplatform.dao.inter"/>
+        <!--<property name="annotationClass" value="com.hklk.oplatformrm.dao.inter.repo.MyBatisRepository" />-->
+    </bean>
 
-	<!-- 一个事务管理器, Jdbc单数据源事务 -->
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="druidDataSource" />
-	</bean>
+    <!-- 一个事务管理器, Jdbc单数据源事务 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="druidDataSource"/>
+    </bean>
 
-	<bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
-		destroy-method="close">
-		<!-- 基本属性 url、user、password -->
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
+    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
 
-		<!-- 配置初始化大小、最小、最大 -->
-		<property name="initialSize" value="1" />
-		<property name="minIdle" value="${jdbc.minIdle}" />
-		<property name="maxActive" value="${jdbc.maxActive}" />
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="${jdbc.minIdle}"/>
+        <property name="maxActive" value="${jdbc.maxActive}"/>
 
-		<!-- 配置获取连接等待超时的时间 -->
-		<property name="maxWait" value="60000" />
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000"/>
 
-		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
-		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
 
-		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
-		<property name="minEvictableIdleTimeMillis" value="300000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
 
-		<property name="validationQuery" value="SELECT 'x' FROM DUAL" />
-		<property name="testWhileIdle" value="true" />
-		<property name="testOnBorrow" value="false" />
-		<property name="testOnReturn" value="false" />
+        <property name="validationQuery" value="SELECT 'x' FROM DUAL"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
 
-		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
-		<property name="poolPreparedStatements" value="true" />
-		<property name="maxPoolPreparedStatementPerConnectionSize" value="50" />
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="50"/>
 
-		<!-- 配置监控统计拦截的filters -->
-		<property name="filters" value="stat" />
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
 
-		<!-- 定期把监控数据输出到日志中 -->
-		<property name="timeBetweenLogStatsMillis" value="300000" />
-	</bean>
+        <!-- 定期把监控数据输出到日志中 -->
+        <property name="timeBetweenLogStatsMillis" value="300000"/>
+    </bean>
 
-	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="del*" propagation="REQUIRED" />
-			<tx:method name="up*" propagation="REQUIRED" />
-			<tx:method name="grant*" propagation="REQUIRED" />
-			<tx:method name="insert*" propagation="REQUIRED"/>
-			<tx:method name="*" propagation="REQUIRED" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="up*" propagation="REQUIRED"/>
+            <tx:method name="grant*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="*" propagation="REQUIRED" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
 
-	<aop:config>
-		<!-- 设置切入面 -->
-		<!-- 第一个*代表所有的返回值类型；第二个*代表所有的类；第三个*代表类所有方法；..代表子或者孙子包；最后一个..代表所有的参数 -->
-		 <aop:pointcut id="transactionPointcut" expression="(execution(* com..service..*Impl.*(..)))" />
-		<!-- 设置切入点 -->
-		<aop:advisor pointcut-ref="transactionPointcut"  advice-ref="transactionAdvice"/>
-	</aop:config>
-	
+    <aop:config>
+        <!-- 设置切入面 -->
+        <!-- 第一个*代表所有的返回值类型；第二个*代表所有的类；第三个*代表类所有方法；..代表子或者孙子包；最后一个..代表所有的参数 -->
+        <aop:pointcut id="transactionPointcut" expression="(execution(* com..service..*Impl.*(..)))"/>
+        <!-- 设置切入点 -->
+        <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
+    </aop:config>
+
 </beans>

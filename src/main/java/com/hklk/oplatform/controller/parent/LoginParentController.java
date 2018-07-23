@@ -6,10 +6,7 @@ import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.service.SStudentService;
-import com.hklk.oplatform.util.HttpRequestUtils;
-import com.hklk.oplatform.util.JsonUtil;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,9 +49,7 @@ public class LoginParentController extends BaseController {
     @RequestMapping("/loginWx")
     public String getWxOpenId(@RequestParam(value = "code") String code, HttpServletRequest request,
                               HttpServletResponse response, HttpSession session) {
-        String appid = "wxc01e65175cb40604";
-        String secret = "a9da86b619d3d1d6cabd60b184e0fa6f";
-        String wxResult = HttpRequestUtils.httpGet("https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + secret + "&js_code=" + code + "&grant_type=authorization_code");
+        String wxResult = HttpRequestUtils.httpGet("https://api.weixin.qq.com/sns/jscode2session?appid=" + PropUtil.getProperty("wxAppid") + "&secret=" + PropUtil.getProperty("wxSecret") + "&js_code=" + code + "&grant_type=authorization_code");
         Map<String, String> resultMap = JsonUtil.jsonToMapStr(wxResult);
         if (resultMap.get("errcode") != null) {
             return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
@@ -106,7 +101,6 @@ public class LoginParentController extends BaseController {
             }
             List<Map<String, Object>> result = new ArrayList<>();
             for (Map<String, Object> map : studentBinding) {
-
                 LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), getLoginParent(request).getOpenid(), getLoginParent(request).getSession_key());
                 String token = createToken(loginParent);
                 Map<String, Object> stu = new HashMap<>();
@@ -115,12 +109,10 @@ public class LoginParentController extends BaseController {
                 stu.put("className", map.get("className"));
                 stu.put("schoolLogo", map.get("schoolLogo"));
                 stu.put("token", token);
-
                 SStudent sStudent = new SStudent();
                 sStudent.setId((Integer) map.get("id"));
                 sStudent.setWechatId(getLoginParent(request).getOpenid());
                 sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
-
                 result.add(stu);
             }
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
@@ -137,4 +129,9 @@ public class LoginParentController extends BaseController {
         return token;
     }
 
+    private String updateToken(String token, LoginParent loginParent) {
+        // 缓存中添加token对应User
+        tokenManager.addToken(tokenManager.parentTokenKey, token, loginParent);
+        return token;
+    }
 }

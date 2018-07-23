@@ -437,8 +437,18 @@
         order by sca.apply_time desc
     </select>
 
-    <select id="queryCurriculumForParent" resultType="map" parameterType="map">
-        SELECT * FROM
+    <select id="queryCurriculumForParent" resultType="java.util.HashMap" parameterType="map">
+        SELECT *,
+        group_concat(
+        case
+        when ss.week_type =1 then '周一'
+        when ss.week_type =2 then '周二'
+        when ss.week_type =3 then '周三'
+        when ss.week_type =4 then '周四'
+        when ss.week_type =5 then '周五'
+        end
+        ) classTime
+        FROM
         (
         SELECT
         sca.id,
@@ -505,7 +515,6 @@
         4 /*已结束*/
         END AS applyStatus,
         ]]>
-        group_concat(h.week_type) as classTime,
         COUNT(scc.id) AS studentNum,
         (sca.max_num - COUNT(scc.id)) AS surplus
         FROM
@@ -513,14 +522,13 @@
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
-        RIGHT JOIN hklk_school_syllabus h ON sca.id = h.sca_id
         LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
         WHERE
         sca.status = 3
         AND sca.school_id = #{schoolId,jdbcType=INTEGER}
         GROUP BY
         sca.id
-        ) h
+        ) h LEFT JOIN hklk_school_syllabus ss ON h.id = ss.sca_id
         where h.applyStatus in (1,2,3)
         <if test="isFineQuality==-1">/*查询精品*/
             <choose>
@@ -546,6 +554,17 @@
 
 
     <select id="selectByApplyCurriculmForParentById" resultType="map" parameterType="java.lang.Integer">
+        select *,
+        group_concat(
+        case
+        when h.week_type =1 then '周一'
+        when h.week_type =2 then '周二'
+        when h.week_type =3 then '周三'
+        when h.week_type =4 then '周四'
+        when h.week_type =5 then '周五'
+        end
+        ) classTime
+         from (
         SELECT
         sca.id,
         sca.is_fine_quality as isFineQuality,
@@ -612,7 +631,6 @@
         4 /*已结束*/
         END AS applyStatus,
         ]]>
-        group_concat(h.week_type) as classTime,
         COUNT(scc.id) AS studentNum,
         (sca.max_num - COUNT(scc.id)) AS surplus
         FROM
@@ -620,11 +638,12 @@
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
-        RIGHT JOIN hklk_school_syllabus h ON sca.id = h.sca_id
         LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
         WHERE
         sca.id = #{scaId,jdbcType=INTEGER}
         GROUP BY
-        sca.id
+        sca.id) tmp left JOIN hklk_school_syllabus h ON tmp.id = h.sca_id
+        GROUP BY tmp.id
+
     </select>
 </mapper>

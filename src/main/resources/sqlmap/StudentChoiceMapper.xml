@@ -101,7 +101,17 @@
     </select>
 
     <select id="queryMyCurriculum" resultType="map" parameterType="map">
-        SELECT * from (
+        SELECT *,
+        group_concat(
+        case
+        when h.week_type =1 then '周一'
+        when h.week_type =2 then '周二'
+        when h.week_type =3 then '周三'
+        when h.week_type =4 then '周四'
+        when h.week_type =5 then '周五'
+        end
+        ) classTime,week_type weekType
+        from (
         SELECT
         sca.id,
         c.`name` AS curriculumName,
@@ -114,11 +124,10 @@
         c.class_hours classHours,
         (select GROUP_CONCAT(d.name) from hklk_dic d where FIND_IN_SET(d.id, c.learning_style)>0 GROUP BY d.typecode) as
         learningStyle,
-        group_concat(h.week_type) classTime,
         c.cover,
         IFNULL(SUM(cs.num*cs.unit_price),0) as totalPrice,
+        COUNT(scc.id) AS studentNum,
         <![CDATA[
-
         CASE
         WHEN sca.begin_of_select_time > SYSDATE() THEN
         0 /*未开课*/
@@ -173,18 +182,19 @@
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_school_teacher st ON st.id = sca.teacher_id
         LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
-        LEFT JOIN hklk_school_syllabus h on sca.id = h.sca_id
         where scc.student_id = #{studentId,jdbcType=INTEGER}
-        GROUP BY sca.id) tmp where 1=1
+        GROUP BY sca.id) tmp LEFT JOIN hklk_school_syllabus h on tmp.id = h.sca_id where 1=1
+        <if test="weekType != null">
+            h.weekType = #{weekType,jdbcType=INTEGER}
+        </if>
         <choose>
-            <when test="state != null">
+            <when test="state == 1">
                 and tmp.applyStatus = 4
             </when>
             <otherwise>
                 and tmp.applyStatus != 4
             </otherwise>
         </choose>
-
     </select>
 
 </mapper>

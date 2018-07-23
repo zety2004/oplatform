@@ -4,8 +4,6 @@ import com.hklk.oplatform.comm.LoginParent;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.ParentMessage;
 import com.hklk.oplatform.entity.table.StudentChoice;
-import com.hklk.oplatform.entity.vo.CurriculumChoiceVo;
-import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.*;
@@ -20,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -157,6 +156,17 @@ public class ParentCurriculumController extends BaseController {
         }
     }
 
+
+    @ResponseBody
+    @RequestMapping("/wxPay")
+    public String wxPay(Double totalFee, String curriculumName, HttpServletRequest request,
+                        HttpServletResponse response, HttpSession session) {
+
+
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+
     /**
      * 2018/7/16 15:25
      * 家长查询课程页面
@@ -169,14 +179,29 @@ public class ParentCurriculumController extends BaseController {
     public String queryMyCurriculum(Integer isEnd, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        List<Map<String, Object>> myCurriculum;
-        if (isEnd == null) {
-            myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null);
-        } else {
-            myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 1);
-        }
-
+        List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), isEnd, null);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), myCurriculum);
     }
 
+
+    /**
+     * 2018/7/16 15:25
+     * 家长查询课程页面
+     *
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/queryCurriculumForWeekType")
+    public String queryCurriculumForWeekType(HttpServletRequest request,
+                                             HttpServletResponse response, HttpSession session) {
+        LoginParent loginParent = getLoginParent(request);
+        Map<String, Object> result = new HashMap<>();
+        result.put("Mon", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 1));
+        result.put("Tues", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 2));
+        result.put("Wed", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 3));
+        result.put("Thur", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 4));
+        result.put("Fri", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 5));
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+    }
 }

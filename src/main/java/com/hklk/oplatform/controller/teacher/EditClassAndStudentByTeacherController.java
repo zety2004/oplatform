@@ -82,7 +82,7 @@ public class EditClassAndStudentByTeacherController extends BaseController {
         SClass temp = sClassService.selectByNameForValidate(sClass.getName(), schoolId);
         if (sClass.getId() == null && temp != null) {
             return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
-        } else if (sClass.getId() != null && temp != null && temp.getId() != sClass.getId()) {
+        } else if (sClass.getId() != null && temp != null && temp.getId().intValue() != sClass.getId().intValue()) {
             return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
         } else {
             sClass.setSchoolId(schoolId);
@@ -150,7 +150,7 @@ public class EditClassAndStudentByTeacherController extends BaseController {
         if (sStudent.getId() == null && temp != null) {
             System.out.println(getLoginTeacher(request).getNickName() + "老师操作!");
             return ToolUtil.buildResultStr(StatusCode.STUDENT_EX, StatusCode.getStatusMsg(StatusCode.STUDENT_EX));
-        } else if (sStudent.getId() != null && temp != null && temp.getId() != sStudent.getId()) {
+        } else if (sStudent.getId() != null && temp != null && temp.getId().intValue() != sStudent.getId().intValue()) {
             return ToolUtil.buildResultStr(StatusCode.STUDENT_EX, StatusCode.getStatusMsg(StatusCode.STUDENT_EX));
         } else {
             sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);

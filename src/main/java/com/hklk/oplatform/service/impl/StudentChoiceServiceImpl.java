@@ -14,6 +14,7 @@ import com.hklk.oplatform.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,11 +56,17 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
     }
 
     @Override
-    public List<Map<String, Object>> queryMyCurriculum(Integer studentId,Integer state) {
+    public List<Map<String, Object>> queryMyCurriculum(Integer studentId, Integer state, Integer weekType) {
         Map<String, Object> params = new HashMap<>();
         params.put("studentId", studentId);
         params.put("state", state);
+        params.put("weekType", weekType);
+        List<Map<String, Object>> result = studentChoiceMapper.queryMyCurriculum(params);
+        if (result.get(0) != null) {
+            return result;
+        } else {
+            return new ArrayList<>();
+        }
 
-        return studentChoiceMapper.queryMyCurriculum(params);
     }
 }

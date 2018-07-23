@@ -78,22 +78,39 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <update id="updateIsReadById" parameterType="java.lang.Integer" >
+    <update id="updateIsReadById" parameterType="java.lang.Integer">
     update hklk_school_parent_message
     set is_read = 1
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <update id="updateIsReadByStudentId" parameterType="java.lang.Integer" >
+    <update id="updateIsReadByStudentId" parameterType="java.lang.Integer">
     update hklk_school_parent_message
     set is_read = 1
     where student_id = #{teacherId,jdbcType=INTEGER}
   </update>
 
     <select id="queryParentMessage" parameterType="map" resultMap="BaseResultMap">
-        select
+
+        SELECT
         <include refid="Base_Column_List"/>
-        from hklk_school_parent_message
-        where student_id = #{studentId,jdbcType=INTEGER}
+        FROM
+        hklk_school_parent_message spm
+        WHERE
+        spm.student_id IN (
+        SELECT
+        ss.id
+        FROM
+        hklk_school_student ss
+        WHERE
+        ss.parent_phone IN (
+        SELECT
+        sst.parent_phone
+        FROM
+        hklk_school_student sst
+        WHERE
+        sst.id = #{studentId,jdbcType=INTEGER}
+        )
+        )
         <if test="isRead !=null">
             and is_read = #{isRead,jdbcType=INTEGER}
         </if>

@@ -60,16 +60,17 @@ public class EditClassAndStudentController extends BaseController {
     @RequestMapping("/queryClasses")
     public String queryClasses(String param, int pageNum, HttpServletRequest request,
                                HttpServletResponse response, HttpSession session) {
-        PageTableForm<SClassVo> pageTableForm = sClassService.queryClasses(param, getLoginSchool(request).getSchoolId(),null, pageNum, pageSize);
+        PageTableForm<SClassVo> pageTableForm = sClassService.queryClasses(param, getLoginSchool(request).getSchoolId(), null, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
     }
 
     /**
      * 2018/7/4 16:14
      * 根据id查询班级
+     *
      * @param id
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryClassesById")
@@ -82,9 +83,10 @@ public class EditClassAndStudentController extends BaseController {
     /**
      * 2018/7/4 16:15
      * 添加或修改班级
-     * @param sClass    班级对象
-     * @author 曹良峰
+     *
+     * @param sClass 班级对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/addOrUpdateClass")
@@ -95,7 +97,7 @@ public class EditClassAndStudentController extends BaseController {
         SClass temp = sClassService.selectByNameForValidate(sClass.getName(), schoolId);
         if (sClass.getId() == null && temp != null) {
             return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
-        } else if (sClass.getId() != null && temp != null && temp.getId() != sClass.getId()) {
+        } else if (sClass.getId() != null && temp != null && temp.getId().intValue() != sClass.getId().intValue()) {
             return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
         } else {
             sClassService.insertOrUpdateByPrimaryKeySelective(sClass);
@@ -106,9 +108,10 @@ public class EditClassAndStudentController extends BaseController {
     /**
      * 2018/7/4 16:15
      * 删除班级
-     * @param id    班级主键
-     * @author 曹良峰
+     *
+     * @param id 班级主键
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/delClass")
@@ -121,10 +124,11 @@ public class EditClassAndStudentController extends BaseController {
     /**
      * 2018/7/4 16:16
      * 根据班级查询学生
-     * @param param     筛选条件
-     * @param classId   班级id
-     * @author 曹良峰
+     *
+     * @param param   筛选条件
+     * @param classId 班级id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryStudentByClassId")
@@ -133,13 +137,14 @@ public class EditClassAndStudentController extends BaseController {
         List<SStudent> result = sStudentService.queryStudentByClassId(param, classId);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
     }
-    
+
     /**
      * 2018/7/4 16:17
      * 根据id查询学生
-     * @param id    学生id
-     * @author 曹良峰
+     *
+     * @param id 学生id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryStudentById")
@@ -152,9 +157,10 @@ public class EditClassAndStudentController extends BaseController {
     /**
      * 2018/7/4 16:17
      * 添加修改学生
+     *
      * @param sStudent 学生对象
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/addOrUpdateStudent")
@@ -163,7 +169,7 @@ public class EditClassAndStudentController extends BaseController {
         SStudent temp = sStudentService.selectBySNumForValidate(getLoginSchool(request).getSchoolId(), sStudent.getsNum());
         if (sStudent.getId() == null && temp != null) {
             return ToolUtil.buildResultStr(StatusCode.STUDENT_EX, StatusCode.getStatusMsg(StatusCode.STUDENT_EX));
-        } else if (sStudent.getId() != null && temp != null && temp.getId() != sStudent.getId()) {
+        } else if (sStudent.getId() != null && temp != null && temp.getId().intValue() != sStudent.getId().intValue()) {
             return ToolUtil.buildResultStr(StatusCode.STUDENT_EX, StatusCode.getStatusMsg(StatusCode.STUDENT_EX));
         } else {
             sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
@@ -174,9 +180,10 @@ public class EditClassAndStudentController extends BaseController {
     /**
      * 2018/7/4 16:18
      * 删除学生
-     * @param id    学生id
-     * @author 曹良峰
+     *
+     * @param id 学生id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/delStudent")
@@ -189,9 +196,10 @@ public class EditClassAndStudentController extends BaseController {
     /**
      * 2018/7/4 12:51
      * 导出学生 excel
+     *
      * @param classId 班级id
-     * @author 曹良峰
      * @return {"resultCode":200,"resultMsg":"成功"}
+     * @author 曹良峰
      */
     @RequestMapping("/exportExcelForStudent")
     @ResponseBody
@@ -217,9 +225,10 @@ public class EditClassAndStudentController extends BaseController {
     /**
      * 2018/7/4 12:52
      * 导入学生 excel
+     *
      * @param classId 班级id
-     * @author 曹良峰
      * @return {"resultCode":200,"resultMsg":"成功"}  code:1015 存在失败  300 操作失败
+     * @author 曹良峰
      */
     @RequestMapping("/importExcelForStudent")
     @ResponseBody
