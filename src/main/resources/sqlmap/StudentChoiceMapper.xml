@@ -78,6 +78,15 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
+    <select id="queryParentApplyForIsApply" resultType="map" parameterType="map">
+                SELECT
+                    sca_id,pay_state
+                FROM
+                    hklk_student_choice_curriculum
+                WHERE
+                    student_id = #{studentId,jdbcType=INTEGER} and sca_id = #{scaId,jdbcType=INTEGER}
+    </select>
+
     <select id="queryParentApplyForVerification" resultType="java.lang.Integer" parameterType="map">
         select max(num) from (SELECT
             count(1) as num,sca.school_id
@@ -100,18 +109,77 @@
         GROUP BY ss.week_type) t GROUP BY t.school_id
     </select>
 
+    <select id="queryMyCurriculumVerification" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        (
+        SELECT
+        sca.id,
+        sca.curriculum_id,
+        sca.teacher_id,
+        sca.applyStatus
+        FROM
+        (
+        SELECT
+        hsca.id,
+        hsca.curriculum_id,
+        hsca.teacher_id,
+        hsca.status as applyStatus
+        FROM
+        hklk_student_choice_curriculum scc
+        LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
+        WHERE
+        scc.student_id = #{studentId,jdbcType=INTEGER}
+        <if test="payState != null">
+            and scc.pay_state = #{payState,jdbcType=INTEGER}
+        </if>
+
+        GROUP BY
+        hsca.id
+        ) sca
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        LEFT JOIN hklk_school_teacher st ON st.id = sca.teacher_id
+        LEFT JOIN hklk_consumables cs ON sca.curriculum_id = cs.curriculum_id
+        GROUP BY
+        sca.id
+        ) tmp
+        LEFT JOIN hklk_school_syllabus h ON tmp.id = h.sca_id
+        WHERE
+        1 = 1
+        <if test="weekType != null">
+            and h.week_type = #{weekType,jdbcType=INTEGER}
+        </if>
+        <choose>
+            <when test="state == 1">
+                and tmp.applyStatus = 4
+            </when>
+            <otherwise>
+                and tmp.applyStatus != 4
+            </otherwise>
+        </choose>
+    </select>
+
+
     <select id="queryMyCurriculum" resultType="map" parameterType="map">
-        SELECT *,
-        group_concat(
-        case
-        when h.week_type =1 then '周一'
-        when h.week_type =2 then '周二'
-        when h.week_type =3 then '周三'
-        when h.week_type =4 then '周四'
-        when h.week_type =5 then '周五'
-        end
-        ) classTime,week_type weekType
-        from (
+        SELECT
+        tmp.*, group_concat(
+        CASE
+        WHEN h.week_type = 1 THEN
+        '周一'
+        WHEN h.week_type = 2 THEN
+        '周二'
+        WHEN h.week_type = 3 THEN
+        '周三'
+        WHEN h.week_type = 4 THEN
+        '周四'
+        WHEN h.week_type = 5 THEN
+        '周五'
+        END
+        ) classTime,
+        week_type weekType
+        FROM
+        (
         SELECT
         sca.id,
         c.`name` AS curriculumName,
@@ -122,11 +190,22 @@
         sca.max_num maxNum,
         sca.class_place classPlace,
         c.class_hours classHours,
-        (select GROUP_CONCAT(d.name) from hklk_dic d where FIND_IN_SET(d.id, c.learning_style)>0 GROUP BY d.typecode) as
-        learningStyle,
+        sca.studentNum,
+        (
+        SELECT
+        GROUP_CONCAT(d. NAME)
+        FROM
+        hklk_dic d
+        WHERE
+        FIND_IN_SET(d.id, c.learning_style) > 0
+        GROUP BY
+        d.typecode
+        ) AS learningStyle,
         c.cover,
-        IFNULL(SUM(cs.num*cs.unit_price),0) as totalPrice,
-        COUNT(scc.id) AS studentNum,
+        IFNULL(
+        SUM(cs.num * cs.unit_price),
+        0
+        ) AS totalPrice,
         <![CDATA[
         CASE
         WHEN sca.begin_of_select_time > SYSDATE() THEN
@@ -177,15 +256,38 @@
         END AS applyStatus
         ]]>
         FROM
+        (
+        SELECT
+        hsca.id,
+        COUNT(scc.id) AS studentNum,
+        hsca.curriculum_id,
+        hsca.teacher_id,
+        hsca.applicable_grade,
+        hsca.curr_start_time,
+        hsca.max_num,
+        hsca.class_place,
+        hsca.begin_of_select_time,
+        hsca.end_of_select_time
+        FROM
         hklk_student_choice_curriculum scc
-        LEFT JOIN hklk_school_curriculum_apply sca ON scc.sca_id = sca.id
+        LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
+        WHERE
+        scc.student_id = #{studentId,jdbcType=INTEGER}
+        and scc.pay_state = #{payState,jdbcType=INTEGER}
+        GROUP BY
+        hsca.id
+        ) sca
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_school_teacher st ON st.id = sca.teacher_id
-        LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
-        where scc.student_id = #{studentId,jdbcType=INTEGER}
-        GROUP BY sca.id) tmp LEFT JOIN hklk_school_syllabus h on tmp.id = h.sca_id where 1=1
+        LEFT JOIN hklk_consumables cs ON sca.curriculum_id = cs.curriculum_id
+        GROUP BY
+        sca.id
+        ) tmp
+        LEFT JOIN hklk_school_syllabus h ON tmp.id = h.sca_id
+        WHERE
+        1 = 1
         <if test="weekType != null">
-            h.weekType = #{weekType,jdbcType=INTEGER}
+            and h.week_type = #{weekType,jdbcType=INTEGER}
         </if>
         <choose>
             <when test="state == 1">

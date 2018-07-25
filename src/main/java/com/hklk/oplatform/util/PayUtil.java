@@ -66,11 +66,9 @@ public class PayUtil {
     public static SortedMap<Object, Object> startWXPay(String result) {
         try {
             Map<String, String> map = xmlStr2Map(result);
-            SortedMap<Object, Object> parameterMap = new TreeMap<Object, Object>();
+            SortedMap<Object, Object> parameterMap = new TreeMap<>();
             parameterMap.put("appid", PropUtil.getProperty("wxAppid"));
-            parameterMap.put("partnerid", PropUtil.getProperty("mchId"));
-            parameterMap.put("prepayid", map.get("prepay_id"));
-            parameterMap.put("package", "Sign=WXPay");
+            parameterMap.put("package", "prepay_id=" + map.get("prepay_id"));
             parameterMap.put("noncestr", PayUtil.CreateNoncestr());
             // 本来生成的时间戳是13位，但是ios必须是10位，所以截取了一下
             parameterMap.put("timestamp",

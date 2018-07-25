@@ -2,6 +2,7 @@ package com.hklk.oplatform.controller.teacher;
 
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.TeacherMessage;
+import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
 import com.hklk.oplatform.service.TeacherMessageService;
 import com.hklk.oplatform.util.StatusCode;
@@ -41,9 +42,12 @@ public class TeacherMessageController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryTeacherMessage")
-    public String queryTeacherMessage(Integer isRead, HttpServletRequest request,
+    public String queryTeacherMessage(Integer isRead, Integer pageNum, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
-        List<TeacherMessage> teacherMessages = teacherMessageService.queryTeacherMessage(getLoginTeacher(request).getTeacherId(), isRead);
+        if (pageNum == null) {
+            pageNum = 1;
+        }
+        PageTableForm<TeacherMessage> teacherMessages = teacherMessageService.queryTeacherMessage(getLoginTeacher(request).getTeacherId(), isRead, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), teacherMessages);
     }
 

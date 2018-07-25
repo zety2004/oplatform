@@ -1,6 +1,7 @@
 package com.hklk.oplatform.service;
 
 import com.hklk.oplatform.entity.table.TeacherMessage;
+import com.hklk.oplatform.entity.vo.PageTableForm;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface TeacherMessageService {
 
     int updateIsReadById(Integer id);
 
-    List<TeacherMessage> queryTeacherMessage(Integer teacherId,Integer isRead);
+    PageTableForm<TeacherMessage> queryTeacherMessage(Integer teacherId, Integer isRead,Integer pageNum,Integer pageSize);
 }

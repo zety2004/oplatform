@@ -7,6 +7,7 @@ import com.hklk.oplatform.entity.table.StudentChoice;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.*;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +18,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 
 /**
@@ -87,6 +88,8 @@ public class ParentCurriculumController extends BaseController {
     public String selectApplyCurriculumById(Integer scaId, HttpServletRequest request,
                                             HttpServletResponse response, HttpSession session) {
         Map<String, Object> curriculum = scApplyService.selectByApplyCurriculmForParentById(scaId);
+        curriculum.put("des", curriculum.get("des").toString().replaceAll("px", "rpx"));
+
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 
@@ -140,6 +143,16 @@ public class ParentCurriculumController extends BaseController {
     public String insertStudentChoice(Integer scaId, String curriculumName, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
+        Map<String,Object> isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
+        if(isApply!=null) {
+            if((int)isApply.get("pay_state")==0){
+                return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已申请该课程，尚未付款，请前往订单页完成支付！");
+            }else{
+                return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已申请该课程！");
+            }
+
+        }
+        //验证不通课程是否时间冲突
         Integer num = studentChoiceService.queryParentApplyForVerification(loginParent.getSchoolId(), scaId, loginParent.getStudentId());
         if (num > 1) {
             return ToolUtil.buildResultStr(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY, StatusCode.getStatusMsg(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY));
@@ -159,13 +172,101 @@ public class ParentCurriculumController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/wxPay")
-    public String wxPay(Double totalFee, String curriculumName, HttpServletRequest request,
+    public String wxPay(Double totalFee, HttpServletRequest request,
                         HttpServletResponse response, HttpSession session) {
+        // 防止抓包修改订单金额造成损失
+        if (totalFee <= 0) {
+            return ToolUtil.buildResultStr(StatusCode.ERROR, "付款金额错误!");
+        }
 
+        SortedMap<Object, Object> parameters = PayUtil.getWXPrePayID();
+        parameters.put("body", "好课乐课-课程选课");
 
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        parameters.put("spbill_create_ip", request.getRemoteAddr());
+        parameters.put("out_trade_no", PayUtil.getDateStr()); // 订单id这里我的订单id生成规则是订单id+时间
+        parameters.put("total_fee", "1"); // 测试时，每次支付一分钱，微信支付所传的金额是以分为单位的，因此实际开发中需要x100
+        // parameters.put("total_fee", orders.getOrderAmount()*100+""); // 上线后，将此代码放开
+
+        // 设置签名
+        String sign = PayUtil.createSign(parameters);
+        parameters.put("sign", sign);
+        // 封装请求参数结束
+        String requestXML = PayUtil.getRequestXml(parameters); // 获取xml结果
+        System.out.println("封装请求参数是：" + requestXML);
+        // 调用统一下单接口
+        String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
+        SortedMap<Object, Object> parMap = PayUtil.startWXPay(result);
+
+        if (parMap == null) {
+            return ToolUtil.buildResultStr(StatusCode.ERROR, "支付出现异常，请稍后重试!");
+        } else {
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), parMap);
+        }
     }
 
+    @RequestMapping("/wxNotify")
+    @ResponseBody
+    public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws IOException, JDOMException {
+        String result = PayUtil.reciverWx(request); // 接收到异步的参数
+        Map<String, String> m = new HashMap<>();// 解析xml成map
+        if (m != null && !"".equals(m)) {
+            m = PayUtil.xmlStr2Map(result);
+        }
+        // 过滤空 设置 TreeMap
+        SortedMap<Object, Object> packageParams = new TreeMap<>();
+        Iterator it = m.keySet().iterator();
+        while (it.hasNext()) {
+            String parameter = (String) it.next();
+            String parameterValue = m.get(parameter);
+            String v = "";
+            if (null != parameterValue) {
+                v = parameterValue.trim();
+            }
+            packageParams.put(parameter, v);
+        }
+        // 判断签名是否正确
+        String resXml;
+        if (PayUtil.isTenpaySign(packageParams)) {
+            if ("SUCCESS".equals((String) packageParams.get("return_code"))) {
+                // 如果返回成功
+                String mch_id = (String) packageParams.get("mch_id"); // 商户号
+                String out_trade_no = (String) packageParams.get("out_trade_no"); // 商户订单号
+                String total_fee = (String) packageParams.get("total_fee");
+                String transaction_id = (String) packageParams.get("transaction_id"); // 微信支付订单号
+                // 查询订单 根据订单号查询订单
+                String orderId = out_trade_no.substring(0, out_trade_no.length() - PayUtil.TIME.length());
+                //Orders orders = ordersMapper.selectByPrimaryKey(Integer.parseInt(orderId));
+
+                // 验证商户ID 和 价格 以防止篡改金额
+                if (PropUtil.getProperty("mchId").equals(mch_id)
+                    //&& orders != null
+                    // &&
+                    // total_fee.trim().toString().equals(orders.getOrderAmount())
+                    // // 实际项目中将此注释删掉，以保证支付金额相等
+                        ) {
+
+                    // TODO Auto-generated catch block
+
+
+                    resXml = PayUtil.setXML("SUCCESS", "OK");
+                } else {
+                    resXml = PayUtil.setXML("FAIL", "参数错误");
+                }
+            } else // 如果微信返回支付失败，将错误信息返回给微信
+            {
+                resXml = PayUtil.setXML("FAIL", "交易失败");
+            }
+        } else {
+            resXml = resXml = PayUtil.setXML("FAIL", "通知签名验证失败");
+        }
+
+        // 处理业务完毕，将业务结果通知给微信
+        // ------------------------------
+        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+        out.write(resXml.getBytes());
+        out.flush();
+        out.close();
+    }
 
     /**
      * 2018/7/16 15:25
@@ -176,10 +277,10 @@ public class ParentCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryMyCurriculum")
-    public String queryMyCurriculum(Integer isEnd, HttpServletRequest request,
+    public String queryMyCurriculum(Integer isEnd, Integer payState, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), isEnd, null);
+        List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), isEnd, null, payState);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), myCurriculum);
     }
 
@@ -197,11 +298,11 @@ public class ParentCurriculumController extends BaseController {
                                              HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
         Map<String, Object> result = new HashMap<>();
-        result.put("Mon", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 1));
-        result.put("Tues", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 2));
-        result.put("Wed", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 3));
-        result.put("Thur", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 4));
-        result.put("Fri", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 5));
+        result.put("Mon", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 1, 1));
+        result.put("Tues", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 2, 1));
+        result.put("Wed", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 3, 1));
+        result.put("Thur", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 4, 1));
+        result.put("Fri", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 5, 1));
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
     }
 }

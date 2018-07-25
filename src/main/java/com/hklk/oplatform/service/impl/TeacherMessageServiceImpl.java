@@ -1,7 +1,10 @@
 package com.hklk.oplatform.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.hklk.oplatform.dao.inter.TeacherMessageMapper;
 import com.hklk.oplatform.entity.table.TeacherMessage;
+import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.service.TeacherMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,10 +50,13 @@ public class TeacherMessageServiceImpl implements TeacherMessageService {
     }
 
     @Override
-    public List<TeacherMessage> queryTeacherMessage(Integer teacherId, Integer isRead) {
+    public PageTableForm<TeacherMessage> queryTeacherMessage(Integer teacherId, Integer isRead,Integer pageNum,Integer pageSize) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId", teacherId);
         params.put("isRead", isRead);
-        return teacherMessageMapper.queryTeacherMessage(params);
+        Page page = PageHelper.startPage(pageNum,pageSize,true);
+        teacherMessageMapper.queryTeacherMessage(params);
+        PageTableForm<TeacherMessage> pageTableForm = new PageTableForm<>(page);
+        return pageTableForm;
     }
 }

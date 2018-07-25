@@ -18,18 +18,19 @@
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.hklk.oplatform.entity.table.Curriculum" extends="BaseResultMap">
         <result column="des" property="des" jdbcType="LONGVARCHAR"/>
+        <result column="wxdes" property="wxdes" jdbcType="LONGVARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, cover, name, subject, grade, learning_style , class_hours , collection_num , author,
     enclosure, enc_des , status,unique_num
     </sql>
     <sql id="Blob_Column_List">
-    des
-  </sql>
+    des,wxdes
+    </sql>
     <select id="selectByPrimaryKey" resultType="map" parameterType="java.lang.Integer">
         select
         cc.id, cc.cover, cc.name, cc.subject, cc.grade, cc.learning_style learningStyle, cc.class_hours classHours, cc.collection_num collectionNum, cc.author,
-        cc.enclosure, cc.enc_des encDes, cc.status, cc.unique_num uniqueNum, cc.des, IFNULL(SUM(cu.num*cu.unit_price),0) as totalPrice
+        cc.enclosure, cc.enc_des encDes, cc.status, cc.unique_num uniqueNum, cc.des,cc.wxdes, IFNULL(SUM(cu.num*cu.unit_price),0) as totalPrice
         from hklk_curriculum cc left join hklk_consumables cu on cc.id = cu.curriculum_id
         where cc.id = #{id,jdbcType=INTEGER} group by cc.id
     </select>
@@ -51,12 +52,12 @@
       subject, grade, learning_style, 
       class_hours, collection_num, author, 
       enclosure, enc_des, status,
-      des,unique_num)
+      des,unique_num,wxdes)
     values (#{id,jdbcType=INTEGER}, #{cover,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{subject,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{learningStyle,jdbcType=VARCHAR}, 
       #{classHours,jdbcType=VARCHAR}, #{collectionNum,jdbcType=INTEGER}, #{author,jdbcType=VARCHAR}, 
       #{enclosure,jdbcType=VARCHAR}, #{encDes,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{des,jdbcType=LONGVARCHAR}, #{unique_num,jdbcType=VARCHAR})
+      #{des,jdbcType=LONGVARCHAR}, #{unique_num,jdbcType=VARCHAR},#{wxdes,jdbcType=LONGVARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.Curriculum">
         insert into hklk_curriculum
@@ -101,7 +102,10 @@
                 des,
             </if>
             <if test="uniqueNum != null">
-                unique_num
+                unique_num,
+            </if>
+            <if test="wxdes != null">
+                wxdes,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -147,6 +151,9 @@
             <if test="uniqueNum != null">
                 #{uniqueNum,jdbcType=VARCHAR},
             </if>
+            <if test="wxdes != null">
+                #{wxdes,jdbcType=LONGVARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.Curriculum">
@@ -188,6 +195,9 @@
             <if test="des != null">
                 des = #{des,jdbcType=LONGVARCHAR},
             </if>
+            <if test="wxdes != null">
+                wxdes = #{wxdes,jdbcType=LONGVARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -204,7 +214,8 @@
       enclosure = #{enclosure,jdbcType=VARCHAR},
       enc_des = #{encDes,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
-      des = #{des,jdbcType=LONGVARCHAR}
+      des = #{des,jdbcType=LONGVARCHAR},
+      wxdes = #{wxdes,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
     <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.Curriculum">

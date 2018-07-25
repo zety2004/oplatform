@@ -16,5 +16,7 @@ public interface StudentChoiceService {
 
     int queryParentApplyForVerification(Integer schoolId, Integer scaId, Integer studentId);
 
-    List<Map<String, Object>> queryMyCurriculum(Integer studentId,Integer state,Integer weekType);
+    Map<String, Object> queryParentApplyForIsApply(Integer scaId, Integer studentId);
+
+    List<Map<String, Object>> queryMyCurriculum(Integer studentId,Integer state,Integer weekType,Integer payState);
 }

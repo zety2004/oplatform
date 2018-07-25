@@ -29,6 +29,8 @@ public class Curriculum implements Serializable {
 
     private String des;
 
+    private String wxdes;
+
     private String uniqueNum;
 
     private static final long serialVersionUID = 1L;
@@ -143,5 +145,13 @@ public class Curriculum implements Serializable {
 
     public void setUniqueNum(String uniqueNum) {
         this.uniqueNum = uniqueNum;
+    }
+
+    public String getWxdes() {
+        return wxdes;
+    }
+
+    public void setWxdes(String wxdes) {
+        this.wxdes = wxdes;
     }
 }

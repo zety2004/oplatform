@@ -33,5 +33,9 @@ public interface SCApplyMapper {
 
     List<Map<String, Object>> queryCurriculumForParent(Map<String, Object> param);
 
+    int queryCurriculumForParentVerification(Map<String, Object> param);
+
     Map<String, Object> selectByApplyCurriculmForParentById(Integer id);
+
+
 }

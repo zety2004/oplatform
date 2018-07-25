@@ -114,5 +114,6 @@
         <if test="isRead !=null">
             and is_read = #{isRead,jdbcType=INTEGER}
         </if>
+        order by id desc
     </select>
 </mapper>

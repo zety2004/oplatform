@@ -121,27 +121,34 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("isFineQuality", 1);
-        List<Map<String, Object>> jpList = scApplyMapper.queryCurriculumForParent(param);
+        int jpnum = scApplyMapper.queryCurriculumForParentVerification(param);
+        List<Map<String, Object>> jpList;
+        if (jpnum == 0) {
+            jpList = null;
+        } else {
+            jpList = scApplyMapper.queryCurriculumForParent(param);
+        }
         param.put("isFineQuality", 0);
-        List<Map<String, Object>> hotList = scApplyMapper.queryCurriculumForParent(param);
+        int hotnum = scApplyMapper.queryCurriculumForParentVerification(param);
+        List<Map<String, Object>> hotList;
+        if (hotnum == 0) {
+            hotList = null;
+        } else {
+            hotList = scApplyMapper.queryCurriculumForParent(param);
+        }
         param.put("isFineQuality", -1);
         param.put("grade", grade);
-        List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
-        if (jpList.get(0) == null) {
-            result.put("fineQuality", new ArrayList<>());
+        int allnum = scApplyMapper.queryCurriculumForParentVerification(param);
+        List<Map<String, Object>> allList;
+        if (allnum == 0) {
+            allList = null;
         } else {
-            result.put("fineQuality", jpList);
+            allList = scApplyMapper.queryCurriculumForParent(param);
         }
-        if (hotList.get(0) == null) {
-            result.put("Hot", new ArrayList<>());
-        } else {
-            result.put("Hot", hotList);
-        }
-        if (allList.get(0) == null) {
-            result.put("all", new ArrayList<>());
-        } else {
-            result.put("all", allList);
-        }
+        result.put("fineQuality", jpList);
+        result.put("Hot", hotList);
+        result.put("all", allList);
+
         return result;
     }
 
@@ -150,8 +157,15 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("isFineQuality", -1);
-        List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
-        return allList;
+        int num = scApplyMapper.queryCurriculumForParentVerification(param);
+        if (num == 0) {
+            return null;
+        } else {
+            List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
+            return allList;
+
+        }
+
     }
 
     @Override

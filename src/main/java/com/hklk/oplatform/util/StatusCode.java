@@ -75,6 +75,8 @@ public class StatusCode {
     public final static int NO_FOUND_STUDENT = 1024;
     //该学生已经被绑定！
     public final static int STUDENT_WAS_BINDING = 1025;
+    //申请课程失败！
+    public final static int BUY_CURR_FOR_PARENT = 1026;
 
     public static String getStatusMsg(Object code) {
 
