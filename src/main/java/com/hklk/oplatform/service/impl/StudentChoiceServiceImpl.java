@@ -78,4 +78,9 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
             return result;
         }
     }
+
+    @Override
+    public Map<String, Object> selectByOrderId(String orderId) {
+        return studentChoiceMapper.selectByOrderId(orderId);
+    }
 }

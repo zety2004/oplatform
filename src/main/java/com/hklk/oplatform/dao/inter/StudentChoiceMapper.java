@@ -21,4 +21,6 @@ public interface StudentChoiceMapper {
     int queryMyCurriculumVerification(Map<String, Object> param);
 
     Map<String, Object> queryParentApplyForIsApply(Map<String, Object> param);
+
+    Map<String, Object> selectByOrderId(String orderId);
 }

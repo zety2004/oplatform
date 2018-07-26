@@ -223,9 +223,4 @@ public class DateUtil {
         return sdf.format(c.getTime());
     }
 
-    public static void main(String[] args) {
-        System.out.println(getSundayOfThisWeek());
-    }
-
-
 }

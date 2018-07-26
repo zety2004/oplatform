@@ -37,7 +37,7 @@ public class PasswordProvider {
         }
     }
 
-    private static String md5(String str) {
+    public static String md5(String str) {
         String password = null;
         try {
             // 生成一个MD5加密计算摘要

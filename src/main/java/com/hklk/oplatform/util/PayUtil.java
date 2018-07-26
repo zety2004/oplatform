@@ -1,6 +1,7 @@
 package com.hklk.oplatform.util;
 
 import com.hklk.oplatform.provider.PasswordProvider;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -29,13 +30,13 @@ public class PayUtil {
     /**
      * 创建微信交易对象
      */
-    public static SortedMap<Object, Object> getWXPrePayID() {
-        SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
+    public static Map<String, Object> getWXPrePayID() {
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("appid", PropUtil.getProperty("wxAppid"));
         parameters.put("mch_id", PropUtil.getProperty("mchId"));
         parameters.put("nonce_str", PayUtil.CreateNoncestr());
+        parameters.put("sign_type", "MD5");
         parameters.put("fee_type", "CNY");
-        parameters.put("notify_url", PropUtil.getProperty("notifyUrl"));
         parameters.put("trade_type", "JSAPI");
         return parameters;
     }
@@ -116,11 +117,48 @@ public class PayUtil {
         }
         sb.append("key=" + PropUtil.getProperty("WxPay.key"));
         // 算出摘要
-        String mysign = PasswordProvider.encrypt(sb.toString()).toLowerCase();
+        String mysign = PasswordProvider.md5(sb.toString()).toLowerCase();
         String tenpaySign = ((String) packageParams.get("sign")).toLowerCase();
         // System.out.println(tenpaySign + " " + mysign);
         return tenpaySign.equals(mysign);
     }
+
+
+    public static String getSign(Map<String, Object> parameters) {
+
+        String result = "";
+        try {
+            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(parameters.entrySet());
+            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
+            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
+
+                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
+                    return (o1.getKey()).compareTo(o2.getKey());
+                }
+            });
+
+            // 构造签名键值对的格式
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, Object> item : infoIds) {
+                if (item.getKey() != null || item.getKey() != "") {
+                    String key = item.getKey();
+                    Object val = item.getValue();
+                    if (!(val == "" || val == null)) {
+                        sb.append(key + "=" + val + "&");
+                    }
+                }
+            }
+            sb.append("key=" + PropUtil.getProperty("wxKey"));
+            result = sb.toString();
+            System.out.println(result);
+            //进行MD5加密
+            result = DigestUtils.md5Hex(result).toUpperCase();
+        } catch (Exception e) {
+            return null;
+        }
+        return result;
+    }
+
 
     /**
      * @param parameters 请求参数
@@ -140,7 +178,8 @@ public class PayUtil {
             }
         }
         sb.append("key=" + PropUtil.getProperty("wxKey"));
-        String sign = PasswordProvider.encrypt(sb.toString()).toUpperCase();
+        System.out.println(sb.toString());
+        String sign = PasswordProvider.md5(sb.toString()).toUpperCase();
         return sign;
     }
 
@@ -149,7 +188,7 @@ public class PayUtil {
      * @return
      * @Description：将请求参数转换为xml格式的string
      */
-    public static String getRequestXml(SortedMap<Object, Object> parameters) {
+    public static String getRequestXml(Map<String, Object> parameters) {
         StringBuffer sb = new StringBuffer();
         sb.append("<xml>");
         Set es = parameters.entrySet();

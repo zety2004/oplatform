@@ -19,4 +19,6 @@ public interface StudentChoiceService {
     Map<String, Object> queryParentApplyForIsApply(Integer scaId, Integer studentId);
 
     List<Map<String, Object>> queryMyCurriculum(Integer studentId,Integer state,Integer weekType,Integer payState);
+
+    Map<String, Object> selectByOrderId(String orderId);
 }

@@ -115,7 +115,6 @@ public class BaseBean {
                     }
                     break;
                 default:
-                    System.out.println(1111);
                     break;
             }
             x++;

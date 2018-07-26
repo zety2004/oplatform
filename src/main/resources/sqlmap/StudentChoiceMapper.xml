@@ -7,6 +7,9 @@
         <result column="sca_id" property="scaId" jdbcType="INTEGER"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="pay_state" property="payState" jdbcType="INTEGER"/>
+        <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
+        <result column="pay_money" property="payMoney" jdbcType="DOUBLE"/>
+        <result column="commodity_name" property="commodityName" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, student_id, sca_id, create_time, pay_state
@@ -17,6 +20,27 @@
         from hklk_student_choice_curriculum
         where id = #{id,jdbcType=INTEGER}
     </select>
+
+    <select id="selectByOrderId" resultType="map" parameterType="java.lang.String">
+            SELECT
+                scc.id,
+                scc.student_id AS studentId,
+                scc.sca_id scaId,
+                pay_state payState,
+                scc.pay_money payMoney,
+                scc.commodity_name commodityName,
+                scc.order_id as orderId,
+                sum(cm.unit_price*cm.num) realMoney
+            FROM
+                hklk_student_choice_curriculum scc
+            LEFT JOIN hklk_school_curriculum_apply sca ON scc.sca_id = sca.id
+            LEFT JOIN hklk_curriculum hc ON sca.curriculum_id = hc.id
+            LEFT JOIN hklk_consumables cm ON hc.id = cm.curriculum_id
+            where scc.order_id =  #{orderId,jdbcType=VARCHAR}
+            GROUP BY scc.id
+    </select>
+
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from hklk_student_choice_curriculum
     where id = #{id,jdbcType=INTEGER}
@@ -40,6 +64,15 @@
             <if test="payState != null">
                 pay_state,
             </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="payMoney != null">
+                pay_money,
+            </if>
+            <if test="commodityName != null">
+                commodity_name,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -57,6 +90,15 @@
             <if test="payState != null">
                 #{payState,jdbcType=INTEGER},
             </if>
+            <if test="orderId != null">
+                #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="payMoney != null">
+                #{payMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityName != null">
+                #{commodityName,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.StudentChoice">
@@ -73,6 +115,15 @@
             </if>
             <if test="payState != null">
                 pay_state = #{payState,jdbcType=INTEGER},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="payMoney != null">
+                pay_money = #{payMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="commodityName != null">
+                commodity_name = #{commodityName,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

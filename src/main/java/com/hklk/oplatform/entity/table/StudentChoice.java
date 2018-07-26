@@ -14,6 +14,10 @@ public class StudentChoice implements Serializable {
 
     private Integer payState;
 
+    private String orderId;
+    private String payMoney;
+    private String commodityName;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -54,5 +58,29 @@ public class StudentChoice implements Serializable {
 
     public void setPayState(Integer payState) {
         this.payState = payState;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getPayMoney() {
+        return payMoney;
+    }
+
+    public void setPayMoney(String payMoney) {
+        this.payMoney = payMoney;
+    }
+
+    public String getCommodityName() {
+        return commodityName;
+    }
+
+    public void setCommodityName(String commodityName) {
+        this.commodityName = commodityName;
     }
 }

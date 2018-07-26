@@ -20,4 +20,8 @@ public class IdProvider {
         UUID uuid = UUID.randomUUID();
         return uuid.toString().replaceAll("-", "");
     }
+
+    public static void main(String[] args) {
+        System.out.println(IdProvider.createUUIDId());
+    }
 }

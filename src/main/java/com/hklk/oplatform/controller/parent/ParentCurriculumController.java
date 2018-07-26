@@ -4,6 +4,7 @@ import com.hklk.oplatform.comm.LoginParent;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.ParentMessage;
 import com.hklk.oplatform.entity.table.StudentChoice;
+import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.*;
@@ -140,63 +141,71 @@ public class ParentCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/saveStudentChoice")
-    public String insertStudentChoice(Integer scaId, String curriculumName, HttpServletRequest request,
+    public String insertStudentChoice(Integer scaId, String curriculumName, String payMoney, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        Map<String,Object> isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
-        if(isApply!=null) {
-            if((int)isApply.get("pay_state")==0){
+        Map<String, Object> isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
+        if (isApply != null) {
+            if ((int) isApply.get("pay_state") == 0) {
                 return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已申请该课程，尚未付款，请前往订单页完成支付！");
-            }else{
+            } else {
                 return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已申请该课程！");
             }
-
         }
         //验证不通课程是否时间冲突
         Integer num = studentChoiceService.queryParentApplyForVerification(loginParent.getSchoolId(), scaId, loginParent.getStudentId());
         if (num > 1) {
             return ToolUtil.buildResultStr(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY, StatusCode.getStatusMsg(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY));
         } else {
+            String orderId = IdProvider.createUUIDId();
             StudentChoice studentChoice = new StudentChoice();
+            studentChoice.setOrderId(orderId);
             studentChoice.setScaId(scaId);
             studentChoice.setStudentId(loginParent.getStudentId());
+            studentChoice.setPayMoney(payMoney);
+            studentChoice.setCommodityName(curriculumName);
             studentChoiceService.insertSelective(studentChoice);
             ParentMessage parentMessage = new ParentMessage();
             parentMessage.setStudentId(loginParent.getStudentId());
             parentMessage.setMessage("您为 " + loginParent.getChildName() + "同学报名成功 " + curriculumName + " 课程！");
             parentMessageService.insertSelective(parentMessage);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), orderId);
         }
     }
 
 
     @ResponseBody
     @RequestMapping("/wxPay")
-    public String wxPay(Double totalFee, HttpServletRequest request,
+    public String wxPay(String orderId, HttpServletRequest request,
                         HttpServletResponse response, HttpSession session) {
-        // 防止抓包修改订单金额造成损失
-        if (totalFee <= 0) {
-            return ToolUtil.buildResultStr(StatusCode.ERROR, "付款金额错误!");
+        Map<String, Object> order = studentChoiceService.selectByOrderId(orderId);
+        if ((double) order.get("payMoney") == (double) order.get("realMoney") && (double) order.get("payMoney") == 0) {
+            StudentChoice studentChoice = new StudentChoice();
+            studentChoice.setId((int) order.get("id"));
+            studentChoice.setPayState((int) order.get("payState"));
+            studentChoiceService.updateByPrimaryKeySelective(studentChoice);
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, "订单金额为0，无需支付!");
+        } else if ((double) order.get("payMoney") != (double) order.get("realMoney")) {
+            return ToolUtil.buildResultStr(StatusCode.ERROR, "订单金额不正确，支付失败!");
         }
-
-        SortedMap<Object, Object> parameters = PayUtil.getWXPrePayID();
+        Map<String, Object> parameters = PayUtil.getWXPrePayID();
         parameters.put("body", "好课乐课-课程选课");
-
         parameters.put("spbill_create_ip", request.getRemoteAddr());
-        parameters.put("out_trade_no", PayUtil.getDateStr()); // 订单id这里我的订单id生成规则是订单id+时间
-        parameters.put("total_fee", "1"); // 测试时，每次支付一分钱，微信支付所传的金额是以分为单位的，因此实际开发中需要x100
-        // parameters.put("total_fee", orders.getOrderAmount()*100+""); // 上线后，将此代码放开
+        parameters.put("out_trade_no", order.get("orderId"));
+        parameters.put("notify_url", PropUtil.getProperty("notifyUrl"));
+        parameters.put("openid", getLoginParent(request).getOpenid());
+        parameters.put("total_fee", "1"); // 测试
+        //parameters.put("total_fee", (Double) order.get("realMoney") * 100); // 上线后，将此代码放开
 
-        // 设置签名
-        String sign = PayUtil.createSign(parameters);
+        String sign = PayUtil.getSign(parameters);
         parameters.put("sign", sign);
         // 封装请求参数结束
         String requestXML = PayUtil.getRequestXml(parameters); // 获取xml结果
         System.out.println("封装请求参数是：" + requestXML);
         // 调用统一下单接口
         String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
+        System.out.println(result);
         SortedMap<Object, Object> parMap = PayUtil.startWXPay(result);
-
         if (parMap == null) {
             return ToolUtil.buildResultStr(StatusCode.ERROR, "支付出现异常，请稍后重试!");
         } else {
@@ -227,20 +236,20 @@ public class ParentCurriculumController extends BaseController {
         // 判断签名是否正确
         String resXml;
         if (PayUtil.isTenpaySign(packageParams)) {
-            if ("SUCCESS".equals((String) packageParams.get("return_code"))) {
+            if ("SUCCESS".equals(packageParams.get("return_code"))) {
                 // 如果返回成功
                 String mch_id = (String) packageParams.get("mch_id"); // 商户号
                 String out_trade_no = (String) packageParams.get("out_trade_no"); // 商户订单号
                 String total_fee = (String) packageParams.get("total_fee");
                 String transaction_id = (String) packageParams.get("transaction_id"); // 微信支付订单号
                 // 查询订单 根据订单号查询订单
-                String orderId = out_trade_no.substring(0, out_trade_no.length() - PayUtil.TIME.length());
-                //Orders orders = ordersMapper.selectByPrimaryKey(Integer.parseInt(orderId));
+                String orderId = out_trade_no;
+                Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
 
                 // 验证商户ID 和 价格 以防止篡改金额
                 if (PropUtil.getProperty("mchId").equals(mch_id)
                     //&& orders != null
-                    // &&
+                    //&&
                     // total_fee.trim().toString().equals(orders.getOrderAmount())
                     // // 实际项目中将此注释删掉，以保证支付金额相等
                         ) {
@@ -280,10 +289,9 @@ public class ParentCurriculumController extends BaseController {
     public String queryMyCurriculum(Integer isEnd, Integer payState, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), isEnd, null, payState);
+        List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), isEnd, null, 1);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), myCurriculum);
     }
-
 
     /**
      * 2018/7/16 15:25
