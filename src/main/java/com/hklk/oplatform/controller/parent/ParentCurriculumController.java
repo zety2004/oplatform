@@ -179,6 +179,7 @@ public class ParentCurriculumController extends BaseController {
     public String wxPay(String orderId, HttpServletRequest request,
                         HttpServletResponse response, HttpSession session) {
         Map<String, Object> order = studentChoiceService.selectByOrderId(orderId);
+        order.put("realMoney", order.get("realMoney") == null ? 0 : order.get("realMoney"));
         if ((double) order.get("payMoney") == (double) order.get("realMoney") && (double) order.get("payMoney") == 0) {
             StudentChoice studentChoice = new StudentChoice();
             studentChoice.setId((int) order.get("id"));

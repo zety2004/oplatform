@@ -241,6 +241,7 @@
         sca.max_num maxNum,
         sca.class_place classPlace,
         c.class_hours classHours,
+        sca.orderId,
         sca.studentNum,
         (
         SELECT
@@ -318,7 +319,8 @@
         hsca.max_num,
         hsca.class_place,
         hsca.begin_of_select_time,
-        hsca.end_of_select_time
+        hsca.end_of_select_time,
+        scc.order_id orderId
         FROM
         hklk_student_choice_curriculum scc
         LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
