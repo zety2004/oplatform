@@ -6,25 +6,30 @@ import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.provider.IdProvider;
+import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.UserService;
-import com.hklk.oplatform.util.CookieUtils;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.StringUtils;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 运营登陆管理
+ *
  * @author 曹良峰
  * @since 1.0
  */
@@ -37,10 +42,11 @@ public class LoginUserController extends BaseController {
     /**
      * 2018/7/4 18:02
      * 用户登陆
-     * @param username  用户名
-     * @param password  用户密码
-     * @author 曹良峰
+     *
+     * @param username 用户名
+     * @param password 用户密码
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/login")
@@ -70,6 +76,8 @@ public class LoginUserController extends BaseController {
         }
     }
 
+
+
     private String createToken(LoginUser loginUser) {
         // 生成token
         String token = IdProvider.createUUIDId();
@@ -92,8 +100,9 @@ public class LoginUserController extends BaseController {
     /**
      * 2018/7/4 18:03
      * 退出登陆
-     * @author 曹良峰
+     *
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/loginOut")

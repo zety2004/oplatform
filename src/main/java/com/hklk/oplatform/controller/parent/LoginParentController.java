@@ -49,7 +49,7 @@ public class LoginParentController extends BaseController {
     @RequestMapping("/loginWx")
     public String getWxOpenId(@RequestParam(value = "code") String code, HttpServletRequest request,
                               HttpServletResponse response, HttpSession session) {
-        System.out.println("-------------------------------"+code);
+
         String wxResult = HttpRequestUtils.httpGet("https://api.weixin.qq.com/sns/jscode2session?appid=" + PropUtil.getProperty("wxAppid") + "&secret=" + PropUtil.getProperty("wxSecret") + "&js_code=" + code + "&grant_type=authorization_code");
         Map<String, String> resultMap = JsonUtil.jsonToMapStr(wxResult);
         if (resultMap.get("errcode") != null) {

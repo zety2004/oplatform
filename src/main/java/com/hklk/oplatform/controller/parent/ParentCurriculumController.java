@@ -8,7 +8,6 @@ import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.*;
-import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,7 +122,7 @@ public class ParentCurriculumController extends BaseController {
                                              HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
         List<Map<String, Object>> curriculumChoiceVos;
-        if (isAll == null) {
+        if (isAll == null || "".equals(isAll)) {
             curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), null);
         } else {
             curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), loginParent.getGrade());
@@ -157,7 +156,7 @@ public class ParentCurriculumController extends BaseController {
         if (num > 1) {
             return ToolUtil.buildResultStr(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY, StatusCode.getStatusMsg(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY));
         } else {
-            String orderId = IdProvider.createUUIDId();
+            String orderId = System.currentTimeMillis() + "";
             StudentChoice studentChoice = new StudentChoice();
             studentChoice.setOrderId(orderId);
             studentChoice.setScaId(scaId);
@@ -179,13 +178,12 @@ public class ParentCurriculumController extends BaseController {
     public String wxPay(String orderId, HttpServletRequest request,
                         HttpServletResponse response, HttpSession session) {
         Map<String, Object> order = studentChoiceService.selectByOrderId(orderId);
-        order.put("realMoney", order.get("realMoney") == null ? 0 : order.get("realMoney"));
         if ((double) order.get("payMoney") == (double) order.get("realMoney") && (double) order.get("payMoney") == 0) {
             StudentChoice studentChoice = new StudentChoice();
             studentChoice.setId((int) order.get("id"));
-            studentChoice.setPayState((int) order.get("payState"));
+            studentChoice.setPayState(1);
             studentChoiceService.updateByPrimaryKeySelective(studentChoice);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, "订单金额为0，无需支付!");
+            return ToolUtil.buildResultStr(StatusCode.DONOT_NEED_PAY, "订单金额为0，无需支付!");
         } else if ((double) order.get("payMoney") != (double) order.get("realMoney")) {
             return ToolUtil.buildResultStr(StatusCode.ERROR, "订单金额不正确，支付失败!");
         }
@@ -195,6 +193,7 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("out_trade_no", order.get("orderId"));
         parameters.put("notify_url", PropUtil.getProperty("notifyUrl"));
         parameters.put("openid", getLoginParent(request).getOpenid());
+        parameters.put("sign_type", "MD5");
         parameters.put("total_fee", "1"); // 测试
         //parameters.put("total_fee", (Double) order.get("realMoney") * 100); // 上线后，将此代码放开
 
@@ -202,11 +201,9 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("sign", sign);
         // 封装请求参数结束
         String requestXML = PayUtil.getRequestXml(parameters); // 获取xml结果
-        System.out.println("封装请求参数是：" + requestXML);
         // 调用统一下单接口
         String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
-        System.out.println(result);
-        SortedMap<Object, Object> parMap = PayUtil.startWXPay(result);
+        Map<String, Object> parMap = PayUtil.startWXPay(result);
         if (parMap == null) {
             return ToolUtil.buildResultStr(StatusCode.ERROR, "支付出现异常，请稍后重试!");
         } else {
@@ -216,7 +213,7 @@ public class ParentCurriculumController extends BaseController {
 
     @RequestMapping("/wxNotify")
     @ResponseBody
-    public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws IOException, JDOMException {
+    public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
         String result = PayUtil.reciverWx(request); // 接收到异步的参数
         Map<String, String> m = new HashMap<>();// 解析xml成map
         if (m != null && !"".equals(m)) {
@@ -287,11 +284,19 @@ public class ParentCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryMyCurriculum")
-    public String queryMyCurriculum(Integer isEnd, Integer payState, HttpServletRequest request,
+    public String queryMyCurriculum(Integer isEnd, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), isEnd, null, 1);
+        List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculumList(loginParent.getStudentId(), isEnd);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), myCurriculum);
+    }
+
+    @ResponseBody
+    @RequestMapping("/delOrder")
+    public String delOrder(Integer sccId, HttpServletRequest request,
+                           HttpServletResponse response, HttpSession session) {
+        studentChoiceService.deleteByPrimaryKey(sccId);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
     /**
@@ -307,11 +312,11 @@ public class ParentCurriculumController extends BaseController {
                                              HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
         Map<String, Object> result = new HashMap<>();
-        result.put("Mon", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 1, 1));
-        result.put("Tues", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 2, 1));
-        result.put("Wed", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 3, 1));
-        result.put("Thur", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 4, 1));
-        result.put("Fri", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), null, 5, 1));
+        result.put("Mon", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 1));
+        result.put("Tues", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 2));
+        result.put("Wed", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 3));
+        result.put("Thur", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 4));
+        result.put("Fri", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 5));
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
     }
 }

@@ -30,7 +30,7 @@
                 scc.pay_money payMoney,
                 scc.commodity_name commodityName,
                 scc.order_id as orderId,
-                sum(cm.unit_price*cm.num) realMoney
+                IFNULL(sum(cm.unit_price*cm.num),0) realMoney
             FROM
                 hklk_student_choice_curriculum scc
             LEFT JOIN hklk_school_curriculum_apply sca ON scc.sca_id = sca.id
@@ -182,10 +182,7 @@
         LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
         WHERE
         scc.student_id = #{studentId,jdbcType=INTEGER}
-        <if test="payState != null">
-            and scc.pay_state = #{payState,jdbcType=INTEGER}
-        </if>
-
+        and scc.pay_state = 1
         GROUP BY
         hsca.id
         ) sca
@@ -320,13 +317,15 @@
         hsca.class_place,
         hsca.begin_of_select_time,
         hsca.end_of_select_time,
-        scc.order_id orderId
+        scc.order_id orderId,
+        scc.create_time,
+        scc.id sccId
         FROM
         hklk_student_choice_curriculum scc
         LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
         WHERE
         scc.student_id = #{studentId,jdbcType=INTEGER}
-        and scc.pay_state = #{payState,jdbcType=INTEGER}
+        and scc.pay_state = 1
         GROUP BY
         hsca.id
         ) sca
@@ -338,18 +337,76 @@
         ) tmp
         LEFT JOIN hklk_school_syllabus h ON tmp.id = h.sca_id
         WHERE
-        1 = 1
+        tmp.applyStatus != 4
         <if test="weekType != null">
             and h.week_type = #{weekType,jdbcType=INTEGER}
         </if>
+    </select>
+
+    <select id="queryMyCurriculumList" resultType="map" parameterType="map">
+
+        SELECT
+        sca.id,
+        c.`name` AS curriculumName,
+        sca.applicable_grade AS grade,
+        sca.curriculum_id AS curriculumId,
+        st.nickname AS teacherName,
+        sca.curr_start_time AS currStartTime,
+        sca.max_num maxNum,
+        sca.class_place classPlace,
+        c.class_hours classHours,
+        sca.orderId,
+        (SYSDATE()-sca.create_time) as second,
+        sca.create_time,
+        sca.sccId,
+        sca.studentNum,
+        c.cover,
+        IFNULL(
+        SUM(cs.num * cs.unit_price),
+        0
+        ) AS totalPrice,
+        sca.pay_state payState
+
+        FROM
+        (
+        SELECT
+        hsca.id,
+        COUNT(scc.id) AS studentNum,
+        hsca.curriculum_id,
+        hsca.teacher_id,
+        hsca.applicable_grade,
+        hsca.curr_start_time,
+        hsca.max_num,
+        hsca.class_place,
+        hsca.begin_of_select_time,
+        hsca.end_of_select_time,
+        hsca.status,
+        scc.order_id orderId,
+        scc.create_time,
+        scc.id sccId,
+        scc.pay_state
+        FROM
+        hklk_student_choice_curriculum scc
+        LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
+        WHERE
+        scc.student_id = #{studentId,jdbcType=INTEGER}
+        GROUP BY
+        hsca.id
+        ) sca
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        LEFT JOIN hklk_school_teacher st ON st.id = sca.teacher_id
+        LEFT JOIN hklk_consumables cs ON sca.curriculum_id = cs.curriculum_id
+        WHERE
+        1 = 1
         <choose>
             <when test="state == 1">
-                and tmp.applyStatus = 4
+                AND (sca.status = 4 or sca.pay_state = -1)
             </when>
             <otherwise>
-                and tmp.applyStatus != 4
+                AND sca.status != 4 and sca.pay_state != -1
             </otherwise>
         </choose>
+        GROUP BY sca.id
     </select>
 
 </mapper>

@@ -77,6 +77,8 @@ public class StatusCode {
     public final static int STUDENT_WAS_BINDING = 1025;
     //申请课程失败！
     public final static int BUY_CURR_FOR_PARENT = 1026;
+    //订单金额为0，无需支付!
+    public final static int DONOT_NEED_PAY = 1027;
 
     public static String getStatusMsg(Object code) {
 
@@ -117,6 +119,7 @@ public class StatusCode {
         map.put(INSERT_ERROR_FOR_PARENT_APPLY, "选课失败，您申报的课程存在时间冲突!");
         map.put(NO_FOUND_STUDENT, "您输入的手机号和学生学号不符！");
         map.put(STUDENT_WAS_BINDING, "该学生已经被绑定！");
+        map.put(DONOT_NEED_PAY, "订单金额为0，无需支付！");
         return map.get(code);
     }
 }

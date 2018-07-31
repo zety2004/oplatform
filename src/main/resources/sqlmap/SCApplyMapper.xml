@@ -260,7 +260,8 @@
         sca.class_place,
         CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
         choose_time,sca.is_fine_quality,
-        COUNT(scc.id) AS student_num,
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state !=-1) as
+        student_num,
         <![CDATA[
         CASE
         WHEN sca.begin_of_select_time > SYSDATE()  THEN
@@ -287,10 +288,9 @@
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
-        LEFT JOIN hklk_student_choice_curriculum scc ON sca.id = scc.sca_id
         RIGHT JOIN hklk_school_syllabus h on sca.id = h.sca_id
         WHERE
-        sca. STATUS = 3 and sca.school_id = #{schoolId,jdbcType=INTEGER}
+        sca.STATUS = 3 and sca.school_id = #{schoolId,jdbcType=INTEGER}
         <if test="param != null">
             and c.name like CONCAT('%', #{param}, '%')
         </if>
@@ -319,7 +319,8 @@
         sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,sca.applicable_grade as
         grade,st.nickname as
         teacher_name,sca.begin_of_select_time,sca.end_of_select_time,sca.max_num,
-        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id) as student_num,
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state !=-1) as
+        student_num,
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = (select count(1) from
         hklk_student_choice_curriculum scc where scc.sca_id = sca.id) THEN 1 else 0 end
         is_sign,sca.order_remark,h.nickname as op_person,sca.is_fine_quality
@@ -396,7 +397,8 @@
         CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
         choose_time,sca.is_fine_quality,
         sca.status,
-        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id) AS student_num,
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state !=-1) AS
+        student_num,
         <![CDATA[
         CASE
         WHEN sca.begin_of_select_time > SYSDATE()  THEN
@@ -415,9 +417,8 @@
         INTERVAL (SELECT CEILING(tc.class_hours/count(ts.id))*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
         ) THEN
         4/*已结束*/
-        END as apply_status
+        END as apply_status,
         ]]>
-        ,
         concat(group_concat(h.week_type),'|',max(h.class_time)) class_time
         FROM
         hklk_school_curriculum_apply sca
@@ -447,7 +448,6 @@
         sca.applicable_grade AS grade,
         sca.curriculum_id as curriculumId,
         sca.status
-
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
@@ -553,10 +553,10 @@
         4 /*已结束*/
         END AS applyStatus,
         ]]>
-        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and pay_state =1) AS
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and pay_state !=-1) AS
         studentNum,
         (sca.max_num - (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and pay_state
-        =1)) AS surplus
+        !=-1)) AS surplus
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
@@ -572,20 +572,26 @@
         <if test="isFineQuality==-1">/*查询精品*/
             <choose>
                 <when test="grade!=null">
-                    and h.grade like CONCAT('%', #{grade}, '%') ORDER BY h.applyStatus,h.currStartTime DESC
+                    and h.grade like CONCAT('%', #{grade}, '%')
+                    group by h.id
+                    ORDER BY h.applyStatus,h.currStartTime DESC
                 </when>
                 <otherwise>
+                    group by h.id
                     ORDER BY h.applyStatus,h.currStartTime DESC
                 </otherwise>
             </choose>
+
         </if>
         <if test="isFineQuality==1">/*查询精品*/
             and h.isFineQuality = 1
+            group by h.id
             ORDER BY h.surplus DESC
             LIMIT 0,10
         </if>
         <if test="isFineQuality==0">/*查询热门课程*/
             and h.isFineQuality = 0
+            group by h.id
             ORDER BY h.surplus
             LIMIT 0,10
         </if>

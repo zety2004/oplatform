@@ -64,12 +64,10 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
     }
 
     @Override
-    public List<Map<String, Object>> queryMyCurriculum(Integer studentId, Integer state, Integer weekType, Integer payState) {
+    public List<Map<String, Object>> queryMyCurriculum(Integer studentId, Integer weekType) {
         Map<String, Object> params = new HashMap<>();
         params.put("studentId", studentId);
-        params.put("state", state);
         params.put("weekType", weekType);
-        params.put("payState", payState);
         int num = studentChoiceMapper.queryMyCurriculumVerification(params);
         if (num == 0) {
             return null;
@@ -77,6 +75,15 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
             List<Map<String, Object>> result = studentChoiceMapper.queryMyCurriculum(params);
             return result;
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> queryMyCurriculumList(Integer studentId, Integer state) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("studentId", studentId);
+        params.put("state", state);
+        List<Map<String, Object>> result = studentChoiceMapper.queryMyCurriculumList(params);
+        return result;
     }
 
     @Override

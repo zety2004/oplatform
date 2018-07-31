@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,7 +36,6 @@ public class PayUtil {
         parameters.put("appid", PropUtil.getProperty("wxAppid"));
         parameters.put("mch_id", PropUtil.getProperty("mchId"));
         parameters.put("nonce_str", PayUtil.CreateNoncestr());
-        parameters.put("sign_type", "MD5");
         parameters.put("fee_type", "CNY");
         parameters.put("trade_type", "JSAPI");
         return parameters;
@@ -64,16 +64,15 @@ public class PayUtil {
     /**
      * 再次签名，支付
      */
-    public static SortedMap<Object, Object> startWXPay(String result) {
+    public static Map<String, Object> startWXPay(String result) {
         try {
             Map<String, String> map = xmlStr2Map(result);
-            SortedMap<Object, Object> parameterMap = new TreeMap<>();
-            parameterMap.put("appid", PropUtil.getProperty("wxAppid"));
+            Map<String, Object> parameterMap = new TreeMap<>();
+            parameterMap.put("appId", PropUtil.getProperty("wxAppid"));
             parameterMap.put("package", "prepay_id=" + map.get("prepay_id"));
-            parameterMap.put("noncestr", PayUtil.CreateNoncestr());
-            // 本来生成的时间戳是13位，但是ios必须是10位，所以截取了一下
-            parameterMap.put("timestamp",
-                    Long.parseLong(String.valueOf(System.currentTimeMillis()).toString().substring(0, 10)));
+            parameterMap.put("nonceStr", PayUtil.CreateNoncestr());
+            parameterMap.put("signType", "MD5");
+            parameterMap.put("timeStamp",  System.currentTimeMillis() / 1000);
             String sign = PayUtil.createSign(parameterMap);
             parameterMap.put("sign", sign);
             return parameterMap;
@@ -99,11 +98,28 @@ public class PayUtil {
     }
 
     /**
+     * 生成 MD5
+     *
+     * @param data 待处理数据
+     * @return MD5结果
+     */
+    public static String MD5(String data) throws Exception {
+        java.security.MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] array = md.digest(data.getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        for (byte item : array) {
+            sb.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
+        }
+        return sb.toString().toUpperCase();
+    }
+
+
+    /**
      * 是否签名正确,规则是:按参数名称a-z排序,遇到空值的参数不参加签名。
      *
      * @return boolean
      */
-    public static boolean isTenpaySign(SortedMap<Object, Object> packageParams) {
+    public static boolean isTenpaySign(SortedMap<Object, Object> packageParams) throws Exception {
         StringBuffer sb = new StringBuffer();
         Set es = packageParams.entrySet();
         Iterator it = es.iterator();
@@ -117,7 +133,7 @@ public class PayUtil {
         }
         sb.append("key=" + PropUtil.getProperty("WxPay.key"));
         // 算出摘要
-        String mysign = PasswordProvider.md5(sb.toString()).toLowerCase();
+        String mysign = MD5(sb.toString()).toLowerCase();
         String tenpaySign = ((String) packageParams.get("sign")).toLowerCase();
         // System.out.println(tenpaySign + " " + mysign);
         return tenpaySign.equals(mysign);
@@ -129,15 +145,12 @@ public class PayUtil {
         String result = "";
         try {
             List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(parameters.entrySet());
-            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
             Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
 
                 public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
                     return (o1.getKey()).compareTo(o2.getKey());
                 }
             });
-
-            // 构造签名键值对的格式
             StringBuilder sb = new StringBuilder();
             for (Map.Entry<String, Object> item : infoIds) {
                 if (item.getKey() != null || item.getKey() != "") {
@@ -150,9 +163,7 @@ public class PayUtil {
             }
             sb.append("key=" + PropUtil.getProperty("wxKey"));
             result = sb.toString();
-            System.out.println(result);
-            //进行MD5加密
-            result = DigestUtils.md5Hex(result).toUpperCase();
+            result = MD5(result).toUpperCase();
         } catch (Exception e) {
             return null;
         }
@@ -165,21 +176,28 @@ public class PayUtil {
      * @return
      * @Description：创建sign签名
      */
-    public static String createSign(SortedMap<Object, Object> parameters) {
-        StringBuffer sb = new StringBuffer();
-        Set es = parameters.entrySet();
-        Iterator it = es.iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            String k = (String) entry.getKey();
-            Object v = entry.getValue();
-            if (null != v && !"".equals(v) && !"sign".equals(k) && !"key".equals(k)) {
-                sb.append(k + "=" + v + "&");
+    public static String createSign(Map<String, Object> parameters) throws Exception {
+
+        List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(parameters.entrySet());
+        // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
+        Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
+            public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
+                return (o1.getKey()).compareTo(o2.getKey());
+            }
+        });
+        // 构造签名键值对的格式
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Object> item : infoIds) {
+            if (item.getKey() != null || item.getKey() != "") {
+                String key = item.getKey();
+                Object val = item.getValue();
+                if (!(val == "" || val == null)) {
+                    sb.append(key + "=" + val + "&");
+                }
             }
         }
         sb.append("key=" + PropUtil.getProperty("wxKey"));
-        System.out.println(sb.toString());
-        String sign = PasswordProvider.md5(sb.toString()).toUpperCase();
+        String sign = MD5(sb.toString()).toUpperCase();
         return sign;
     }
 
@@ -196,7 +214,7 @@ public class PayUtil {
         while (it.hasNext()) {
             Map.Entry entry = (Map.Entry) it.next();
             String k = (String) entry.getKey();
-            String v = (String) entry.getValue();
+            String v = String.valueOf(entry.getValue());
             if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k)) {
                 sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");
             } else {
