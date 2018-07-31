@@ -156,6 +156,7 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     public List<Map<String, Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade) {
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
+        param.put("grade", grade);
         param.put("isFineQuality", -1);
         int num = scApplyMapper.queryCurriculumForParentVerification(param);
         if (num == 0) {
@@ -171,6 +172,9 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     @Override
     public Map<String, Object> selectByApplyCurriculmForParentById(Integer id) {
         Map<String, Object> result = scApplyMapper.selectByApplyCurriculmForParentById(id);
+        if(result.get("wxdes")!=null){
+            result.put("wxdes", new String((byte[]) result.get("wxdes")));
+        }
         List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId((Integer) result.get("curriculumId"));
         result.put("consumables", consumables);
         return result;

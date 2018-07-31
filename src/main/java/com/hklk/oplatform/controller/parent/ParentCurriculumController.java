@@ -88,7 +88,6 @@ public class ParentCurriculumController extends BaseController {
     public String selectApplyCurriculumById(Integer scaId, HttpServletRequest request,
                                             HttpServletResponse response, HttpSession session) {
         Map<String, Object> curriculum = scApplyService.selectByApplyCurriculmForParentById(scaId);
-        curriculum.put("des", curriculum.get("des").toString().replaceAll("px", "rpx"));
 
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }

@@ -47,7 +47,7 @@ public class serviceTest extends AbstractTestCase {
 
     @Test
     public void redisTest() {
-        Curriculum id = curriculumService.selectIdByUniqueNum("3423424");
+        Integer id = curriculumService.selectIdByUniqueNum("3423424");
         System.out.println(id);
         System.out.println(1111);
     }
@@ -91,6 +91,12 @@ public class serviceTest extends AbstractTestCase {
         scApplyService.queryStudentBySCAId(17);
     }
 
+    @Test
+    public void queryCurriculumByID() {
+
+        Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(22);
+        System.out.println(curriculum);
+    }
 
     @Test
     public void queryTeacherMessage() {

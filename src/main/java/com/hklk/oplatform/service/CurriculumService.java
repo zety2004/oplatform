@@ -1,6 +1,7 @@
 package com.hklk.oplatform.service;
 
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.CurriculumInsertVo;
 import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
@@ -28,11 +29,11 @@ public interface CurriculumService {
      **/
     Map<String, Object> selectByPrimaryKey(Integer id);
 
-    int addCurriculum(Curriculum curriculum);
+    int addCurriculum(CurriculumInsertVo curriculum);
 
-    int updateCurriculum(Curriculum curriculum);
+    int updateCurriculum(CurriculumInsertVo curriculum);
 
     int deleteCurriculum(Integer id);
 
-    Curriculum selectIdByUniqueNum(String uniqueNum);
+    int selectIdByUniqueNum(String uniqueNum);
 }

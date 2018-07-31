@@ -6,6 +6,7 @@ import com.hklk.oplatform.dao.inter.ConsumablesMapper;
 import com.hklk.oplatform.dao.inter.CurriculumMapper;
 import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.CurriculumInsertVo;
 import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
@@ -36,18 +37,24 @@ public class CurriculumServiceImpl implements CurriculumService {
     @Override
     public Map<String, Object> selectByPrimaryKey(Integer id) {
         Map<String, Object> curriculum = curriculumMapper.selectByPrimaryKey(id);
+        if (curriculum.get("des") != null) {
+            curriculum.put("des", new String((byte[]) curriculum.get("des")));
+        }
+        if (curriculum.get("wxdes") != null) {
+            curriculum.put("wxdes", new String((byte[]) curriculum.get("wxdes")));
+        }
         List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId((Integer) curriculum.get("id"));
-        curriculum.put("consumables",consumables);
+        curriculum.put("consumables", consumables);
         return curriculum;
     }
 
     @Override
-    public int addCurriculum(Curriculum curriculum) {
+    public int addCurriculum(CurriculumInsertVo curriculum) {
         return curriculumMapper.insertSelective(curriculum);
     }
 
     @Override
-    public int updateCurriculum(Curriculum curriculum) {
+    public int updateCurriculum(CurriculumInsertVo curriculum) {
         return curriculumMapper.updateByPrimaryKeySelective(curriculum);
     }
 
@@ -57,7 +64,11 @@ public class CurriculumServiceImpl implements CurriculumService {
     }
 
     @Override
-    public Curriculum selectIdByUniqueNum(String uniqueNum) {
+    public int selectIdByUniqueNum(String uniqueNum) {
         return curriculumMapper.selectIdByUniqueNum(uniqueNum);
+    }
+
+    public static void main(String[] args) {
+
     }
 }

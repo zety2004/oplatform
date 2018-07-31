@@ -3,6 +3,7 @@ package com.hklk.oplatform.controller.local;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.CurriculumInsertVo;
 import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumOrderVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
@@ -50,10 +51,11 @@ public class EditCurriculumController extends BaseController {
     /**
      * 2018/7/4 17:15
      * 查询课程列表
-     * @param curriculum    课程对象
-     * @param pageNum       分页参数
-     * @author 曹良峰
+     *
+     * @param curriculum 课程对象
+     * @param pageNum    分页参数
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryCurriculum")
@@ -66,9 +68,10 @@ public class EditCurriculumController extends BaseController {
     /**
      * 2018/7/4 17:16
      * 查询课程详情
+     *
      * @param id
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/selectCurriculumById")
@@ -81,9 +84,10 @@ public class EditCurriculumController extends BaseController {
     /**
      * 2018/7/4 17:17
      * 添加课程
+     *
      * @param curriculum 课程对象
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/addCurriculum")
@@ -91,14 +95,15 @@ public class EditCurriculumController extends BaseController {
                                 HttpServletResponse response, HttpSession session) {
         String uniqueNum = IdProvider.createUUIDId();
         curriculum.setUniqueNum(uniqueNum);
-        curriculumService.addCurriculum(curriculum);
-        Curriculum result = curriculumService.selectIdByUniqueNum(curriculum.getUniqueNum());
+        CurriculumInsertVo curriculumInsertVo = new CurriculumInsertVo(curriculum);
+        curriculumService.addCurriculum(curriculumInsertVo);
+        Integer id = curriculumService.selectIdByUniqueNum(curriculum.getUniqueNum());
         System.out.println(curriculum.getUniqueNum());
         Object returnMessage;
-        if (result == null || result.getId() == null) {
+        if (id == null) {
             returnMessage = "未找到返回记录";
         } else {
-            returnMessage = result.getId();
+            returnMessage = id;
         }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), returnMessage);
     }
@@ -106,24 +111,27 @@ public class EditCurriculumController extends BaseController {
     /**
      * 2018/7/4 17:17
      * 修改课程
-     * @param curriculum    课程对象
-     * @author 曹良峰
+     *
+     * @param curriculum 课程对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateCurriculum")
     public String updateCurriculum(Curriculum curriculum, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
-        curriculumService.updateCurriculum(curriculum);
+        CurriculumInsertVo curriculumInsertVo = new CurriculumInsertVo(curriculum);
+        curriculumService.updateCurriculum(curriculumInsertVo);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
     /**
      * 2018/7/4 17:17
      * 上传文件
+     *
      * @param request （uploadfile）
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @RequestMapping("/uploadCurriculumCover")
     @ResponseBody
@@ -148,9 +156,10 @@ public class EditCurriculumController extends BaseController {
     /**
      * 2018/7/4 17:18
      * 删除课程
-     * @param id    课程id
-     * @author 曹良峰
+     *
+     * @param id 课程id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/deleteCurriculum")
@@ -159,12 +168,14 @@ public class EditCurriculumController extends BaseController {
         curriculumService.deleteCurriculum(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
+
     /**
      * 2018/7/4 17:25
      * 查询课程耗材
+     *
      * @param curId 课程id
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryConsumablesByCurId")
@@ -173,12 +184,14 @@ public class EditCurriculumController extends BaseController {
         List<Consumables> consumablesList = consumablesService.queryConsumablesByCurId(curId);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), consumablesList);
     }
+
     /**
      * 2018/7/4 17:26
      * 添加耗材
-     * @param consumables   耗材对象
-     * @author 曹良峰
+     *
+     * @param consumables 耗材对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/addConsumables")
@@ -191,9 +204,10 @@ public class EditCurriculumController extends BaseController {
     /**
      * 2018/7/4 17:26
      * 修改耗材对象
-     * @param consumables   修改耗材对象
-     * @author 曹良峰
+     *
+     * @param consumables 修改耗材对象
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateConsumables")
@@ -206,9 +220,10 @@ public class EditCurriculumController extends BaseController {
     /**
      * 2018/7/4 17:27
      * 删除耗材
-     * @param id    耗材id
-     * @author 曹良峰
+     *
+     * @param id 耗材id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/deleteConsumables")

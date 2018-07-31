@@ -36,7 +36,7 @@
     </select>
 
 
-    <select id="selectIdByUniqueNum" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <select id="selectIdByUniqueNum" resultType="java.lang.Integer" parameterType="java.lang.String">
         select
         id
         from hklk_curriculum

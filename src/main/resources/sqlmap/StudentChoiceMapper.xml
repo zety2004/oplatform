@@ -348,18 +348,13 @@
         SELECT
         sca.id,
         c.`name` AS curriculumName,
-        sca.applicable_grade AS grade,
-        sca.curriculum_id AS curriculumId,
         st.nickname AS teacherName,
-        sca.curr_start_time AS currStartTime,
-        sca.max_num maxNum,
         sca.class_place classPlace,
         c.class_hours classHours,
         sca.orderId,
         (SYSDATE()-sca.create_time) as second,
         sca.create_time,
         sca.sccId,
-        sca.studentNum,
         c.cover,
         IFNULL(
         SUM(cs.num * cs.unit_price),
@@ -371,15 +366,9 @@
         (
         SELECT
         hsca.id,
-        COUNT(scc.id) AS studentNum,
         hsca.curriculum_id,
         hsca.teacher_id,
-        hsca.applicable_grade,
-        hsca.curr_start_time,
-        hsca.max_num,
         hsca.class_place,
-        hsca.begin_of_select_time,
-        hsca.end_of_select_time,
         hsca.status,
         scc.order_id orderId,
         scc.create_time,
@@ -389,9 +378,10 @@
         hklk_student_choice_curriculum scc
         LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
         WHERE
-        scc.student_id = #{studentId,jdbcType=INTEGER} and scc.pay_state !=-1
-        GROUP BY
-        hsca.id
+        scc.student_id = #{studentId,jdbcType=INTEGER}
+        <if test="state != 1">
+            and scc.pay_state !=-1
+        </if>
         ) sca
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         LEFT JOIN hklk_school_teacher st ON st.id = sca.teacher_id
@@ -401,12 +391,15 @@
         <choose>
             <when test="state == 1">
                 AND (sca.status = 4 or sca.pay_state = -1)
+                GROUP BY sca.orderId
+                order by sca.create_time desc
             </when>
             <otherwise>
                 AND sca.status != 4 and sca.pay_state != -1
+                GROUP BY sca.id
+                order by sca.create_time desc
             </otherwise>
         </choose>
-        GROUP BY sca.id
     </select>
 
 </mapper>
