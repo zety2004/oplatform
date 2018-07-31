@@ -135,7 +135,7 @@
                 FROM
                     hklk_student_choice_curriculum
                 WHERE
-                    student_id = #{studentId,jdbcType=INTEGER} and sca_id = #{scaId,jdbcType=INTEGER}
+                    student_id = #{studentId,jdbcType=INTEGER} and sca_id = #{scaId,jdbcType=INTEGER} and pay_state != -1
     </select>
 
     <select id="queryParentApplyForVerification" resultType="java.lang.Integer" parameterType="map">
@@ -155,7 +155,7 @@
                 FROM
                     hklk_student_choice_curriculum
                 WHERE
-                    student_id = #{studentId,jdbcType=INTEGER}
+                    student_id = #{studentId,jdbcType=INTEGER} and pay_state !=-1
         )
         GROUP BY ss.week_type) t GROUP BY t.school_id
     </select>
@@ -389,7 +389,7 @@
         hklk_student_choice_curriculum scc
         LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
         WHERE
-        scc.student_id = #{studentId,jdbcType=INTEGER}
+        scc.student_id = #{studentId,jdbcType=INTEGER} and scc.pay_state !=-1
         GROUP BY
         hsca.id
         ) sca
