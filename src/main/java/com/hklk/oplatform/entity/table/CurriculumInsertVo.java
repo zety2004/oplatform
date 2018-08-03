@@ -33,6 +33,10 @@ public class CurriculumInsertVo implements Serializable {
 
     private byte[] wxdes;
 
+    private Integer teacherId;
+
+    private Integer isPublic;
+
     public CurriculumInsertVo(Curriculum curriculum) {
         this.id = curriculum.getId();
         this.cover = curriculum.getCover();
@@ -49,6 +53,8 @@ public class CurriculumInsertVo implements Serializable {
         this.uniqueNum = curriculum.getUniqueNum();
         this.des = curriculum.getDes() == null ? null : curriculum.getDes().getBytes();
         this.wxdes = curriculum.getWxdes() == null ? null : curriculum.getWxdes().getBytes();
+        this.teacherId = curriculum.getTeacherId();
+        this.isPublic = curriculum.getIsPublic();
     }
 
     private static final long serialVersionUID = 1L;
@@ -171,5 +177,21 @@ public class CurriculumInsertVo implements Serializable {
 
     public void setWxdes(byte[] wxdes) {
         this.wxdes = wxdes;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
     }
 }

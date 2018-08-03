@@ -94,12 +94,12 @@ public class serviceTest extends AbstractTestCase {
     @Test
     public void queryCurriculumByID() {
 
-        Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(22);
-        System.out.println(curriculum);
+        Map<String, List<Map<String, Object>>> curriculumPageTableForm = scApplyService.queryHotCurriculumForParent(1, null);
+        System.out.println(curriculumPageTableForm);
     }
 
     @Test
     public void queryTeacherMessage() {
-        System.out.println(JsonUtil.toJson(scApplyService.queryHotCurriculumForParent(1,3)));
+        System.out.println(JsonUtil.toJson(scApplyService.queryHotCurriculumForParent(1, 3)));
     }
 }

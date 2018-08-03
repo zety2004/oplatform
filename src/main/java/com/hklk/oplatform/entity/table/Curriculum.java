@@ -33,6 +33,10 @@ public class Curriculum implements Serializable {
 
     private String uniqueNum;
 
+    private Integer teacherId;
+
+    private Integer isPublic;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -153,5 +157,21 @@ public class Curriculum implements Serializable {
 
     public void setWxdes(String wxdes) {
         this.wxdes = wxdes;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public Integer getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Integer isPublic) {
+        this.isPublic = isPublic;
     }
 }

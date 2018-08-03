@@ -104,7 +104,7 @@ public class ParentCurriculumController extends BaseController {
     public String queryHotCurriculumByParent(HttpServletRequest request,
                                              HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        Map<String, List<Map<String, Object>>> curriculumPageTableForm = scApplyService.queryHotCurriculumForParent(loginParent.getSchoolId(), loginParent.getGrade());
+        Map<String, List<Map<String, Object>>> curriculumPageTableForm = scApplyService.queryHotCurriculumForParent(loginParent.getSchoolId(), null);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
@@ -165,7 +165,7 @@ public class ParentCurriculumController extends BaseController {
             studentChoiceService.insertSelective(studentChoice);
             ParentMessage parentMessage = new ParentMessage();
             parentMessage.setStudentId(loginParent.getStudentId());
-            parentMessage.setMessage("您为 " + loginParent.getChildName() + "同学报名成功 " + curriculumName + " 课程！");
+            parentMessage.setMessage("您为 " + loginParent.getChildName() + "同学成功报名 " + curriculumName + " 课程！请确认支付。");
             parentMessageService.insertSelective(parentMessage);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), orderId);
         }
@@ -239,21 +239,20 @@ public class ParentCurriculumController extends BaseController {
                 String out_trade_no = (String) packageParams.get("out_trade_no"); // 商户订单号
                 String total_fee = (String) packageParams.get("total_fee");
                 String transaction_id = (String) packageParams.get("transaction_id"); // 微信支付订单号
-                // 查询订单 根据订单号查询订单
+
                 String orderId = out_trade_no;
                 Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
 
-                // 验证商户ID 和 价格 以防止篡改金额
-                if (PropUtil.getProperty("mchId").equals(mch_id)
-                    //&& orders != null
-                    //&&
-                    // total_fee.trim().toString().equals(orders.getOrderAmount())
-                    // // 实际项目中将此注释删掉，以保证支付金额相等
-                        ) {
+                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null && total_fee.trim().equals(orders.get("pay_money"))) {
+                    StudentChoice studentChoice = new StudentChoice();
+                    studentChoice.setPayState(1);
+                    studentChoice.setId((Integer) orders.get("id"));
+                    studentChoiceService.updateByPrimaryKeySelective(studentChoice);
 
-                    // TODO Auto-generated catch block
-
-
+                    ParentMessage parentMessage = new ParentMessage();
+                    parentMessage.setStudentId((Integer) orders.get("studentId"));
+                    parentMessage.setMessage("您的订单 " + orderId + " 已经支付成功，请确认信息。");
+                    parentMessageService.insertSelective(parentMessage);
                     resXml = PayUtil.setXML("SUCCESS", "OK");
                 } else {
                     resXml = PayUtil.setXML("FAIL", "参数错误");

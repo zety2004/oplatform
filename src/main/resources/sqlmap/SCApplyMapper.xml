@@ -223,12 +223,11 @@
                 and sca.status = #{status,jdbcType=INTEGER}
             </otherwise>
         </choose>
-        <if test="teacherId != null">
-            and st.id = #{teacherId,jdbcType=INTEGER}
+        <if test="isTeacherCurriculum != null">
+            and c.teacher_id != null
         </if>
         group by sca.id
     </select>
-
 
     <resultMap id="CurriculumChoiceMap" type="com.hklk.oplatform.entity.vo.CurriculumChoiceVo">
         <id column="id" property="id" jdbcType="INTEGER"/>

@@ -95,11 +95,11 @@ public class LoginParentController extends BaseController {
                                 HttpServletResponse response, HttpSession session) {
         List<Map<String, Object>> student = sStudentService.queryStudentByPhoneNum(phone, null, sNum);
 
-        List<Map<String, Object>> studentBinding = sStudentService.queryStudentByPhoneNum(phone, null, null);
         if (student != null && student.size() != 0) {
             if (student.get(0).get("wechatId") != null && !"".equals(student.get(0).get("wechatId"))) {
                 return ToolUtil.buildResultStr(StatusCode.STUDENT_WAS_BINDING, StatusCode.getStatusMsg(StatusCode.STUDENT_WAS_BINDING));
             }
+            List<Map<String, Object>> studentBinding = sStudentService.queryStudentByPhoneNum(phone, null, null);
             List<Map<String, Object>> result = new ArrayList<>();
             for (Map<String, Object> map : studentBinding) {
                 LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), getLoginParent(request).getOpenid(), getLoginParent(request).getSession_key());
@@ -120,6 +120,31 @@ public class LoginParentController extends BaseController {
         } else {
             return ToolUtil.buildResultStr(StatusCode.NO_FOUND_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_FOUND_STUDENT));
         }
+    }
+
+    /**
+     * 2018/8/3 10:41
+     * 描述一下方法的作用
+     *
+     * @param phone
+     * @param request
+     * @param response
+     * @param session
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/unBindingWeChat")
+    public String unbindingWeChat(@RequestParam(value = "phone") String phone, HttpServletRequest request,
+                                  HttpServletResponse response, HttpSession session) {
+        List<Map<String, Object>> studentBinding = sStudentService.queryStudentByPhoneNum(phone, null, null);
+        for (Map<String, Object> student : studentBinding) {
+            SStudent sStudent = new SStudent();
+            sStudent.setId((Integer) student.get("id"));
+            sStudent.setWechatId("");
+            sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
     private String createToken(LoginParent loginParent) {

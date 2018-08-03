@@ -3,9 +3,11 @@ package com.hklk.oplatform.controller.teacher;
 import com.hklk.oplatform.comm.LoginTeacher;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.CurriculumInsertVo;
 import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
+import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.SCApplyService;
@@ -89,11 +91,74 @@ public class TeacherApplyCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
-
+        if (curriculum.getIsPublic() != null) {
+            curriculum.setTeacherId(getLoginTeacher(request).getTeacherId());
+        }
         PageTableForm<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums(curriculum, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
+    /**
+     * 2018/7/4 17:17
+     * 添加课程
+     *
+     * @param curriculum 课程对象
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/addCurriculum")
+    public String addCurriculum(Curriculum curriculum, HttpServletRequest request,
+                                HttpServletResponse response, HttpSession session) {
+        String uniqueNum = IdProvider.createUUIDId();
+        curriculum.setUniqueNum(uniqueNum);
+        curriculum.setIsPublic(0);
+        curriculum.setTeacherId(getLoginTeacher(request).getTeacherId());
+        CurriculumInsertVo curriculumInsertVo = new CurriculumInsertVo(curriculum);
+        curriculumService.addCurriculum(curriculumInsertVo);
+        Integer id = curriculumService.selectIdByUniqueNum(curriculum.getUniqueNum());
+        System.out.println(curriculum.getUniqueNum());
+        Object returnMessage;
+        if (id == null) {
+            returnMessage = "未找到返回记录";
+        } else {
+            returnMessage = id;
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), returnMessage);
+    }
+
+    /**
+     * 2018/7/4 17:17
+     * 修改课程
+     *
+     * @param curriculum 课程对象
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/updateCurriculum")
+    public String updateCurriculum(Curriculum curriculum, HttpServletRequest request,
+                                   HttpServletResponse response, HttpSession session) {
+        CurriculumInsertVo curriculumInsertVo = new CurriculumInsertVo(curriculum);
+        curriculumService.updateCurriculum(curriculumInsertVo);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/4 17:18
+     * 删除课程
+     *
+     * @param id 课程id
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/deleteCurriculum")
+    public String deleteCurriculum(Integer id, HttpServletRequest request,
+                                   HttpServletResponse response, HttpSession session) {
+        curriculumService.deleteCurriculum(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
 
     /**
      * 2018/7/4 12:11

@@ -27,7 +27,7 @@ public interface SCApplyService {
 
     PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize);
 
-    PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer teacherId, Integer schoolId, Integer status, int pageNum, int pageSize);
+    PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer isTeacherCurriculum, Integer schoolId, Integer status, int pageNum, int pageSize);
 
     PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int pageNum, int pageSize);
 

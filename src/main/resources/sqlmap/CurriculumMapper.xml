@@ -15,10 +15,12 @@
         <result column="enc_des" property="encDes" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="unique_num" property="uniqueNum" jdbcType="VARCHAR"/>
+        <result column="teacher_id" property="teacherId" jdbcType="INTEGER"/>
+        <result column="is_public" property="isPublic" jdbcType="INTEGER"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.hklk.oplatform.entity.table.Curriculum" extends="BaseResultMap">
-        <result column="des" property="des" jdbcType="LONGVARCHAR"/>
-        <result column="wxdes" property="wxdes" jdbcType="LONGVARCHAR"/>
+        <result column="des" property="des" jdbcType="LONGVARBINARY"/>
+        <result column="wxdes" property="wxdes" jdbcType="LONGVARBINARY"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, cover, name, subject, grade, learning_style , class_hours , collection_num , author,
@@ -43,22 +45,41 @@
         where  unique_num = #{unique_num,jdbcType=VARCHAR}
     </select>
 
+    <select id="queryCurriculums" resultMap="BaseResultVoMap"
+            parameterType="com.hklk.oplatform.entity.table.Curriculum">
+        select * from (select
+        t.id, t.cover, t.name, t.subject, t.grade, t.learning_style, t.class_hours, t.collection_num, t.author,
+        t.enc_des, t.status,t.is_public,t.teacher_id
+        ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc
+        from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id GROUP BY t.id ) cc
+        where status=1
+        <if test="name != null">
+            and cc.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="grade != null">
+            and cc.grade like CONCAT('%', #{grade}, '%')
+        </if>
+        <if test="learningStyle != null">
+            and cc.learning_style like CONCAT('%', #{learningStyle}, '%')
+        </if>
+        <if test="subject != null">
+            and cc.subject like CONCAT('%', #{subject}, '%')
+        </if>
+        <choose>
+            <when test="teacherId!=null">
+                and cc.teacher_id = #{teacherId}
+            </when>
+            <otherwise>
+                and is_public = 1
+            </otherwise>
+        </choose>
+        order by id desc
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from hklk_curriculum
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.hklk.oplatform.entity.table.Curriculum">
-    insert into hklk_curriculum (id, cover, name, 
-      subject, grade, learning_style, 
-      class_hours, collection_num, author, 
-      enclosure, enc_des, status,
-      des,unique_num,wxdes)
-    values (#{id,jdbcType=INTEGER}, #{cover,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{subject,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{learningStyle,jdbcType=VARCHAR}, 
-      #{classHours,jdbcType=VARCHAR}, #{collectionNum,jdbcType=INTEGER}, #{author,jdbcType=VARCHAR}, 
-      #{enclosure,jdbcType=VARCHAR}, #{encDes,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{des,jdbcType=LONGVARCHAR}, #{unique_num,jdbcType=VARCHAR},#{wxdes,jdbcType=LONGVARCHAR})
-  </insert>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.Curriculum">
         insert into hklk_curriculum
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -156,6 +177,7 @@
             </if>
         </trim>
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.Curriculum">
         update hklk_curriculum
         <set>
@@ -201,38 +223,6 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hklk.oplatform.entity.table.Curriculum">
-    update hklk_curriculum
-    set cover = #{cover,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      subject = #{subject,jdbcType=VARCHAR},
-      grade = #{grade,jdbcType=VARCHAR},
-      learning_style = #{learningStyle,jdbcType=VARCHAR},
-      class_hours = #{classHours,jdbcType=VARCHAR},
-      collection_num = #{collectionNum,jdbcType=INTEGER},
-      author = #{author,jdbcType=VARCHAR},
-      enclosure = #{enclosure,jdbcType=VARCHAR},
-      enc_des = #{encDes,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
-      des = #{des,jdbcType=LONGVARCHAR},
-      wxdes = #{wxdes,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-    <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.Curriculum">
-        update hklk_curriculum
-        set cover = #{cover,jdbcType=VARCHAR},
-          name = #{name,jdbcType=VARCHAR},
-          subject = #{subject,jdbcType=VARCHAR},
-          grade = #{grade,jdbcType=VARCHAR},
-          learning_style = #{learningStyle,jdbcType=VARCHAR},
-          class_hours = #{classHours,jdbcType=VARCHAR},
-          collection_num = #{collectionNum,jdbcType=INTEGER},
-          author = #{author,jdbcType=VARCHAR},
-          enclosure = #{enclosure,jdbcType=VARCHAR},
-          enc_des = #{encDes,jdbcType=VARCHAR},
-          status = #{status,jdbcType=INTEGER}
-        where id = #{id,jdbcType=INTEGER}
-    </update>
 
     <resultMap id="BaseResultVoMap" type="com.hklk.oplatform.entity.vo.CurriculumForListVo">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -248,27 +238,4 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="ishc" property="ishc"/>
     </resultMap>
-
-    <select id="queryCurriculums" resultMap="BaseResultVoMap"
-            parameterType="com.hklk.oplatform.entity.table.Curriculum">
-        select * from (select
-        t.id, t.cover, t.name, t.subject, t.grade, t.learning_style, t.class_hours, t.collection_num, t.author,
-        t.enc_des, t.status
-        ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc
-        from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id GROUP BY t.id ) cc
-        where status=1
-        <if test="name != null">
-            and cc.name like CONCAT('%', #{name}, '%')
-        </if>
-        <if test="grade != null">
-            and cc.grade like CONCAT('%', #{grade}, '%')
-        </if>
-        <if test="learningStyle != null">
-            and cc.learning_style like CONCAT('%', #{learningStyle}, '%')
-        </if>
-        <if test="subject != null">
-            and cc.subject like CONCAT('%', #{subject}, '%')
-        </if>
-        order by id desc
-    </select>
 </mapper>

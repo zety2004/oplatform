@@ -48,21 +48,15 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
 
     @Override
     public PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize) {
-        Map<String, Integer> param = new HashMap<>();
-        param.put("schoolId", schoolId);
-        param.put("status", status);
-        Page page = PageHelper.startPage(pageNum, pageSize, true);
-        scApplyMapper.queryCurriculumApply(param);
-        PageTableForm<CurriculumApplyVo> curriculumApplyVoPageTableForm = new PageTableForm<>(page);
-        return curriculumApplyVoPageTableForm;
+        return queryCurriculumApply(null, schoolId, status, pageNum, pageSize);
     }
 
     @Override
-    public PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer teacherId, Integer schoolId, Integer status, int pageNum, int pageSize) {
+    public PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer isTeacherCurriculum, Integer schoolId, Integer status, int pageNum, int pageSize) {
         Map<String, Integer> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("status", status);
-        param.put("teacherId", teacherId);
+        param.put("isTeacherCurriculum", isTeacherCurriculum);
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         scApplyMapper.queryCurriculumApply(param);
         PageTableForm<CurriculumApplyVo> curriculumApplyVoPageTableForm = new PageTableForm<>(page);
@@ -121,26 +115,26 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("isFineQuality", 1);
-        int jpnum = scApplyMapper.queryCurriculumForParentVerification(param);
+        int jpNum = scApplyMapper.queryCurriculumForParentVerification(param);
         List<Map<String, Object>> jpList;
-        if (jpnum == 0) {
+        if (jpNum == 0) {
             jpList = null;
         } else {
             jpList = scApplyMapper.queryCurriculumForParent(param);
         }
         param.put("isFineQuality", 0);
-        int hotnum = scApplyMapper.queryCurriculumForParentVerification(param);
+        int hotNum = scApplyMapper.queryCurriculumForParentVerification(param);
         List<Map<String, Object>> hotList;
-        if (hotnum == 0) {
+        if (hotNum == 0) {
             hotList = null;
         } else {
             hotList = scApplyMapper.queryCurriculumForParent(param);
         }
         param.put("isFineQuality", -1);
         param.put("grade", grade);
-        int allnum = scApplyMapper.queryCurriculumForParentVerification(param);
+        int allNum = scApplyMapper.queryCurriculumForParentVerification(param);
         List<Map<String, Object>> allList;
-        if (allnum == 0) {
+        if (allNum == 0) {
             allList = null;
         } else {
             allList = scApplyMapper.queryCurriculumForParent(param);
@@ -172,7 +166,7 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     @Override
     public Map<String, Object> selectByApplyCurriculmForParentById(Integer id) {
         Map<String, Object> result = scApplyMapper.selectByApplyCurriculmForParentById(id);
-        if(result.get("wxdes")!=null){
+        if (result.get("wxdes") != null) {
             result.put("wxdes", new String((byte[]) result.get("wxdes")));
         }
         List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId((Integer) result.get("curriculumId"));
