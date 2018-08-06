@@ -121,7 +121,9 @@
         c.`name` as curriculumName,
         sca.curriculum_id as curriculumId,
         sca.class_place as classPlace,
-        ss.class_time as classTime
+        ss.class_time as classTime,
+        (select count(tss.id) from hklk_school_syllabus tss where tss.school_id=ss.school_id and tss.sca_id = sca.id) as
+        weeklyNum
         FROM
         hklk_school_syllabus ss
         LEFT JOIN hklk_school_curriculum_apply sca ON ss.sca_id = sca.id

@@ -72,7 +72,7 @@ public class PayUtil {
             parameterMap.put("package", "prepay_id=" + map.get("prepay_id"));
             parameterMap.put("nonceStr", PayUtil.CreateNoncestr());
             parameterMap.put("signType", "MD5");
-            parameterMap.put("timeStamp",  System.currentTimeMillis() / 1000);
+            parameterMap.put("timeStamp", System.currentTimeMillis() / 1000);
             String sign = PayUtil.createSign(parameterMap);
             parameterMap.put("sign", sign);
             return parameterMap;
@@ -131,11 +131,10 @@ public class PayUtil {
                 sb.append(k + "=" + v + "&");
             }
         }
-        sb.append("key=" + PropUtil.getProperty("WxPay.key"));
+        sb.append("key=" + PropUtil.getProperty("wxKey"));
         // 算出摘要
         String mysign = MD5(sb.toString()).toLowerCase();
         String tenpaySign = ((String) packageParams.get("sign")).toLowerCase();
-        // System.out.println(tenpaySign + " " + mysign);
         return tenpaySign.equals(mysign);
     }
 

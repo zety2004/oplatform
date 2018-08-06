@@ -224,7 +224,7 @@
         WHEN h.week_type = 5 THEN
         '周五'
         END
-        ) classTime,
+        SEPARATOR '、') classTime,
         week_type weekType
         FROM
         (

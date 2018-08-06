@@ -218,6 +218,7 @@ public class ParentCurriculumController extends BaseController {
         if (m != null && !"".equals(m)) {
             m = PayUtil.xmlStr2Map(result);
         }
+        System.out.println("支付成功反馈:" + result);
         // 过滤空 设置 TreeMap
         SortedMap<Object, Object> packageParams = new TreeMap<>();
         Iterator it = m.keySet().iterator();
@@ -242,8 +243,10 @@ public class ParentCurriculumController extends BaseController {
 
                 String orderId = out_trade_no;
                 Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
-
-                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null && total_fee.trim().equals(orders.get("pay_money"))) {
+                System.out.println("订单信息:"+orders);
+                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null //&& total_fee.trim().equals(orders.get("pay_money"))
+                        ) {
+                    System.out.println("支付成功正在修改状态----------------------------------------------------------");
                     StudentChoice studentChoice = new StudentChoice();
                     studentChoice.setPayState(1);
                     studentChoice.setId((Integer) orders.get("id"));
@@ -262,12 +265,13 @@ public class ParentCurriculumController extends BaseController {
                 resXml = PayUtil.setXML("FAIL", "交易失败");
             }
         } else {
-            resXml = resXml = PayUtil.setXML("FAIL", "通知签名验证失败");
+            resXml = PayUtil.setXML("FAIL", "通知签名验证失败");
         }
 
         // 处理业务完毕，将业务结果通知给微信
         // ------------------------------
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+        System.out.println("返回微信消息:"+resXml);
         out.write(resXml.getBytes());
         out.flush();
         out.close();
