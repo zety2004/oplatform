@@ -176,6 +176,22 @@ public class TeacherApplyCurriculumController extends BaseController {
     }
 
     /**
+     * 2018/7/4 17:25
+     * 查询课程耗材
+     *
+     * @param curId 课程id
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/queryConsumablesByCurId")
+    public String queryConsumablesByCurId(Integer curId, HttpServletRequest request,
+                                          HttpServletResponse response, HttpSession session) {
+        List<Consumables> consumablesList = consumablesService.queryConsumablesByCurId(curId);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), consumablesList);
+    }
+
+    /**
      * 2018/7/4 17:26
      * 修改耗材对象
      *
