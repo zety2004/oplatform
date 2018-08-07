@@ -37,8 +37,33 @@ public class CurriculumServiceImpl implements CurriculumService {
     }
 
     @Override
+    public PageTableForm<Map<String, Object>> queryCurriculumsForTeacher(Curriculum curriculum, int pageNum, int pageSize) {
+        Page page = PageHelper.startPage(pageNum, pageSize, true);
+        curriculumMapper.queryCurriculumsForTeacher(curriculum);
+        PageTableForm<Map<String, Object>> pageTableForm = new PageTableForm(page);
+        return pageTableForm;
+    }
+
+    @Override
     public Map<String, Object> selectByPrimaryKey(Integer id) {
         Map<String, Object> curriculum = curriculumMapper.selectByPrimaryKey(id);
+        if (curriculum.get("des") != null) {
+            curriculum.put("des", new String((byte[]) curriculum.get("des")));
+        }
+        if (curriculum.get("wxdes") != null) {
+            curriculum.put("wxdes", new String((byte[]) curriculum.get("wxdes")));
+        }
+        List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId((Integer) curriculum.get("id"));
+        curriculum.put("consumables", consumables);
+        return curriculum;
+    }
+
+    @Override
+    public Map<String, Object> selectCurriculumByTeacher(Integer id, Integer teacherId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        params.put("teacherId", teacherId);
+        Map<String, Object> curriculum = curriculumMapper.selectCurriculumByTeacher(params);
         if (curriculum.get("des") != null) {
             curriculum.put("des", new String((byte[]) curriculum.get("des")));
         }

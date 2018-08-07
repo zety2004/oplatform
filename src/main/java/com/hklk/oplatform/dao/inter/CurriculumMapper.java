@@ -14,9 +14,13 @@ public interface CurriculumMapper {
 
     Map<String, Object> selectByPrimaryKey(Integer id);
 
+    Map<String, Object> selectCurriculumByTeacher(Map<String, Object> params);
+
     int updateByPrimaryKeySelective(CurriculumInsertVo record);
 
     List<CurriculumForListVo> queryCurriculums(Curriculum curriculum);
+
+    List<Map<String, Object>> queryCurriculumsForTeacher(Curriculum curriculum);
 
     int selectIdByUniqueNum(String uniqueNum);
 }

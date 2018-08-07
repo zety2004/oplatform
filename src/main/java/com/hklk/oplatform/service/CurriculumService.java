@@ -6,6 +6,7 @@ import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -20,6 +21,8 @@ public interface CurriculumService {
      **/
     PageTableForm<CurriculumForListVo> queryCurriculums(Curriculum curriculum, int pageNum, int pageSize);
 
+    PageTableForm<Map<String, Object>> queryCurriculumsForTeacher(Curriculum curriculum, int pageNum, int pageSize);
+
     /**
      * @author 曹良峰
      * @Description 根据id查询课程详情
@@ -28,6 +31,8 @@ public interface CurriculumService {
      * @Return com.hklk.oplatform.entity.vo.CurriculumVo
      **/
     Map<String, Object> selectByPrimaryKey(Integer id);
+
+    Map<String, Object> selectCurriculumByTeacher(Integer id, Integer teacherId);
 
     int addCurriculum(CurriculumInsertVo curriculum);
 

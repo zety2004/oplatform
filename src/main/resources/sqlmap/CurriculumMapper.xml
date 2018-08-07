@@ -76,6 +76,54 @@
         order by id desc
     </select>
 
+    <select id="queryCurriculumsForTeacher" resultType="map"
+            parameterType="com.hklk.oplatform.entity.table.Curriculum">
+        select id,cover,name,subject,grade,learning_style as learningStyle,class_hours as classHours,
+        collection_num as collectionNum , author,enc_des as encDes, status,is_public as isPublic,
+        teacher_id as teacherId,ishc,enclosure
+        <if test="teacherId!=null">
+            ,(select count(1) from hklk_school_curriculum_apply sca where sca.curriculum_id = cc.id
+            and sca.teacher_id = #{teacherId}) as isApply
+        </if>
+        from (select
+        t.id, t.cover, t.name, t.subject, t.grade, t.learning_style, t.class_hours, t.collection_num, t.author,
+        t.enc_des, t.status,t.is_public,t.teacher_id
+        ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc,t.enclosure
+        from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id GROUP BY t.id ) cc
+        where status=1
+        <if test="name != null">
+            and cc.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="grade != null">
+            and cc.grade like CONCAT('%', #{grade}, '%')
+        </if>
+        <if test="learningStyle != null">
+            and cc.learning_style like CONCAT('%', #{learningStyle}, '%')
+        </if>
+        <if test="subject != null">
+            and cc.subject like CONCAT('%', #{subject}, '%')
+        </if>
+        <choose>
+            <when test="teacherId!=null">
+                and cc.teacher_id = #{teacherId}
+            </when>
+            <otherwise>
+                and is_public = 1
+            </otherwise>
+        </choose>
+        order by id desc
+    </select>
+
+    <select id="selectCurriculumByTeacher" resultType="map" parameterType="java.lang.Integer">
+        select
+        cc.id, cc.cover, cc.name, cc.subject, cc.grade, cc.learning_style learningStyle, cc.class_hours classHours, cc.collection_num collectionNum, cc.author,
+        cc.enclosure, cc.enc_des encDes, cc.status, cc.unique_num uniqueNum, cc.des,cc.wxdes, IFNULL(SUM(cu.num*cu.unit_price),0) as totalPrice,
+        (select count(1) from hklk_school_curriculum_apply sca where sca.curriculum_id = cc.id  and sca.teacher_id = #{teacherId}) as isApply
+        from hklk_curriculum cc left join hklk_consumables cu on cc.id = cu.curriculum_id
+        where cc.id = #{id,jdbcType=INTEGER} group by cc.id
+    </select>
+
+
     <delete id="deleteByPrimaryKey" parameterType="map">
         delete from hklk_curriculum
         where id = #{id,jdbcType=INTEGER}
