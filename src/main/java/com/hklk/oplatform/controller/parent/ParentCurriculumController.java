@@ -140,8 +140,8 @@ public class ParentCurriculumController extends BaseController {
     public String insertStudentChoice(Integer scaId, String curriculumName, String payMoney, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        System.out.println("-----------------------------" + loginParent.getStudentId());
-        if (loginParent.getStudentId() == null) {
+        
+        if (loginParent == null || loginParent.getStudentId() == null) {
             return ToolUtil.buildResultStr(StatusCode.NO_BINDING_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_BINDING_STUDENT));
         }
         //验证该课程是否可以选择
