@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface CurriculumMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Map<String, Object> params);
 
     int insertSelective(CurriculumInsertVo record);
 
-    Map<String,Object> selectByPrimaryKey(Integer id);
+    Map<String, Object> selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(CurriculumInsertVo record);
 

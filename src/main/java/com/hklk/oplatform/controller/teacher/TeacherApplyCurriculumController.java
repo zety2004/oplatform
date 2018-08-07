@@ -155,7 +155,7 @@ public class TeacherApplyCurriculumController extends BaseController {
     @RequestMapping("/deleteCurriculum")
     public String deleteCurriculum(Integer id, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
-        curriculumService.deleteCurriculum(id);
+        curriculumService.deleteCurriculum(id, getLoginTeacher(request).getTeacherId());
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 

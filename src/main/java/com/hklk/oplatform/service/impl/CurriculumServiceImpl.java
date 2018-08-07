@@ -11,9 +11,11 @@ import com.hklk.oplatform.entity.vo.CurriculumForListVo;
 import com.hklk.oplatform.entity.vo.CurriculumVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.service.CurriculumService;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +62,17 @@ public class CurriculumServiceImpl implements CurriculumService {
 
     @Override
     public int deleteCurriculum(Integer id) {
-        return curriculumMapper.deleteByPrimaryKey(id);
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        return curriculumMapper.deleteByPrimaryKey(params);
+    }
+
+    @Override
+    public int deleteCurriculum(Integer id, Integer teacherId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        params.put("teacherId", teacherId);
+        return curriculumMapper.deleteByPrimaryKey(params);
     }
 
     @Override

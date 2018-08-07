@@ -76,10 +76,13 @@
         order by id desc
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from hklk_curriculum
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+    <delete id="deleteByPrimaryKey" parameterType="map">
+        delete from hklk_curriculum
+        where id = #{id,jdbcType=INTEGER}
+        <if test="teacherId != null">
+            and teacher_id = #{teacherId}
+        </if>
+    </delete>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.CurriculumInsertVo">
         insert into hklk_curriculum
         <trim prefix="(" suffix=")" suffixOverrides=",">

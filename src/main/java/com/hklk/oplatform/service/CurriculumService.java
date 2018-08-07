@@ -18,7 +18,7 @@ public interface CurriculumService {
      * @Param []
      * @Return java.util.List<com.hklk.oplatform.entity.table.PPage>
      **/
-    PageTableForm<CurriculumForListVo> queryCurriculums(Curriculum curriculum,int pageNum, int pageSize);
+    PageTableForm<CurriculumForListVo> queryCurriculums(Curriculum curriculum, int pageNum, int pageSize);
 
     /**
      * @author 曹良峰
@@ -34,6 +34,8 @@ public interface CurriculumService {
     int updateCurriculum(CurriculumInsertVo curriculum);
 
     int deleteCurriculum(Integer id);
+
+    int deleteCurriculum(Integer id, Integer teacherId);
 
     int selectIdByUniqueNum(String uniqueNum);
 }
