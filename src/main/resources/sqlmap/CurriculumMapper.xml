@@ -252,6 +252,5 @@
         <result column="enc_des" property="encDes" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="ishc" property="ishc"/>
-        <result column="enclosure" property="enclosure"/>
     </resultMap>
 </mapper>
