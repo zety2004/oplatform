@@ -138,6 +138,14 @@
                     student_id = #{studentId,jdbcType=INTEGER} and sca_id = #{scaId,jdbcType=INTEGER} and pay_state != -1
     </select>
 
+    <select id="queryParentApplyForIsQualified" resultType="java.lang.Integer" parameterType="map">
+                select count(1) from hklk_school_curriculum_apply sca
+                where sca.applicable_grade like CONCAT('%', #{grade}, '%')
+                and sca.school_id = #{schoolId,jdbcType=INTEGER}
+                and sca.id = #{scaId,jdbcType=INTEGER}
+    </select>
+
+
     <select id="queryParentApplyForVerification" resultType="java.lang.Integer" parameterType="map">
         select max(num) from (SELECT
             count(1) as num,sca.school_id

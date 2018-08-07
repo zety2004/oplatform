@@ -79,6 +79,10 @@ public class StatusCode {
     public final static int BUY_CURR_FOR_PARENT = 1026;
     //订单金额为0，无需支付!
     public final static int DONOT_NEED_PAY = 1027;
+    //您的账号尚未绑定学生，无法报名
+    public final static int NO_BINDING_STUDENT = 1028;
+    //您的孩子不符合该课程的申报条件，该课程不属于您孩子的学校或不符合年级
+    public final static int STUDENT_IS_NO_QUALIFIED = 1029;
 
     public static String getStatusMsg(Object code) {
 
@@ -120,6 +124,9 @@ public class StatusCode {
         map.put(NO_FOUND_STUDENT, "您输入的手机号和学生学号不符！");
         map.put(STUDENT_WAS_BINDING, "该学生已经被绑定！");
         map.put(DONOT_NEED_PAY, "订单金额为0，无需支付！");
+
+        map.put(NO_BINDING_STUDENT, "您的账号尚未绑定学生，无法报名！");
+        map.put(STUDENT_IS_NO_QUALIFIED, "您的孩子不符合该课程的申报条件，该课程不属于您孩子的学校或不符合年级!");
         return map.get(code);
     }
 }

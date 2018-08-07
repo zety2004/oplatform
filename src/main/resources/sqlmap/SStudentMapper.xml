@@ -146,6 +146,7 @@
         <if test="param != null">
             and (full_name like CONCAT('%',#{param}, '%') or s_num like CONCAT('%',#{param}, '%'))
         </if>
+        order by id desc
     </select>
 
     <select id="queryStudentByPhoneNum" resultType="map" parameterType="map">

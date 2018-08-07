@@ -4,7 +4,6 @@ import com.hklk.oplatform.comm.LoginParent;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.ParentMessage;
 import com.hklk.oplatform.entity.table.StudentChoice;
-import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.*;
@@ -88,7 +87,6 @@ public class ParentCurriculumController extends BaseController {
     public String selectApplyCurriculumById(Integer scaId, HttpServletRequest request,
                                             HttpServletResponse response, HttpSession session) {
         Map<String, Object> curriculum = scApplyService.selectByApplyCurriculmForParentById(scaId);
-
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 
@@ -142,6 +140,16 @@ public class ParentCurriculumController extends BaseController {
     public String insertStudentChoice(Integer scaId, String curriculumName, String payMoney, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
+        System.out.println("-----------------------------" + loginParent.getStudentId());
+        if (loginParent.getStudentId() == null) {
+            return ToolUtil.buildResultStr(StatusCode.NO_BINDING_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_BINDING_STUDENT));
+        }
+        //验证该课程是否可以选择
+        Integer isQualified = studentChoiceService.queryParentApplyForIsQualified(loginParent.getSchoolId(), loginParent.getGrade().toString(), scaId);
+        if (isQualified == null || isQualified == 0) {
+            return ToolUtil.buildResultStr(StatusCode.STUDENT_IS_NO_QUALIFIED, StatusCode.getStatusMsg(StatusCode.STUDENT_IS_NO_QUALIFIED));
+        }
+
         Map<String, Object> isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
         if (isApply != null) {
             if ((int) isApply.get("pay_state") == 0) {
@@ -150,7 +158,7 @@ public class ParentCurriculumController extends BaseController {
                 return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已申请该课程！");
             }
         }
-        //验证不通课程是否时间冲突
+        //验证不同课程是否时间冲突
         Integer num = studentChoiceService.queryParentApplyForVerification(loginParent.getSchoolId(), scaId, loginParent.getStudentId());
         if (num > 1) {
             return ToolUtil.buildResultStr(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY, StatusCode.getStatusMsg(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY));
@@ -243,7 +251,7 @@ public class ParentCurriculumController extends BaseController {
 
                 String orderId = out_trade_no;
                 Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
-                System.out.println("订单信息:"+orders);
+                System.out.println("订单信息:" + orders);
                 if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null //&& total_fee.trim().equals(orders.get("pay_money"))
                         ) {
                     System.out.println("支付成功正在修改状态----------------------------------------------------------");
@@ -271,7 +279,7 @@ public class ParentCurriculumController extends BaseController {
         // 处理业务完毕，将业务结果通知给微信
         // ------------------------------
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-        System.out.println("返回微信消息:"+resXml);
+        System.out.println("返回微信消息:" + resXml);
         out.write(resXml.getBytes());
         out.flush();
         out.close();

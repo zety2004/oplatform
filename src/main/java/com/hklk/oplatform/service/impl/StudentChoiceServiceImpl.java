@@ -90,4 +90,13 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
     public Map<String, Object> selectByOrderId(String orderId) {
         return studentChoiceMapper.selectByOrderId(orderId);
     }
+
+    @Override
+    public int queryParentApplyForIsQualified(Integer schoolId, String grade, Integer scaId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("schoolId", schoolId);
+        params.put("grade", grade);
+        params.put("scaId", scaId);
+        return studentChoiceMapper.queryParentApplyForIsQualified(params);
+    }
 }

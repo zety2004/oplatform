@@ -49,7 +49,6 @@ public class serviceTest extends AbstractTestCase {
     public void redisTest() {
         Integer id = curriculumService.selectIdByUniqueNum("3423424");
         System.out.println(id);
-        System.out.println(1111);
     }
 
     @Test
@@ -99,7 +98,7 @@ public class serviceTest extends AbstractTestCase {
     }
 
     @Test
-    public void queryTeacherMessage() {
+    public void queryHotCurriculumForParent() {
         System.out.println(JsonUtil.toJson(scApplyService.queryHotCurriculumForParent(1, 3)));
     }
 }

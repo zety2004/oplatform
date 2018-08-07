@@ -17,6 +17,7 @@ public interface StudentChoiceMapper {
     int queryParentApplyForVerification(Map<String, Object> param);
 
     List<Map<String, Object>> queryMyCurriculum(Map<String, Object> param);
+
     List<Map<String, Object>> queryMyCurriculumList(Map<String, Object> param);
 
     int queryMyCurriculumVerification(Map<String, Object> param);
@@ -24,4 +25,6 @@ public interface StudentChoiceMapper {
     Map<String, Object> queryParentApplyForIsApply(Map<String, Object> param);
 
     Map<String, Object> selectByOrderId(String orderId);
+
+    int queryParentApplyForIsQualified(Map<String, Object> param);
 }

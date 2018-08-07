@@ -16,11 +16,13 @@ public interface StudentChoiceService {
 
     int queryParentApplyForVerification(Integer schoolId, Integer scaId, Integer studentId);
 
+    int queryParentApplyForIsQualified(Integer schoolId, String grade, Integer scaId);
+
     Map<String, Object> queryParentApplyForIsApply(Integer scaId, Integer studentId);
 
-    List<Map<String, Object>> queryMyCurriculum(Integer studentId,Integer weekType);
+    List<Map<String, Object>> queryMyCurriculum(Integer studentId, Integer weekType);
 
-    List<Map<String, Object>> queryMyCurriculumList(Integer studentId,Integer state);
+    List<Map<String, Object>> queryMyCurriculumList(Integer studentId, Integer state);
 
     Map<String, Object> selectByOrderId(String orderId);
 }

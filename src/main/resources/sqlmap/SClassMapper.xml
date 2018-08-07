@@ -139,5 +139,6 @@
             and sc.name like CONCAT('%',#{param}, '%')
         </if>
         group by sc.id
+        order by id desc
     </select>
 </mapper>

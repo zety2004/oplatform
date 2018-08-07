@@ -2,6 +2,7 @@ package com.hklk.oplatform.controller.teacher;
 
 import com.hklk.oplatform.comm.LoginTeacher;
 import com.hklk.oplatform.controller.BaseController;
+import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.CurriculumInsertVo;
 import com.hklk.oplatform.entity.table.SCApply;
@@ -9,10 +10,7 @@ import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
-import com.hklk.oplatform.service.CurriculumService;
-import com.hklk.oplatform.service.SCApplyService;
-import com.hklk.oplatform.service.SSyllabusService;
-import com.hklk.oplatform.service.STeacherService;
+import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,11 +42,12 @@ public class TeacherApplyCurriculumController extends BaseController {
     CurriculumService curriculumService;
     @Autowired
     SCApplyService scApplyService;
-
     @Autowired
     STeacherService sTeacherService;
     @Autowired
     SSyllabusService sSyllabusService;
+    @Autowired
+    ConsumablesService consumablesService;
 
     /**
      * 2018/7/4 17:17
@@ -157,6 +156,54 @@ public class TeacherApplyCurriculumController extends BaseController {
     public String deleteCurriculum(Integer id, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
         curriculumService.deleteCurriculum(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/4 17:26
+     * 添加耗材
+     *
+     * @param consumables 耗材对象
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/addConsumables")
+    public String addConsumables(Consumables consumables, HttpServletRequest request,
+                                 HttpServletResponse response, HttpSession session) {
+        consumablesService.insertSelective(consumables);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/4 17:26
+     * 修改耗材对象
+     *
+     * @param consumables 修改耗材对象
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/updateConsumables")
+    public String updateConsumables(Consumables consumables, HttpServletRequest request,
+                                    HttpServletResponse response, HttpSession session) {
+        consumablesService.updateByPrimaryKeySelective(consumables);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/4 17:27
+     * 删除耗材
+     *
+     * @param id 耗材id
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/deleteConsumables")
+    public String deleteConsumables(Integer id, HttpServletRequest request,
+                                    HttpServletResponse response, HttpSession session) {
+        consumablesService.deleteByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
