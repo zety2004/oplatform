@@ -80,7 +80,7 @@
     delete from hklk_curriculum
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.Curriculum">
+    <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.CurriculumInsertVo">
         insert into hklk_curriculum
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -128,6 +128,12 @@
             <if test="wxdes != null">
                 wxdes,
             </if>
+            <if test="teacherId != null">
+                teacher_id,
+            </if>
+            <if test="isPublic != null">
+                is_public,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -174,6 +180,12 @@
             </if>
             <if test="wxdes != null">
                 #{wxdes,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="teacherId != null">
+                #{teacherId,jdbcType=INTEGER},
+            </if>
+            <if test="isPublic != null">
+                #{isPublic,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
