@@ -228,32 +228,9 @@ public class EditClassAndStudentByTeacherController extends BaseController {
             String[] fieldNames = {"sNum", "fullName", "sex", "parentName", "parentPhone"};
             List<SStudent> sStudents = ExcelUtils.importExcel(fileTemp, SStudent.class, fieldNames, 1, 0, 0);
             Integer schoolId = getLoginTeacher(request).getSchoolId();
-            List<ImportStudentVo> errorInsert = new ArrayList<>();
-            int index = 0;
-            for (SStudent sStudent : sStudents) {
-                if (sStudent.getsNum() == null || "".equals(sStudent.getsNum())) {
-                    ImportStudentVo importStudentVo = new ImportStudentVo();
-                    importStudentVo.setFullName(sStudent.getFullName());
-                    importStudentVo.setsNum(sStudent.getsNum());
-                    importStudentVo.setReason("缺少关键字段，请检查后重新导入");
-                    errorInsert.add(importStudentVo);
-                    index++;
-                    continue;
-                }
-                SStudent temp = sStudentService.selectBySNumForValidate(schoolId, sStudent.getsNum());
-                if (sStudent.getId() == null && temp != null) {
-                    ImportStudentVo importStudentVo = new ImportStudentVo();
-                    importStudentVo.setFullName(sStudent.getFullName());
-                    importStudentVo.setsNum(sStudent.getsNum());
-                    SClass sClass = sClassService.selectByPrimaryKey(temp.getClassId());
-                    importStudentVo.setReason("该学生已存在于" + sClass.getName() + "班中");
-                    errorInsert.add(importStudentVo);
-                    index++;
-                } else {
-                    sStudent.setClassId(classId);
-                    sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
-                }
-            }
+            Map<String, Object> temp = sStudentService.insertBatchStudent(sStudents, schoolId, classId);
+            List<ImportStudentVo> errorInsert = (List<ImportStudentVo>) temp.get("errorInsert");
+            int index = (Integer) temp.get("index");
             Map<String, Object> result = new HashMap<>();
             result.put("total", sStudents.size());
             result.put("failList", errorInsert);
