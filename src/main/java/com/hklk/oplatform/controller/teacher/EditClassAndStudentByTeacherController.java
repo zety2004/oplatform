@@ -109,7 +109,7 @@ public class EditClassAndStudentByTeacherController extends BaseController {
                            HttpServletResponse response, HttpSession session) {
         LoginTeacher loginTeacher = getLoginTeacher(request);
         SClass temp = sClassService.selectByPrimaryKey(id);
-        if (temp.getCreateBy() == null || temp.getCreateBy() != loginTeacher.getTeacherId()) {
+        if (temp.getCreateBy() == null || temp.getCreateBy().intValue() != loginTeacher.getTeacherId().intValue()) {
             return ToolUtil.buildResultStr(StatusCode.VALIDATE_CLASS_IS_TEACHER_CREATE, StatusCode.getStatusMsg(StatusCode.VALIDATE_CLASS_IS_TEACHER_CREATE));
         } else {
             sClassService.deleteByPrimaryKey(id);

@@ -15,8 +15,12 @@ public class StudentChoice implements Serializable {
     private Integer payState;
 
     private String orderId;
+
     private String payMoney;
+
     private String commodityName;
+
+    private String transactionId;
 
     private static final long serialVersionUID = 1L;
 
@@ -82,5 +86,13 @@ public class StudentChoice implements Serializable {
 
     public void setCommodityName(String commodityName) {
         this.commodityName = commodityName;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 }

@@ -140,7 +140,7 @@ public class ParentCurriculumController extends BaseController {
     public String insertStudentChoice(Integer scaId, String curriculumName, String payMoney, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-        
+
         if (loginParent == null || loginParent.getStudentId() == null) {
             return ToolUtil.buildResultStr(StatusCode.NO_BINDING_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_BINDING_STUDENT));
         }
@@ -258,6 +258,7 @@ public class ParentCurriculumController extends BaseController {
                     StudentChoice studentChoice = new StudentChoice();
                     studentChoice.setPayState(1);
                     studentChoice.setId((Integer) orders.get("id"));
+                    studentChoice.setTransactionId(transaction_id);
                     studentChoiceService.updateByPrimaryKeySelective(studentChoice);
 
                     ParentMessage parentMessage = new ParentMessage();
