@@ -2,9 +2,12 @@ package com.hklk.oplatform.service.impl;
 
 import com.hklk.oplatform.dao.inter.SCApplyMapper;
 import com.hklk.oplatform.dao.inter.SSyllabusMapper;
+import com.hklk.oplatform.dao.inter.TeacherMessageMapper;
 import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.SSyllabus;
+import com.hklk.oplatform.entity.table.TeacherMessage;
 import com.hklk.oplatform.service.SSyllabusService;
+import com.hklk.oplatform.service.TeacherMessageService;
 import com.hklk.oplatform.util.DateUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +28,8 @@ public class SSyllabusServiceServiceImpl implements SSyllabusService {
     SSyllabusMapper sSyllabusMapper;
     @Autowired
     SCApplyMapper scApplyMapper;
+    @Autowired
+    TeacherMessageMapper teacherMessageMapper;
 
     @Override
     public int deleteByPrimaryKey(Integer id) {
@@ -126,6 +131,11 @@ public class SSyllabusServiceServiceImpl implements SSyllabusService {
                         scApply.setStatus(3);
                         scApply.setCurrStartTime(DateUtil.string2Date(div.select("div.class-content-box").attr("data-starttime"), "yyyy-MM-dd"));
                         this.insertOrUpdateByPrimaryKeySelective(sSyllabus, scApply);
+
+                        TeacherMessage teacherMessage = new TeacherMessage();
+                        teacherMessage.setTeacherId(Integer.parseInt(div.select("div.class-content-box").select("div.teacher").attr("data-teacherid")));
+                        teacherMessage.setMessage("您申报的 " + div.select("span.setName").html() + " 课程已经成功排课！");
+                        teacherMessageMapper.insertSelective(teacherMessage);
                         y++;
                     }
                     break;

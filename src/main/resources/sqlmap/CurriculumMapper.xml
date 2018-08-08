@@ -66,8 +66,8 @@
             and cc.subject like CONCAT('%', #{subject}, '%')
         </if>
         <choose>
-            <when test="teacherId!=null">
-                and cc.teacher_id = #{teacherId}
+            <when test="is_public!=null">
+                and cc.is_public = #{isPublic}
             </when>
             <otherwise>
                 and is_public = 1

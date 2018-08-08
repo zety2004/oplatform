@@ -85,7 +85,6 @@ public class StatusCode {
     public final static int STUDENT_IS_NO_QUALIFIED = 1029;
 
     public static String getStatusMsg(Object code) {
-
         Map<Object, String> map = new HashMap<Object, String>();
         map.put(SUCCESS, "成功");
         map.put(ERROR, "操作失败，请重试！");
