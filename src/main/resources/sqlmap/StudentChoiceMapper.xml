@@ -10,6 +10,7 @@
         <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
         <result column="pay_money" property="payMoney" jdbcType="DOUBLE"/>
         <result column="commodity_name" property="commodityName" jdbcType="VARCHAR"/>
+        <result column="transaction_id" property="transactionId" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, student_id, sca_id, create_time, pay_state
@@ -73,6 +74,9 @@
             <if test="commodityName != null">
                 commodity_name,
             </if>
+            <if test="transactionId != null">
+                transaction_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -99,6 +103,9 @@
             <if test="commodityName != null">
                 #{commodityName,jdbcType=VARCHAR},
             </if>
+            <if test="transactionId != null">
+                #{transactionId,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.hklk.oplatform.entity.table.StudentChoice">
@@ -124,6 +131,9 @@
             </if>
             <if test="commodityName != null">
                 commodity_name = #{commodityName,jdbcType=VARCHAR},
+            </if>
+            <if test="transactionId != null">
+                transaction_id = #{transactionId,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

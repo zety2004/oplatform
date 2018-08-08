@@ -32,6 +32,8 @@ public class CurriculumOrderVo implements Serializable {
 
     private String opPerson;
 
+    private Integer ishc;
+
     private static final long serialVersionUID = 1L;
 
 
@@ -145,5 +147,13 @@ public class CurriculumOrderVo implements Serializable {
 
     public void setIsFineQuality(Integer isFineQuality) {
         this.isFineQuality = isFineQuality;
+    }
+
+    public Integer getIshc() {
+        return ishc;
+    }
+
+    public void setIshc(Integer ishc) {
+        this.ishc = ishc;
     }
 }

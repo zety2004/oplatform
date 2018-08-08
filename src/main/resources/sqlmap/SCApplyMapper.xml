@@ -311,6 +311,7 @@
         <result column="school_name" property="schoolName" jdbcType="VARCHAR"/>
         <result column="op_person" property="opPerson" jdbcType="VARCHAR"/>
         <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
+        <result column="ishc" property="ishc" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="java.lang.Integer">
@@ -322,13 +323,14 @@
         student_num,
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = (select count(1) from
         hklk_student_choice_curriculum scc where scc.sca_id = sca.id) THEN 1 else 0 end
-        is_sign,sca.order_remark,h.nickname as op_person,sca.is_fine_quality
+        is_sign,sca.order_remark,h.nickname as op_person,sca.is_fine_quality,count(h2.id) as ishc
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         left join hklk_school hs on hs.id = sca.school_id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         left join hklk_user h on sca.order_op_user_id = h.id
+        left join hklk_consumables h2 on c.id = h2.curriculum_id
         where sca.status in (2,3)
         <if test="queryParam != null">
             and c.name like CONCAT('%',#{queryParam}, '%')
