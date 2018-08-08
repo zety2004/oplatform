@@ -49,9 +49,18 @@
             parameterType="com.hklk.oplatform.entity.table.Curriculum">
         select * from (select
         t.id, t.cover, t.name, t.subject, t.grade, t.learning_style, t.class_hours, t.collection_num, t.author,
-        t.enc_des, t.status,t.is_public,t.teacher_id
+        t.enc_des, t.status,t.teacher_id
         ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc
-        from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id GROUP BY t.id ) cc
+        from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id
+        <choose>
+            <when test="isPublic!=null">
+                and is_public = #{isPublic}
+            </when>
+            <otherwise>
+                and is_public = 1
+            </otherwise>
+        </choose>
+        GROUP BY t.id ) cc
         where status=1
         <if test="name != null">
             and cc.name like CONCAT('%', #{name}, '%')
@@ -65,14 +74,7 @@
         <if test="subject != null">
             and cc.subject like CONCAT('%', #{subject}, '%')
         </if>
-        <choose>
-            <when test="is_public!=null">
-                and cc.is_public = #{isPublic}
-            </when>
-            <otherwise>
-                and is_public = 1
-            </otherwise>
-        </choose>
+
         order by id desc
     </select>
 
