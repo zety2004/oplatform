@@ -150,12 +150,12 @@ public class SchoolCurriculumController extends BaseController {
             scApplyService.updateByPrimaryKeySelective(scApply);
             TeacherMessage teacherMessage = new TeacherMessage();
             teacherMessage.setTeacherId(temp.getTeacherId());
+            Map<String, Object> curriculm = curriculumService.selectByPrimaryKey(temp.getCurriculumId());
             if (scApply.getStatus() == 1) {
-                teacherMessage.setMessage("您申报的课程已经通过审批,进入排课阶段！");
+                teacherMessage.setMessage("您申报的课程 " + curriculm.get("name") + " 已经通过审批,进入排课阶段！");
             } else if (scApply.getStatus() == 2) {
-                teacherMessage.setMessage("您申报的课程被驳回！");
+                teacherMessage.setMessage("您申报的课程 " + curriculm.get("name") + " 被驳回！");
             }
-
             teacherMessageService.insertSelective(teacherMessage);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
