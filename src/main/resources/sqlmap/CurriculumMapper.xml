@@ -85,7 +85,7 @@
         teacher_id as teacherId,ishc,enclosure
         <if test="teacherId!=null">
             ,(select count(1) from hklk_school_curriculum_apply sca where sca.curriculum_id = cc.id
-            and sca.teacher_id = #{teacherId}) as isApply
+            and sca.teacher_id = #{teacherId} and sca.status in (0,1,3)) as isApply
         </if>
         from (select
         t.id, t.cover, t.name, t.subject, t.grade, t.learning_style, t.class_hours, t.collection_num, t.author,
@@ -120,7 +120,7 @@
         select
         cc.id, cc.cover, cc.name, cc.subject, cc.grade, cc.learning_style learningStyle, cc.class_hours classHours, cc.collection_num collectionNum, cc.author,
         cc.enclosure, cc.enc_des encDes, cc.status, cc.unique_num uniqueNum, cc.des,cc.wxdes, IFNULL(SUM(cu.num*cu.unit_price),0) as totalPrice,
-        (select count(1) from hklk_school_curriculum_apply sca where sca.curriculum_id = cc.id  and sca.teacher_id = #{teacherId}) as isApply
+        (select count(1) from hklk_school_curriculum_apply sca where sca.curriculum_id = cc.id  and sca.teacher_id = #{teacherId} and sca.status in (0,1,3)) as isApply
         from hklk_curriculum cc left join hklk_consumables cu on cc.id = cu.curriculum_id
         where cc.id = #{id,jdbcType=INTEGER} group by cc.id
     </select>
