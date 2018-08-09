@@ -129,6 +129,7 @@ public class SSyllabusServiceServiceImpl implements SSyllabusService {
                         scApply.setBeginOfSelectTime(DateUtil.string2Date(div.select("div.class-content-box").attr("data-selstart"), "yyyy-MM-dd"));
                         scApply.setEndOfSelectTime(DateUtil.string2Date(div.select("div.class-content-box").attr("data-selend"), "yyyy-MM-dd"));
                         scApply.setStatus(3);
+                        scApply.setIsFineQuality(Integer.valueOf(div.select("h6.clear").attr("data-fine")));
                         scApply.setCurrStartTime(DateUtil.string2Date(div.select("div.class-content-box").attr("data-starttime"), "yyyy-MM-dd"));
                         this.insertOrUpdateByPrimaryKeySelective(sSyllabus, scApply);
 
