@@ -27,19 +27,19 @@ public interface SCApplyService {
 
     PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize);
 
+    PageTableForm<Map<String, Object>> queryCurriculumApplyForExamine(Integer schoolId, int pageNum, int pageSize);
+
     PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer isTeacherCurriculum, Integer schoolId, Integer status, int pageNum, int pageSize);
 
     PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int pageNum, int pageSize);
 
     List<StudentPay> queryStudentBySCAId(Integer scaId);
 
-    List<SCApply> selectByTeacherId(Integer teacherId, Integer curriculumId);
-
     PageTableForm<CurriculumChoiceVo> queryByTeacherId(Integer teacherId, Integer status, Integer pageNum, Integer pageSize);
 
-    Map<String, List<Map<String,Object>>> queryHotCurriculumForParent(Integer schoolId, Integer grade);
+    Map<String, List<Map<String, Object>>> queryHotCurriculumForParent(Integer schoolId, Integer grade);
 
-    List<Map<String,Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade);
+    List<Map<String, Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade);
 
-    Map<String,Object> selectByApplyCurriculmForParentById(Integer id);
+    Map<String, Object> selectByApplyCurriculmForParentById(Integer id);
 }

@@ -98,6 +98,23 @@ public class SchoolCurriculumController extends BaseController {
     }
 
     /**
+     * 2018/7/4 15:52
+     * 学校查询老师待审核课程
+     *
+     * @param pageNum 分页参数
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/queryCurriculumApplyForExamine")
+    public String queryCurriculumApplyForExamine(int pageNum, HttpServletRequest request,
+                                                 HttpServletResponse response, HttpSession session) {
+
+        PageTableForm<Map<String, Object>> curriculumPageTableForm = scApplyService.queryCurriculumApplyForExamine(getLoginSchool(request).getSchoolId(), pageNum, pageSize);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+    }
+
+    /**
      * 2018/7/4 15:53
      * 查询课程选课情况
      *
@@ -131,35 +148,44 @@ public class SchoolCurriculumController extends BaseController {
     }
 
     /**
-     * 2018/7/4 15:56
-     * 修改申报课程
+     * 2018/8/9 18:06
+     * 描述一下方法的作用
      *
-     * @param scApply 课程申报对象
+     * @param ids
+     * @param status
+     * @param curriculumName
      * @return java.lang.String
      * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateCurriculumApply")
-    public String updateCurriculumApply(SCApply scApply, HttpServletRequest request,
+    public String updateCurriculumApply(String ids, Integer status, String curriculumName, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
-        SCApply temp = scApplyService.selectByPrimaryKey(scApply.getId());
-        if (temp.getOperatorId() != null && temp.getStatus() != 0 && scApply.getStatus() != 0) {
-            return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
-        } else {
-            scApply.setOperatorId(getLoginSchool(request).getSchoolAdminId());
-            scApplyService.updateByPrimaryKeySelective(scApply);
-            TeacherMessage teacherMessage = new TeacherMessage();
-            teacherMessage.setTeacherId(temp.getTeacherId());
-            Map<String, Object> curriculm = curriculumService.selectByPrimaryKey(temp.getCurriculumId());
-            if (scApply.getStatus() == 1) {
-                teacherMessage.setMessage("您申报的课程 " + curriculm.get("name") + " 已经通过审批,进入排课阶段！");
-            } else if (scApply.getStatus() == 2) {
-                teacherMessage.setMessage("您申报的课程 " + curriculm.get("name") + " 被驳回！");
+        for (String id : ids.split(",")) {
+            SCApply temp = scApplyService.selectByPrimaryKey(Integer.valueOf(id));
+            if (temp.getOperatorId() != null && temp.getStatus() != 0 && status != 0) {
+                return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
+            } else {
+                SCApply scApply = new SCApply();
+                scApply.setId(Integer.valueOf(id));
+                scApply.setStatus(status);
+                scApply.setOperatorId(getLoginSchool(request).getSchoolAdminId());
+                scApplyService.updateByPrimaryKeySelective(scApply);
+                TeacherMessage teacherMessage = new TeacherMessage();
+                teacherMessage.setTeacherId(temp.getTeacherId());
+                if (status == 1) {
+                    teacherMessage.setMessage("您申报的课程 " + curriculumName + " 已经通过审批,进入排课阶段！");
+                } else if (status == 2) {
+                    teacherMessage.setMessage("您申报的课程 " + curriculumName + " 被驳回！");
+                } else if (status == 0) {
+                    teacherMessage.setMessage("您申报的课程 " + curriculumName + " 被退回到未审核状态！");
+                }
+                teacherMessageService.insertSelective(teacherMessage);
             }
-            teacherMessageService.insertSelective(teacherMessage);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
+
 
     /**
      * 2018/7/4 15:57

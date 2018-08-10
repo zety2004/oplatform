@@ -64,6 +64,13 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
     }
 
     @Override
+    public int queryParentApplyForVerificationTime(Integer scaId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("scaId", scaId);
+        return studentChoiceMapper.queryParentApplyForVerificationTime(params);
+    }
+
+    @Override
     public List<Map<String, Object>> queryMyCurriculum(Integer studentId, Integer weekType) {
         Map<String, Object> params = new HashMap<>();
         params.put("studentId", studentId);

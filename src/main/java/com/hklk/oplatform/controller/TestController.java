@@ -7,9 +7,6 @@ import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.*;
 import net.sf.json.JSONObject;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.logging.Log;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -24,14 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.ConnectException;
-import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,6 +133,25 @@ public class TestController extends BaseController {
         System.out.println("结束Servlet的时间：" + System.currentTimeMillis() + ".");
 
         return "111";
+    }
+
+    public @ResponseBody
+    String timerPollReport() {
+        Map<String, Object> report;
+        //hold住连接
+        while (true) {
+            try {
+                if (true) {
+                    report = new HashMap<>();
+                    report.put("test", "1");
+                    System.out.println("report:" + report);
+                    return JsonUtil.toJson(report);
+                }
+                Thread.sleep(30000);//防止循序太频繁
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String getminiqrQr(String accessToken) {

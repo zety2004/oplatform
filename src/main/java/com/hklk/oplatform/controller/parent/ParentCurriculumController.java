@@ -141,6 +141,7 @@ public class ParentCurriculumController extends BaseController {
                                       HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
 
+        //未绑定学生
         if (loginParent == null || loginParent.getStudentId() == null) {
             return ToolUtil.buildResultStr(StatusCode.NO_BINDING_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_BINDING_STUDENT));
         }
@@ -148,6 +149,11 @@ public class ParentCurriculumController extends BaseController {
         Integer isQualified = studentChoiceService.queryParentApplyForIsQualified(loginParent.getSchoolId(), loginParent.getGrade().toString(), scaId);
         if (isQualified == null || isQualified == 0) {
             return ToolUtil.buildResultStr(StatusCode.STUDENT_IS_NO_QUALIFIED, StatusCode.getStatusMsg(StatusCode.STUDENT_IS_NO_QUALIFIED));
+        }
+        //验证课程是否在选课时间内
+        Integer verificationTimeNum = studentChoiceService.queryParentApplyForVerificationTime(scaId);
+        if (verificationTimeNum == 0) {
+            return ToolUtil.buildResultStr(StatusCode.PARENT_APPLY_CURR_FOR_VER_TIME, StatusCode.getStatusMsg(StatusCode.PARENT_APPLY_CURR_FOR_VER_TIME));
         }
 
         Map<String, Object> isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());

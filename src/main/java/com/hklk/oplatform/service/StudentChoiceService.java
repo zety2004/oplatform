@@ -16,6 +16,8 @@ public interface StudentChoiceService {
 
     int queryParentApplyForVerification(Integer schoolId, Integer scaId, Integer studentId);
 
+    int queryParentApplyForVerificationTime(Integer scaId);
+
     int queryParentApplyForIsQualified(Integer schoolId, String grade, Integer scaId);
 
     Map<String, Object> queryParentApplyForIsApply(Integer scaId, Integer studentId);

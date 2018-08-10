@@ -155,6 +155,17 @@
                 and sca.id = #{scaId,jdbcType=INTEGER}
     </select>
 
+    <select id="queryParentApplyForVerificationTime" resultType="java.lang.Integer" parameterType="map">
+        select count(1)from
+        hklk_school_curriculum_apply sca
+        where sca.id = #{scaId,jdbcType=INTEGER}
+        <![CDATA[
+        and sca.begin_of_select_time<= SYSDATE()
+        and sca.end_of_select_time >= SYSDATE()
+
+        ]]>
+
+    </select>
 
     <select id="queryParentApplyForVerification" resultType="java.lang.Integer" parameterType="map">
         select max(num) from (SELECT

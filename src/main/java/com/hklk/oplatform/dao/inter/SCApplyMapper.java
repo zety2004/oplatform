@@ -17,11 +17,11 @@ public interface SCApplyMapper {
 
     SCApply selectByPrimaryKey(Integer id);
 
-    List<SCApply> selectByTeacherId(Map<String, Object> param);
-
     int updateByPrimaryKeySelective(SCApply record);
 
     List<CurriculumApplyVo> queryCurriculumApply(Map<String, Integer> param);
+
+    List<Map<String, Object>> queryCurriculumApplyForExamine(Map<String, Integer> param);
 
     List<CurriculumChoiceVo> queryCurriculumChoice(Map<String, Object> param);
 

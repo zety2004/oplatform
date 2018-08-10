@@ -302,16 +302,16 @@ public class TeacherApplyCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/addOrUpdateCurriculumApply")
-    public String addOrUpdateCurriculumApply(SCApply scApply, HttpServletRequest request,
+    public String addOrUpdateCurriculumApply(SCApply scApply, Integer num, HttpServletRequest request,
                                              HttpServletResponse response, HttpSession session) {
+        if (num > 5) {
+            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+        }
         LoginTeacher loginTeacher = getLoginTeacher(request);
         scApply.setSchoolId(loginTeacher.getSchoolId());
         scApply.setTeacherId(loginTeacher.getTeacherId());
         if (scApply.getId() == null) {
-            List<SCApply> temp = scApplyService.selectByTeacherId(scApply.getTeacherId(), scApply.getCurriculumId());
-            if (temp.size() > 0) {
-                return ToolUtil.buildResultStr(StatusCode.INSERT_ERROR_FOR_IS_APPLY, StatusCode.getStatusMsg(StatusCode.INSERT_ERROR_FOR_IS_APPLY));
-            } else {
+            for (int i = 0; i < num; i++) {
                 scApplyService.insertSelective(scApply);
             }
         } else {
