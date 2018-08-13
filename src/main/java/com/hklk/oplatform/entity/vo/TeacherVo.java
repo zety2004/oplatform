@@ -25,6 +25,8 @@ public class TeacherVo implements Serializable {
 
     private String remark;
 
+    private String introduction;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -115,5 +117,13 @@ public class TeacherVo implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 }

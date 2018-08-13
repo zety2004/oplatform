@@ -59,7 +59,7 @@ public class LoginTeacherController extends BaseController {
                                HttpServletResponse response, HttpSession session) {
         TeacherVo teacherVo = sTeacherService.loginTeacher(account, pwd);
         if (teacherVo != null && teacherVo.getStatus() == 1 && teacherVo.getSchoolStatus() == 1) {
-            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolName(), teacherVo.getSchoolLogo(), teacherVo.getHeadIco(), teacherVo.getRemark());
+            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolName(), teacherVo.getSchoolLogo(), teacherVo.getHeadIco(), teacherVo.getIntroduction());
             String token = createToken(loginTeacher);
 
             Map<String, String> result = new HashMap<>();
@@ -80,7 +80,6 @@ public class LoginTeacherController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
         }
     }
-
 
 
     /**
@@ -137,7 +136,7 @@ public class LoginTeacherController extends BaseController {
         param.setId(loginTeacher.getTeacherId());
         param.setHeadIco(headIco);
         param.settName(nickName);
-        param.setRemark(remark);
+        param.setIntroduction(remark);
         sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }

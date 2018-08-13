@@ -12,16 +12,18 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
  * Description:
  */
 public class HelloWebSocketHandler extends AbstractWebSocketHandler {
-
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        //处理文本消息
-        System.out.println("get message: " + message.getPayload());
-        //模拟延时
-        Thread.sleep(2000);
-        //发送信息
-        System.out.println("send message: Hello world!");
-        session.sendMessage(new TextMessage("from server: Hello world!"));
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+        try {
+            //处理文本消息
+            System.out.println("get message: " + message.getPayload());
+            //模拟延时
+            Thread.sleep(2000);
+            //发送信息
+            session.sendMessage(new TextMessage("from server: 你好!"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

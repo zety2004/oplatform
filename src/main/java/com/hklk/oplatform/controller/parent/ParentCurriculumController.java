@@ -145,7 +145,7 @@ public class ParentCurriculumController extends BaseController {
         if (loginParent == null || loginParent.getStudentId() == null) {
             return ToolUtil.buildResultStr(StatusCode.NO_BINDING_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_BINDING_STUDENT));
         }
-        //验证该课程是否可以选择
+        //验证该课程是否可以选择(查询该课程是否是该学校的)
         Integer isQualified = studentChoiceService.queryParentApplyForIsQualified(loginParent.getSchoolId(), loginParent.getGrade().toString(), scaId);
         if (isQualified == null || isQualified == 0) {
             return ToolUtil.buildResultStr(StatusCode.STUDENT_IS_NO_QUALIFIED, StatusCode.getStatusMsg(StatusCode.STUDENT_IS_NO_QUALIFIED));

@@ -14,6 +14,8 @@ public class STeacher implements Serializable {
 
     private String remark;
 
+    private String introduction;
+
     private Integer status;
 
     private String pwd;
@@ -104,5 +106,13 @@ public class STeacher implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 }
