@@ -7,6 +7,7 @@
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
         <result column="sex" property="sex" jdbcType="INTEGER"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
         <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
@@ -14,7 +15,7 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, nickname as t_name, phone, sex, remark, status, pwd, school_id, head_ico,create_time
+    id, nickname as t_name, phone, sex, remark, status, pwd, school_id, head_ico,create_time,introduction
   </sql>
     <select id="selectBySTeacher" resultMap="BaseResultMap" parameterType="com.hklk.oplatform.entity.table.STeacher">
         select
@@ -73,6 +74,9 @@
             <if test="headIco != null">
                 head_ico,
             </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -101,6 +105,9 @@
             </if>
             <if test="headIco != null">
                 #{headIco,jdbcType=VARCHAR},
+            </if>
+            <if test="introduction != null">
+                #{introduction,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -131,6 +138,9 @@
             <if test="headIco != null">
                 head_ico = #{headIco,jdbcType=VARCHAR},
             </if>
+            <if test="introduction != null">
+                introduction = #{introduction,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -158,6 +168,7 @@
         <result column="school_logo" property="schoolLogo" jdbcType="VARCHAR"/>
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
         <result column="school_status" property="schoolStatus" jdbcType="INTEGER"/>
     </resultMap>
     <select id="loginTeacher" resultMap="BaseResultVoMap" parameterType="map">

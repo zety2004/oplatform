@@ -11,13 +11,21 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, sca_id, school_id, time_type, week_type,class_time
-  </sql>
+    </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from hklk_school_syllabus
         where id = #{id,jdbcType=INTEGER}
     </select>
+
+    <select id="selectCountStudentNumBySCId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select
+        count(1)
+        from hklk_student_choice_curriculum scc
+        where scc.sca_id = #{scaId,jdbcType=INTEGER}
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from hklk_school_syllabus
     where id = #{id,jdbcType=INTEGER}
@@ -122,6 +130,7 @@
         sca.curriculum_id as curriculumId,
         sca.class_place as classPlace,
         ss.class_time as classTime,
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id) as studentNum,
         (select count(tss.id) from hklk_school_syllabus tss where tss.school_id=ss.school_id and tss.sca_id = sca.id) as
         weeklyNum
         FROM

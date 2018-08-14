@@ -22,6 +22,8 @@ public interface SSyllabusService {
 
     int delAndbatchSaveSyllabus(String param, Integer schoolId);
 
+    int selectCountStudentNumBySCId(Integer scaId);
+
     List<Map<String, String>> queryMapByWeekType(Integer weekType, Integer schoolId);
 
     List<Map<String, String>> queryMapByTimeType(Integer timeType, Integer schoolId);

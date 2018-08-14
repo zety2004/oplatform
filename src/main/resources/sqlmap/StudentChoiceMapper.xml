@@ -160,9 +160,9 @@
         hklk_school_curriculum_apply sca
         where sca.id = #{scaId,jdbcType=INTEGER}
         <![CDATA[
+        and sca.max_num < (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
         and sca.begin_of_select_time<= SYSDATE()
-        and sca.end_of_select_time >= SYSDATE()
-
+       <!-- and sca.end_of_select_time >= SYSDATE() -->
         ]]>
 
     </select>

@@ -32,6 +32,11 @@ public class SSyllabusServiceServiceImpl implements SSyllabusService {
     TeacherMessageMapper teacherMessageMapper;
 
     @Override
+    public int selectCountStudentNumBySCId(Integer scaId) {
+        return sSyllabusMapper.selectCountStudentNumBySCId(scaId);
+    }
+
+    @Override
     public int deleteByPrimaryKey(Integer id) {
         return sSyllabusMapper.deleteByPrimaryKey(id);
     }

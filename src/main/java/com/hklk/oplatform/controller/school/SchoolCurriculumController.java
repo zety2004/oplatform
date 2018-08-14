@@ -166,6 +166,13 @@ public class SchoolCurriculumController extends BaseController {
             if (temp.getOperatorId() != null && temp.getStatus() != 0 && status != 0) {
                 return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
             } else {
+                if (status == 0) {
+                    int studentNum = sSyllabusService.selectCountStudentNumBySCId(temp.getId());
+                    if (studentNum > 0) {
+                        return ToolUtil.buildResultStr(StatusCode.HAS_STUDENT, StatusCode.getStatusMsg(StatusCode.HAS_STUDENT));
+                    }
+                }
+
                 SCApply scApply = new SCApply();
                 scApply.setId(Integer.valueOf(id));
                 scApply.setStatus(status);

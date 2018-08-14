@@ -629,7 +629,7 @@
         CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as chooseTime,
         c.class_hours classHours,
         (select GROUP_CONCAT(d.name) from hklk_dic d where FIND_IN_SET(d.id, c.learning_style)>0 GROUP BY d.typecode) as learningStyle,
-        st.remark,
+        st.introduction remark,
         IFNULL(SUM(cs.num*cs.unit_price),0) as totalPrice,
         <![CDATA[
         CASE
