@@ -7,7 +7,6 @@ import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.SSyllabus;
 import com.hklk.oplatform.entity.table.TeacherMessage;
 import com.hklk.oplatform.service.SSyllabusService;
-import com.hklk.oplatform.service.TeacherMessageService;
 import com.hklk.oplatform.util.DateUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
