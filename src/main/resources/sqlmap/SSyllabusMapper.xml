@@ -129,6 +129,7 @@
         c.`name` as curriculumName,
         sca.curriculum_id as curriculumId,
         sca.class_place as classPlace,
+        sca.is_fine_quality as isFineQuality,
         ss.class_time as classTime,
         (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id) as studentNum,
         (select count(tss.id) from hklk_school_syllabus tss where tss.school_id=ss.school_id and tss.sca_id = sca.id) as
