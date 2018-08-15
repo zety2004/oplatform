@@ -158,7 +158,7 @@
     <select id="selectUsers" resultMap="BaseResultMap" parameterType="com.hklk.oplatform.entity.table.User">
         select
         <include refid="Base_Column_List"/>
-        from hklk_user where 1=1
+        from hklk_user where state in (0,1)
         <if test="username != null and username != ''">
             and username like CONCAT('%', #{username}, '%')
         </if>

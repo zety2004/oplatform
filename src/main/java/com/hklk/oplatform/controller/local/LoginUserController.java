@@ -53,7 +53,7 @@ public class LoginUserController extends BaseController {
     public String loginUser(@RequestParam(value = "username", required = false) String username, @RequestParam(value = "password", required = false) String password, HttpServletRequest request,
                             HttpServletResponse response, HttpSession session) {
         User user = userService.loginUser(username, password);
-        if (user != null && user.getState() == 1) {
+        if (user != null && (user.getState() == 1 || user.getState() == 9)) {
             List<PPage> pPages = userService.queryUserPages(user.getId());
             LoginUser loginUser = new LoginUser(user.getId(), user.getUsername(), user.getNickname(), "");
             if (pPages.get(0) != null) {
@@ -75,7 +75,6 @@ public class LoginUserController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
         }
     }
-
 
 
     private String createToken(LoginUser loginUser) {
