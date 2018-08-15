@@ -208,7 +208,7 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("openid", getLoginParent(request).getOpenid());
         parameters.put("sign_type", "MD5");
         parameters.put("total_fee", "1"); // 测试
-        //parameters.put("total_fee", (Double) order.get("realMoney") * 100); // 上线后，将此代码放开
+        parameters.put("total_fee", (Double) order.get("realMoney") * 100); // 上线后，将此代码放开
 
         String sign = PayUtil.getSign(parameters);
         parameters.put("sign", sign);
@@ -258,8 +258,7 @@ public class ParentCurriculumController extends BaseController {
                 String orderId = out_trade_no;
                 Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
                 System.out.println("订单信息:" + orders);
-                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null //&& total_fee.trim().equals(orders.get("pay_money"))
-                        ) {
+                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null && total_fee.trim().equals(orders.get("pay_money"))) {
                     System.out.println("支付成功正在修改状态----------------------------------------------------------");
                     StudentChoice studentChoice = new StudentChoice();
                     studentChoice.setPayState(1);
