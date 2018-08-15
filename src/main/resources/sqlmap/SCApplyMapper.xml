@@ -475,7 +475,7 @@
         </if>
         GROUP BY
         sca.id
-        ) h LEFT JOIN hklk_school_syllabus ss ON h.id = ss.sca_id where ss.id != null
+        ) h LEFT JOIN hklk_school_syllabus ss ON h.id = ss.sca_id
     </select>
 
     <select id="queryCurriculumForParent" resultType="java.util.HashMap" parameterType="map">
@@ -571,7 +571,7 @@
         GROUP BY
         sca.id
         ) h LEFT JOIN hklk_school_syllabus ss ON h.id = ss.sca_id
-        where h.applyStatus in (1,2,3) and ss.id != null
+        where h.applyStatus in (1,2,3)
         <if test="isFineQuality==-1">/*查询精品*/
             <choose>
                 <when test="grade!=null">
