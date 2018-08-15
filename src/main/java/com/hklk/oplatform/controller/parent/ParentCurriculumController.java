@@ -151,10 +151,12 @@ public class ParentCurriculumController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.STUDENT_IS_NO_QUALIFIED, StatusCode.getStatusMsg(StatusCode.STUDENT_IS_NO_QUALIFIED));
         }
         //验证课程是否在选课时间内
+/*
         Integer verificationTimeNum = studentChoiceService.queryParentApplyForVerificationTime(scaId);
         if (verificationTimeNum == 0) {
             return ToolUtil.buildResultStr(StatusCode.PARENT_APPLY_CURR_FOR_VER_TIME, StatusCode.getStatusMsg(StatusCode.PARENT_APPLY_CURR_FOR_VER_TIME));
         }
+*/
 
         Map<String, Object> isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
         if (isApply != null) {
