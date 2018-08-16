@@ -219,6 +219,7 @@ public class ParentCurriculumController extends BaseController {
         // 调用统一下单接口
         String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
         Map<String, Object> parMap = PayUtil.startWXPay(result);
+        System.out.println("支付返回:" + JsonUtil.toJson(parMap));
         if (parMap == null) {
             return ToolUtil.buildResultStr(StatusCode.ERROR, "支付出现异常，请稍后重试!");
         } else {
