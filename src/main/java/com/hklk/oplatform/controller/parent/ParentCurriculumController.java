@@ -209,13 +209,13 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("notify_url", PropUtil.getProperty("notifyUrl"));
         parameters.put("openid", getLoginParent(request).getOpenid());
         parameters.put("sign_type", "MD5");
-        parameters.put("total_fee", "1"); // 测试
         parameters.put("total_fee", (Double) order.get("realMoney") * 100); // 上线后，将此代码放开
 
         String sign = PayUtil.getSign(parameters);
         parameters.put("sign", sign);
         // 封装请求参数结束
         String requestXML = PayUtil.getRequestXml(parameters); // 获取xml结果
+        System.out.println("获取perid==" + requestXML);
         // 调用统一下单接口
         String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
         Map<String, Object> parMap = PayUtil.startWXPay(result);
