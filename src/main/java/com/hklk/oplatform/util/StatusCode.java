@@ -83,8 +83,8 @@ public class StatusCode {
     public final static int NO_BINDING_STUDENT = 1028;
     //您的孩子不符合该课程的申报条件，该课程不属于您孩子的学校或不符合年级
     public final static int STUDENT_IS_NO_QUALIFIED = 1029;
-    //您申请的课程不在选课时间内
-    public final static int PARENT_APPLY_CURR_FOR_VER_TIME = 1030;
+    //您申请的课程人数已满
+    public final static int PARENT_APPLY_CURR_FOR_VER_NUM = 1030;
     //该课程已有学生申报，修改失败！
     public final static int HAS_STUDENT = 1031;
 
@@ -131,7 +131,7 @@ public class StatusCode {
         map.put(NO_BINDING_STUDENT, "您的账号尚未绑定学生，无法报名！");
         map.put(STUDENT_IS_NO_QUALIFIED, "您的孩子不符合该课程的申报条件，该课程不属于您孩子的学校或不符合年级!");
         map.put(HAS_STUDENT, "该课程已有学生申报，修改失败！");
-        map.put(PARENT_APPLY_CURR_FOR_VER_TIME, "您申请的课程不在选课时间内或选课人数已满！");
+        map.put(PARENT_APPLY_CURR_FOR_VER_NUM, "您申请的课程不在选课时间内或选课人数已满！");
         return map.get(code);
     }
 }

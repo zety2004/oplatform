@@ -151,12 +151,10 @@ public class ParentCurriculumController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.STUDENT_IS_NO_QUALIFIED, StatusCode.getStatusMsg(StatusCode.STUDENT_IS_NO_QUALIFIED));
         }
         //验证课程是否在选课时间内
-/*
         Integer verificationTimeNum = studentChoiceService.queryParentApplyForVerificationTime(scaId);
-        if (verificationTimeNum == 0) {
-            return ToolUtil.buildResultStr(StatusCode.PARENT_APPLY_CURR_FOR_VER_TIME, StatusCode.getStatusMsg(StatusCode.PARENT_APPLY_CURR_FOR_VER_TIME));
+        if (verificationTimeNum == 1) {
+            return ToolUtil.buildResultStr(StatusCode.PARENT_APPLY_CURR_FOR_VER_NUM, StatusCode.getStatusMsg(StatusCode.PARENT_APPLY_CURR_FOR_VER_NUM));
         }
-*/
 
         Map<String, Object> isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
         if (isApply != null) {
@@ -218,9 +216,7 @@ public class ParentCurriculumController extends BaseController {
 
         // 调用统一下单接口
         String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
-        System.out.println("获取perid==" + result);
         Map<String, Object> parMap = PayUtil.startWXPay(result);
-        System.out.println("支付返回:" + JsonUtil.toJson(parMap));
         if (parMap == null) {
             return ToolUtil.buildResultStr(StatusCode.ERROR, "支付出现异常，请稍后重试!");
         } else {
