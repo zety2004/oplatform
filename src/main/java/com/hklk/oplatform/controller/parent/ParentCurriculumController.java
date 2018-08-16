@@ -215,9 +215,10 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("sign", sign);
         // 封装请求参数结束
         String requestXML = PayUtil.getRequestXml(parameters); // 获取xml结果
-        System.out.println("获取perid==" + requestXML);
+
         // 调用统一下单接口
         String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
+        System.out.println("获取perid==" + result);
         Map<String, Object> parMap = PayUtil.startWXPay(result);
         System.out.println("支付返回:" + JsonUtil.toJson(parMap));
         if (parMap == null) {
