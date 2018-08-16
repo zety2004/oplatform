@@ -54,7 +54,7 @@
         from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id
         <if test="teacherId!=null">
             where is_public = 1 or teacher_id in
-            (select teacher_id from hklk_school_teacher st where st.school_id = #{teacherId})
+            (select id from hklk_school_teacher st where st.school_id = #{teacherId})
         </if>
         GROUP BY t.id ) cc
         where status=1
