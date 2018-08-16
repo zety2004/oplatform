@@ -209,7 +209,10 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("notify_url", PropUtil.getProperty("notifyUrl"));
         parameters.put("openid", getLoginParent(request).getOpenid());
         parameters.put("sign_type", "MD5");
-        parameters.put("total_fee", (Double) order.get("realMoney") * 100); // 上线后，将此代码放开
+        System.out.println(order.get("realMoney"));
+        System.out.println((double) order.get("realMoney") * 100);
+        System.out.println((int) ((double) order.get("realMoney") * 100));
+        parameters.put("total_fee", (double) order.get("realMoney") * 100); // 上线后，将此代码放开
 
         String sign = PayUtil.getSign(parameters);
         parameters.put("sign", sign);
