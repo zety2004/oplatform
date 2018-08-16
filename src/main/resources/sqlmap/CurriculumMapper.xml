@@ -53,8 +53,8 @@
         ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc
         from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id
         <if test="teacherId!=null">
-            and (is_public = 0 or teacher_id in
-            (select teacher_id from hklk_school_teacher st where st.school_id = #{teacherId}))
+            where is_public = 1 or teacher_id in
+            (select teacher_id from hklk_school_teacher st where st.school_id = #{teacherId})
         </if>
         GROUP BY t.id ) cc
         where status=1
