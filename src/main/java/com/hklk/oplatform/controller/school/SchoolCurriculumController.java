@@ -57,6 +57,8 @@ public class SchoolCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
+        //这里学校id放在老师id字段作为查询参数
+        curriculum.setTeacherId(getLoginSchool(request).getSchoolId());
         PageTableForm<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums(curriculum, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }

@@ -98,7 +98,6 @@ public class EditCurriculumController extends BaseController {
         CurriculumInsertVo curriculumInsertVo = new CurriculumInsertVo(curriculum);
         curriculumService.addCurriculum(curriculumInsertVo);
         Integer id = curriculumService.selectIdByUniqueNum(curriculum.getUniqueNum());
-        System.out.println(curriculum.getUniqueNum());
         Object returnMessage;
         if (id == null) {
             returnMessage = "未找到返回记录";
@@ -142,7 +141,6 @@ public class EditCurriculumController extends BaseController {
                     + "/uploadTempDirectory/" + file.getOriginalFilename();
             File fileTemp = new File(savePath);
             file.transferTo(fileTemp);
-            System.out.println(PasswordProvider.getMd5ByFile(fileTemp));
             String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + FileUtils.getFilenameExtension(file.getOriginalFilename());
             OssUtil.uploadFile(fileKey, fileTemp);
             String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
