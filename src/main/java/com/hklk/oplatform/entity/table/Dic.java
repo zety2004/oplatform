@@ -9,6 +9,8 @@ public class Dic implements Serializable {
 
     private Integer typeCode;
 
+    private Integer hot;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -33,5 +35,13 @@ public class Dic implements Serializable {
 
     public void setTypeCode(Integer typeCode) {
         this.typeCode = typeCode;
+    }
+
+    public Integer getHot() {
+        return hot;
+    }
+
+    public void setHot(Integer hot) {
+        this.hot = hot;
     }
 }

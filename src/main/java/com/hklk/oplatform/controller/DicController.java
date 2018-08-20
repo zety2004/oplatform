@@ -1,6 +1,5 @@
 package com.hklk.oplatform.controller;
 
-import com.hklk.oplatform.entity.table.Dic;
 import com.hklk.oplatform.service.DicService;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
@@ -13,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/getDic")
 @Controller
@@ -25,7 +25,7 @@ public class DicController extends BaseController {
     @RequestMapping("/queryDicList")
     public String queryDices(String typeCode, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
-        List<Dic> dicList = dicService.queryForList(typeCode);
+        List<Map<String, Object>> dicList = dicService.queryForList(typeCode);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), dicList);
     }
 }
