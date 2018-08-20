@@ -21,7 +21,7 @@ public interface SCApplyService {
 
     int insertSelective(SCApply scApply);
 
-    PageTableForm<CurriculumOrderVo> queryCurriculumOrder(String queryParam, Integer isHandle, int pageNum, int pageSize);
+    PageTableForm<CurriculumOrderVo> queryCurriculumOrder(String queryParam, Integer isHandle, Integer ishc, int pageNum, int pageSize);
 
     SCApply selectByPrimaryKey(Integer id);
 

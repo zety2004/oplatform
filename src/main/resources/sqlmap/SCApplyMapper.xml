@@ -332,6 +332,7 @@
     </resultMap>
 
     <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="java.lang.Integer">
+        select * from (
         SELECT
         sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,sca.applicable_grade as
         grade,st.nickname as
@@ -358,7 +359,17 @@
         <if test="isHandle == 1">
             and sca.order_op_user_id is not null
         </if>
-        GROUP BY sca.id
+        GROUP BY sca.id) res
+        <if test="ishc != null">
+            <choose>
+                <when test="ishc == 1">
+                    where res.ishc > 0
+                </when>
+                <when test="ishc==0">
+                    where res.ishc = 0
+                </when>
+            </choose>
+        </if>
     </select>
 
 

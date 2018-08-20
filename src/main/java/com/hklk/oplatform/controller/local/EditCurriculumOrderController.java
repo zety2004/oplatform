@@ -37,27 +37,29 @@ public class EditCurriculumOrderController extends BaseController {
     /**
      * 2018/7/4 17:28
      * 查询订单
-     * @param queryParam    筛选条件
-     * @param isHandle      可否操作
-     * @param pageNum       分页参数
-     * @author 曹良峰
+     *
+     * @param queryParam 筛选条件
+     * @param isHandle   可否操作
+     * @param pageNum    分页参数
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryCurriculumOrder")
-    public String queryCurriculumOrder(String queryParam,Integer isHandle, int pageNum, HttpServletRequest request,
+    public String queryCurriculumOrder(String queryParam, Integer isHandle, Integer ishc, int pageNum, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
-        PageTableForm<CurriculumOrderVo> curriculumPageTableForm = scApplyService.queryCurriculumOrder(queryParam,isHandle, pageNum, pageSize);
+        PageTableForm<CurriculumOrderVo> curriculumPageTableForm = scApplyService.queryCurriculumOrder(queryParam, isHandle, ishc, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
     /**
      * 2018/7/4 17:28
      * 处理订单
-     * @param remark    订单备注
-     * @param id        订单id
-     * @author 曹良峰
+     *
+     * @param remark 订单备注
+     * @param id     订单id
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/handleCurriculumOrder")
@@ -79,9 +81,10 @@ public class EditCurriculumOrderController extends BaseController {
     /**
      * 2018/7/4 17:29
      * 查询订单支付情况
+     *
      * @param scaId 订单id
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryOrderPlayFor")
