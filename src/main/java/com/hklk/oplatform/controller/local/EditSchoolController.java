@@ -224,6 +224,27 @@ public class EditSchoolController extends BaseController {
     }
 
     /**
+     * 2018/7/4 17:55
+     * 重置学校管理员密码
+     *
+     * @param id 管理员id
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @ResponseBody
+    @RequestMapping("/resetSchoolAdminPwd")
+    public String updateSchoolAdmin(Integer id, HttpServletRequest request,
+                                    HttpServletResponse response, HttpSession session) {
+        SchoolAdmin schoolAdmin = new SchoolAdmin();
+        schoolAdmin.setId(id);
+        schoolAdmin.setPwd("93b1c7f49c7b917831a942fd90ffe0ca");
+
+        schoolAdminService.updateByPrimaryKeySelective(schoolAdmin);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+
+    /**
      * 2018/7/4 17:56
      * 删除学校管理员
      *

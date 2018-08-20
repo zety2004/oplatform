@@ -2,6 +2,7 @@ package com.hklk.oplatform.controller.school;
 
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.STeacher;
+import com.hklk.oplatform.entity.table.SchoolAdmin;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.STeacherService;
@@ -91,6 +92,18 @@ public class EditTeacherController extends BaseController {
             sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
+    }
+
+    @ResponseBody
+    @RequestMapping("/resetTeacherPwd")
+    public String updateSchoolAdmin(Integer id, HttpServletRequest request,
+                                    HttpServletResponse response, HttpSession session) {
+        STeacher sTeacher = new STeacher();
+        sTeacher.setId(id);
+        sTeacher.setPwd("93b1c7f49c7b917831a942fd90ffe0ca");
+
+        sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
     /**
