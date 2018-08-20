@@ -32,7 +32,7 @@
     <select id="selectByPrimaryKey" resultType="map" parameterType="java.lang.Integer">
         select
         cc.id, cc.cover, cc.name, cc.subject, cc.grade, cc.learning_style learningStyle, cc.class_hours classHours, cc.collection_num collectionNum, cc.author,
-        cc.enclosure, cc.enc_des encDes, cc.status, cc.unique_num uniqueNum, cc.des,cc.wxdes, IFNULL(SUM(cu.num*cu.unit_price),0) as totalPrice
+        cc.enclosure, cc.enc_des encDes, cc.status, cc.unique_num uniqueNum, cc.des,cc.wxdes, IFNULL(SUM(cu.num*cu.unit_price),0) as totalPrice,cc.twxdes1,cc.twxdes2
         from hklk_curriculum cc left join hklk_consumables cu on cc.id = cu.curriculum_id
         where cc.id = #{id,jdbcType=INTEGER} group by cc.id
     </select>
@@ -178,6 +178,12 @@
             <if test="isPublic != null">
                 is_public,
             </if>
+            <if test="twxdes1 != null">
+                twxdes1,
+            </if>
+            <if test="twxdes2 != null">
+                twxdes2,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -231,6 +237,12 @@
             <if test="isPublic != null">
                 #{isPublic,jdbcType=INTEGER},
             </if>
+            <if test="twxdes1 != null">
+                #{twxdes1,jdbcType=INTEGER},
+            </if>
+            <if test="twxdes2 != null">
+                #{twxdes2,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
 
@@ -275,6 +287,12 @@
             </if>
             <if test="wxdes != null">
                 wxdes = #{wxdes,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="twxdes1 != null">
+                twxdes1 = #{twxdes1,jdbcType=VARCHAR},
+            </if>
+            <if test="twxdes2 != null">
+                twxdes2 = #{twxdes2,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

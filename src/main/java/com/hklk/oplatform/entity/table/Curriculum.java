@@ -37,6 +37,10 @@ public class Curriculum implements Serializable {
 
     private Integer isPublic;
 
+    private String twxdes1;
+
+    private String twxdes2;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -174,4 +178,21 @@ public class Curriculum implements Serializable {
     public void setIsPublic(Integer isPublic) {
         this.isPublic = isPublic;
     }
+
+    public String getTwxdes1() {
+        return twxdes1;
+    }
+
+    public void setTwxdes1(String twxdes1) {
+        this.twxdes1 = twxdes1;
+    }
+
+    public String getTwxdes2() {
+        return twxdes2;
+    }
+
+    public void setTwxdes2(String twxdes2) {
+        this.twxdes2 = twxdes2;
+    }
 }
+
