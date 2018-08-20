@@ -158,12 +158,14 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
             return null;
         } else {
             List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
-            int hotNum = allList.size() / 3;
-            for (int i = 1; i <= allList.size(); i++) {
-                if (i < hotNum) {
-                    allList.get(i - 1).put("hot", 1);
-                } else {
-                    allList.get(i - 1).put("hot", 0);
+            if (grade == null) {
+                int hotNum = allList.size() / 3;
+                for (int i = 1; i <= allList.size(); i++) {
+                    if (i < hotNum) {
+                        allList.get(i - 1).put("hot", 1);
+                    } else {
+                        allList.get(i - 1).put("hot", 0);
+                    }
                 }
             }
 
