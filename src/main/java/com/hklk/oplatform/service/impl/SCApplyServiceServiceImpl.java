@@ -124,14 +124,6 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         } else {
             jpList = scApplyMapper.queryCurriculumForParent(param);
         }
-        param.put("isFineQuality", 0);
-        int hotNum = scApplyMapper.queryCurriculumForParentVerification(param);
-        List<Map<String, Object>> hotList;
-        if (hotNum == 0) {
-            hotList = null;
-        } else {
-            hotList = scApplyMapper.queryCurriculumForParent(param);
-        }
         param.put("isFineQuality", -1);
         param.put("grade", grade);
         int allNum = scApplyMapper.queryCurriculumForParentVerification(param);
@@ -140,9 +132,16 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
             allList = null;
         } else {
             allList = scApplyMapper.queryCurriculumForParent(param);
+            int hotNum = allList.size() / 3;
+            for (int i = 1; i <= allList.size(); i++) {
+                if (i < hotNum) {
+                    allList.get(i - 1).put("hot", 1);
+                } else {
+                    allList.get(i - 1).put("hot", 0);
+                }
+            }
         }
         result.put("fineQuality", jpList);
-        result.put("Hot", hotList);
         result.put("all", allList);
 
         return result;
@@ -159,6 +158,15 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
             return null;
         } else {
             List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
+            int hotNum = allList.size() / 3;
+            for (int i = 1; i <= allList.size(); i++) {
+                if (i < hotNum) {
+                    allList.get(i - 1).put("hot", 1);
+                } else {
+                    allList.get(i - 1).put("hot", 0);
+                }
+            }
+
             return allList;
 
         }
