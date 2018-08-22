@@ -22,7 +22,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, curriculum_id, apply_time, apply_remark, teacher_id, status, operator_id, begin_of_select_time,
-    end_of_select_time, curr_start_time, class_place, max_num,school_id,is_fine_quality,applicable_grade
+    end_of_select_time, curr_start_time, class_place, max_num,school_id,is_fine_quality,applicable_grade,order_op_user_id
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -394,7 +394,7 @@
             hklk_student_choice_curriculum scc
         LEFT JOIN hklk_school_student ss ON scc.student_id = ss.id
         left join hklk_school_class h on ss.class_id = h.id
-        where scc.sca_id = #{scaId,jdbcType=INTEGER}
+        where scc.sca_id = #{scaId,jdbcType=INTEGER} and scc.pay_state = 1
     </select>
 
     <select id="queryByTeacherId" resultMap="CurriculumChoiceMap" parameterType="map">
