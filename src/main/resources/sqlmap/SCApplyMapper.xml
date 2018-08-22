@@ -397,22 +397,24 @@
         where scc.sca_id = #{scaId,jdbcType=INTEGER} and scc.pay_state = 1
     </select>
 
-    <select id="queryByTeacherId" resultMap="CurriculumChoiceMap" parameterType="map">
+    <select id="queryByTeacherId" resultType="map" parameterType="map">
         SELECT
         sca.id,
-        c.`name` AS curriculum_name,
+        c.`name` AS curriculumName,
         c.cover,
         sca.applicable_grade as grade,
-        sca.curriculum_id,
-        CONCAT(st.nickname,'/',st.phone) AS teacher_name,
-        sca.curr_start_time,
-        sca.max_num,
-        sca.class_place,
+        sca.curriculum_id as curriculumId,
+        CONCAT(st.nickname,'/',st.phone) AS teacherName,
+        sca.curr_start_time as currStartTime,
+        sca.max_num as maxNum,
+        sca.class_place as classPlace,
+        c.learning_style as learningStyle,
         CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
-        choose_time,sca.is_fine_quality,
+        chooseTime,
+        sca.is_fine_quality as isFineQuality,
         sca.status,
         (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state !=-1) AS
-        student_num,
+        studentNum,
         <![CDATA[
         CASE
         WHEN sca.begin_of_select_time > SYSDATE()  THEN
@@ -431,9 +433,9 @@
         INTERVAL (SELECT CEILING(tc.class_hours/count(ts.id))*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
         ) THEN
         4/*已结束*/
-        END as apply_status,
+        END as applyStatus,
         ]]>
-        concat(group_concat(h.week_type),'|',max(h.class_time)) class_time
+        concat(group_concat(h.week_type),'|',max(h.class_time)) classTime
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
@@ -448,6 +450,9 @@
                 and sca.status !=4
             </otherwise>
         </choose>
+        <if test="searchParam!=null">
+            and c.name like cancat('%',#{searchParam},'%')
+        </if>
         GROUP BY sca.id
         order by sca.apply_time desc
     </select>

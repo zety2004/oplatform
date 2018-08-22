@@ -29,7 +29,7 @@ public interface SCApplyMapper {
 
     List<CurriculumOrderVo> queryCurriculumOrder(Map<String, Object> param);
 
-    List<CurriculumChoiceVo> queryByTeacherId(Map<String, Object> param);
+    List<Map<String, Object>> queryByTeacherId(Map<String, Object> param);
 
     List<Map<String, Object>> queryCurriculumForParent(Map<String, Object> param);
 

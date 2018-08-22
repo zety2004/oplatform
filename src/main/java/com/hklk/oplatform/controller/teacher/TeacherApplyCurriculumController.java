@@ -356,9 +356,9 @@ public class TeacherApplyCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryCurriculumApplyByTeacherId")
-    public String queryCurriculumApplyByTeacherId(Integer status, int pageNum, HttpServletRequest request,
+    public String queryCurriculumApplyByTeacherId(Integer status, int pageNum, String searchParam, HttpServletRequest request,
                                                   HttpServletResponse response, HttpSession session) {
-        PageTableForm<CurriculumChoiceVo> curriculumChoiceVos = scApplyService.queryByTeacherId(getLoginTeacher(request).getTeacherId(), status, pageNum, 10);
+        PageTableForm<Map<String, Object>> curriculumChoiceVos = scApplyService.queryByTeacherId(getLoginTeacher(request).getTeacherId(), status,searchParam, pageNum, 10);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVos);
     }
 

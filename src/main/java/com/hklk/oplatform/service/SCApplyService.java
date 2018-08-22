@@ -35,7 +35,7 @@ public interface SCApplyService {
 
     List<StudentPay> queryStudentBySCAId(Integer scaId);
 
-    PageTableForm<CurriculumChoiceVo> queryByTeacherId(Integer teacherId, Integer status, Integer pageNum, Integer pageSize);
+    PageTableForm<Map<String,Object>> queryByTeacherId(Integer teacherId, Integer status,String searchParam, Integer pageNum, Integer pageSize);
 
     Map<String, List<Map<String, Object>>> queryHotCurriculumForParent(Integer schoolId, Integer grade);
 

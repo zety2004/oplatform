@@ -102,13 +102,14 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public PageTableForm<CurriculumChoiceVo> queryByTeacherId(Integer teacherId, Integer status, Integer pageNum, Integer pageSize) {
+    public PageTableForm<Map<String, Object>> queryByTeacherId(Integer teacherId, Integer status, String searchParam, Integer pageNum, Integer pageSize) {
         Map<String, Object> param = new HashMap<>();
         param.put("teacherId", teacherId);
         param.put("status", status);
+        param.put("searchParam", searchParam);
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         scApplyMapper.queryByTeacherId(param);
-        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = new PageTableForm<>(page);
+        PageTableForm<Map<String, Object>> curriculumChoiceVoPageTableForm = new PageTableForm<>(page);
         return curriculumChoiceVoPageTableForm;
     }
 
