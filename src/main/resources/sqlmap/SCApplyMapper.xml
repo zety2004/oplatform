@@ -451,7 +451,7 @@
             </otherwise>
         </choose>
         <if test="searchParam!=null">
-            and c.name like cancat('%',#{searchParam},'%')
+            and c.name like concat('%',#{searchParam},'%')
         </if>
         GROUP BY sca.id
         order by sca.apply_time desc
