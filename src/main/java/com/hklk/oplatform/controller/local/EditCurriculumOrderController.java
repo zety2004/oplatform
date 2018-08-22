@@ -66,7 +66,7 @@ public class EditCurriculumOrderController extends BaseController {
     public String handleCurriculumOrder(String remark, Integer id, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
         SCApply temp = scApplyService.selectByPrimaryKey(id);
-        if (temp.getOperatorId() != null) {
+        if (temp.getOrderOpUserId() != null) {
             return ToolUtil.buildResultStr(StatusCode.ORDER_IS_HANDLE, StatusCode.getStatusMsg(StatusCode.ORDER_IS_HANDLE));
         } else {
             SCApply scApply = new SCApply();
