@@ -40,6 +40,7 @@ public class showPageController extends BaseController {
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
+        curriculum.setIsPublic(1);
         PageTableForm<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums(curriculum, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
@@ -49,7 +50,7 @@ public class showPageController extends BaseController {
     public String selectCurriculumById(Integer id, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
         Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(id);
-        curriculum.put("enclosure",null);
+        curriculum.put("enclosure", null);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
     }
 }

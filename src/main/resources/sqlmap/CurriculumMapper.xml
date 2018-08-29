@@ -52,9 +52,13 @@
         t.enc_des, t.status,t.teacher_id
         ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc
         from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id
+        where 1=1
         <if test="teacherId!=null">
-            where is_public = 1 or teacher_id in
-            (select id from hklk_school_teacher st where st.school_id = #{teacherId})
+             (is_public = 1 or teacher_id in
+            (select id from hklk_school_teacher st where st.school_id = #{teacherId}))
+        </if>
+        <if test="isPublic!=null">
+          and is_public = 1
         </if>
         GROUP BY t.id ) cc
         where status=1
