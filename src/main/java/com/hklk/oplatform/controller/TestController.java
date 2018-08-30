@@ -2,8 +2,10 @@ package com.hklk.oplatform.controller;
 
 import com.hklk.oplatform.comm.cache.RedisObjCache;
 import com.hklk.oplatform.entity.table.SStudent;
+import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.service.STeacherService;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.*;
 import net.sf.json.JSONObject;
@@ -25,11 +27,9 @@ import javax.servlet.AsyncContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/test")
 @Controller
@@ -40,6 +40,9 @@ public class TestController extends BaseController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    STeacherService sTeacherService;
 
     /**
      * @author 曹良峰
@@ -96,6 +99,35 @@ public class TestController extends BaseController {
             e.printStackTrace();
         }
         return "OK";
+    }
+
+
+    /**
+     * 2018/7/4 12:51
+     * 导出老师列表 excel
+     *
+     * @return {"resultCode":200,"resultMsg":"成功"}
+     * @author 曹良峰
+     */
+    @RequestMapping("/exportExcelForTeacher")
+    @ResponseBody
+    public String exportExcelForStudent(HttpServletRequest request,
+                                        HttpServletResponse response, HttpSession session) {
+
+        String[] columnHeader = {"tName", "phone", "sex", "remark"};
+        String[] fieldNames = {"名称", "手机号", "性别", "备注"};
+        List<STeacher> sTeachers = sTeacherService.queryTeacherBySchoolIdForList(1);
+        try {
+            ServletOutputStream out = response.getOutputStream();
+            response.setHeader("Content-disposition", "attachment; filename=teachers.xlsx");
+            response.setContentType("application/msexcel");
+            ExcelUtils.exportExcel(out, "xlsx", sTeachers, fieldNames, columnHeader);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
     @RequestMapping("/importExcel")

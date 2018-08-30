@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -49,6 +50,13 @@ public class STeacherServiceServiceImpl implements STeacherService {
         sTeacherMapper.queryTeacherBySchoolId(params);
         PageTableForm<STeacher> pageTableForm = new PageTableForm<>(page);
         return pageTableForm;
+    }
+
+    @Override
+    public List<STeacher> queryTeacherBySchoolIdForList(Integer schoolId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("schoolId", schoolId);
+        return sTeacherMapper.queryTeacherBySchoolId(params);
     }
 
     @Override

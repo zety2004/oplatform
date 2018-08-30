@@ -52,7 +52,7 @@ public class StatusCode {
     public final static int CLASS_EX = 1013;
     // 学生已存在
     public final static int STUDENT_EX = 1014;
-    // 导入学生存在失败项,请确认数据是否正确
+    // 导入数据存在失败项,请确认数据是否正确
     public final static int IMPORTERROR_STUDENT = 1015;
     //订单已处理
     public final static int ORDER_IS_HANDLE = 1016;
@@ -114,7 +114,7 @@ public class StatusCode {
         map.put(PASSWORD_ERROR, "原密码输入错误！");
         map.put(CLASS_EX, "班级已存在！");
         map.put(STUDENT_EX, "学生已存在！");
-        map.put(IMPORTERROR_STUDENT, "导入学生存在失败项,请确认数据是否正确！");
+        map.put(IMPORTERROR_STUDENT, "导入数据存在失败项,请确认数据是否正确！");
         map.put(ORDER_IS_HANDLE, "订单已处理！");
         map.put(UPLOAD_ERROR, "上传文件失败,最大不得超过200M！");
         map.put(VALIDATE_CLASS_IS_TEACHER_CREATE, "该班级不是自己创建的，不能删除！");

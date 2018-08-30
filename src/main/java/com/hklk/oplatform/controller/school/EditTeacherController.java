@@ -1,21 +1,35 @@
 package com.hklk.oplatform.controller.school;
 
 import com.hklk.oplatform.controller.BaseController;
+import com.hklk.oplatform.entity.table.SClass;
+import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.table.SchoolAdmin;
+import com.hklk.oplatform.entity.vo.ImportStudentVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.STeacherService;
+import com.hklk.oplatform.util.ExcelUtils;
+import com.hklk.oplatform.util.FileUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 学校管理老师接口
@@ -93,6 +107,100 @@ public class EditTeacherController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }
+
+    /**
+     * 2018/7/4 12:51
+     * 导出老师列表 excel
+     *
+     * @return {"resultCode":200,"resultMsg":"成功"}
+     * @author 曹良峰
+     */
+    @RequestMapping("/exportExcelForTeacher")
+    @ResponseBody
+    public String exportExcelForTeacher(HttpServletRequest request,
+                                        HttpServletResponse response, HttpSession session) {
+
+        String[] columnHeader = {"tName", "phone", "sex", "remark"};
+        String[] fieldNames = {"名称", "手机号", "性别", "备注"};
+        List<STeacher> sTeachers = sTeacherService.queryTeacherBySchoolIdForList(getLoginSchool(request).getSchoolId());
+        try {
+            ServletOutputStream out = response.getOutputStream();
+            response.setHeader("Content-disposition", "attachment; filename=students.xlsx");
+            response.setContentType("application/msexcel");
+            ExcelUtils.exportExcel(out, "xlsx", sTeachers, fieldNames, columnHeader);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    /**
+     * 2018/7/4 12:52
+     * 导入学生 excel
+     *
+     * @return {"resultCode":200,"resultMsg":"成功"}  code:1015 存在失败  300 操作失败
+     * @author 曹良峰
+     */
+    @RequestMapping("/importExcelForTeacher")
+    @ResponseBody
+    public String importExcelForTeacher(MultipartHttpServletRequest request) {
+        try {
+            MultipartFile file = request.getFile("importExcel");// 与页面input的name相同
+            if (FileUtils.getFilenameExtension(file.getOriginalFilename()).indexOf("xlsx") == -1 && FileUtils.getFilenameExtension(file.getOriginalFilename()).indexOf("xls") == -1) {
+                return ToolUtil.buildResultStr(StatusCode.FILE_IS_NOT_RIGHT, StatusCode.getStatusMsg(StatusCode.FILE_IS_NOT_RIGHT));
+            }
+            String savePath = request.getSession().getServletContext().getRealPath("/")
+                    + "/uploadTempDirectory/" + file.getOriginalFilename();
+            File fileTemp = new File(savePath);
+            file.transferTo(fileTemp);
+            String[] fieldNames = {"tName", "phone", "sex", "remark"};
+            List<STeacher> sTeachers = ExcelUtils.importExcel(fileTemp, STeacher.class, fieldNames, 1, 0, 0);
+            Integer schoolId = getLoginSchool(request).getSchoolId();
+            List<Map<String, Object>> errorInsert = new ArrayList<>();
+            int index = 0;
+            for (STeacher sTeacher : sTeachers) {
+                if (sTeacher.gettName() == null || "".equals(sTeacher.gettName())) {
+                    Map<String, Object> importMap = new HashMap<>();
+                    importMap.put("tName", sTeacher.gettName());
+                    importMap.put("phone", sTeacher.getPhone());
+                    importMap.put("reason", "缺少关键字段，请检查后重新导入");
+                    errorInsert.add(importMap);
+                    index++;
+                    continue;
+                }
+                STeacher param = new STeacher();
+                param.setSchoolId(schoolId);
+                param.setPhone(sTeacher.getPhone());
+                STeacher temp = sTeacherService.selectBySTeacher(param);
+                if (temp != null) {
+                    Map<String, Object> importMap = new HashMap<>();
+                    importMap.put("tName", sTeacher.gettName());
+                    importMap.put("phone", sTeacher.getPhone());
+                    importMap.put("reason", "该老师已存在系统中");
+                    errorInsert.add(importMap);
+                    index++;
+                } else {
+                    sTeacher.setSchoolId(schoolId);
+                    sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
+                }
+            }
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", sTeachers.size());
+            result.put("failList", errorInsert);
+            if (index > 0) {
+                return ToolUtil.buildResultStr(StatusCode.IMPORTERROR_STUDENT, StatusCode.getStatusMsg(StatusCode.IMPORTERROR_STUDENT), result);
+            } else {
+                return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+        }
+    }
+
 
     @ResponseBody
     @RequestMapping("/resetTeacherPwd")
