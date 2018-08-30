@@ -409,6 +409,8 @@
         sca.max_num as maxNum,
         sca.class_place as classPlace,
         c.learning_style as learningStyle,
+        c.class_hours as classHours,
+        c.subject,
         CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
         chooseTime,
         sca.is_fine_quality as isFineQuality,
@@ -628,6 +630,8 @@
         sca.curriculum_id as curriculumId,
         st.nickname AS teacherName,
         st.head_ico,
+        st.introduction remark,
+        st.tag,
         sca.curr_start_time as currStartTime,
         sca.max_num maxNum,
         sca.class_place classPlace,
@@ -639,8 +643,8 @@
         CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as chooseTime,
         c.class_hours classHours,
         (select GROUP_CONCAT(d.name) from hklk_dic d where FIND_IN_SET(d.id, c.learning_style)>0 GROUP BY d.typecode) as learningStyle,
-        st.introduction remark,
         IFNULL(SUM(cs.num*cs.unit_price),0) as totalPrice,
+        round(IFNULL(SUM(cs.num*cs.unit_price),0)*10/6) as beforPrice,
         <![CDATA[
         CASE
         WHEN sca.begin_of_select_time > SYSDATE() THEN

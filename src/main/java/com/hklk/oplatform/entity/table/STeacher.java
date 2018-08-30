@@ -26,6 +26,8 @@ public class STeacher implements Serializable {
 
     private Date createTime;
 
+    private String tag;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -114,5 +116,13 @@ public class STeacher implements Serializable {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

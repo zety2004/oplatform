@@ -59,7 +59,7 @@ public class LoginTeacherController extends BaseController {
                                HttpServletResponse response, HttpSession session) {
         TeacherVo teacherVo = sTeacherService.loginTeacher(account, pwd);
         if (teacherVo != null && teacherVo.getStatus() == 1 && teacherVo.getSchoolStatus() == 1) {
-            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolName(), teacherVo.getSchoolLogo(), teacherVo.getHeadIco(), teacherVo.getIntroduction());
+            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolName(), teacherVo.getSchoolLogo(), teacherVo.getHeadIco(), teacherVo.getIntroduction(), teacherVo.getTag());
             String token = createToken(loginTeacher);
 
             Map<String, String> result = new HashMap<>();
@@ -69,6 +69,7 @@ public class LoginTeacherController extends BaseController {
             result.put("schoolName", loginTeacher.getSchoolName());
             result.put("remark", loginTeacher.getRemark());
             result.put("headIco", loginTeacher.getHeadIco());
+            result.put("tag", loginTeacher.getTag());
 
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
         } else if (teacherVo != null && teacherVo.getSchoolStatus() != 1) {
@@ -126,7 +127,7 @@ public class LoginTeacherController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/updateTeacher")
-    public String updateUserPassword(String headIco, String nickName, String remark, HttpServletRequest request,
+    public String updateUserPassword(String headIco, String nickName, String remark, String tag, HttpServletRequest request,
                                      HttpServletResponse response, HttpSession session) {
         LoginTeacher loginTeacher = getLoginTeacher(request);
         if (loginTeacher == null) {
@@ -137,6 +138,7 @@ public class LoginTeacherController extends BaseController {
         param.setHeadIco(headIco);
         param.settName(nickName);
         param.setIntroduction(remark);
+        param.setTag(tag);
         sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }

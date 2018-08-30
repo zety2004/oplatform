@@ -27,6 +27,8 @@ public class TeacherVo implements Serializable {
 
     private String introduction;
 
+    private String tag;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -125,5 +127,13 @@ public class TeacherVo implements Serializable {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

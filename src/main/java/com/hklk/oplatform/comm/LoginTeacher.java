@@ -26,10 +26,12 @@ public class LoginTeacher implements Serializable {
 
     private String remark;
 
+    private String tag;
+
     public LoginTeacher() {
     }
 
-    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId,String schoolName, String schoolLogo, String headIco, String remark) {
+    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId, String schoolName, String schoolLogo, String headIco, String remark, String tag) {
         super();
         this.teacherId = teacherId;
         this.account = account;
@@ -40,6 +42,7 @@ public class LoginTeacher implements Serializable {
         this.schoolLogo = schoolLogo;
         this.headIco = headIco;
         this.remark = remark;
+        this.tag = tag;
     }
 
     public Integer getTeacherId() {
@@ -129,5 +132,13 @@ public class LoginTeacher implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }
