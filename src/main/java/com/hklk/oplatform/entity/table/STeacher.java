@@ -10,7 +10,7 @@ public class STeacher implements Serializable {
 
     private String phone;
 
-    private Integer sex;
+    private String sex;
 
     private String remark;
 
@@ -54,15 +54,15 @@ public class STeacher implements Serializable {
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public Integer getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(Integer sex) {
+    public void setSex(String sex) {
         if ("男".equals(sex)) {
-            sex = 1;
+            sex = "1";
         } else if ("女".equals(sex)) {
-            sex = 0;
+            sex = "0";
         }
         this.sex = sex;
     }
