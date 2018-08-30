@@ -636,6 +636,7 @@
         sca.max_num maxNum,
         sca.class_place classPlace,
         c.cover,
+        c.wxcover,
         case when c.teacher_id is null then 0 else 1 end as isTA,
         c.wxdes,
         c.twxdes1,
