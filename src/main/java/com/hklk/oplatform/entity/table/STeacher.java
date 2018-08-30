@@ -59,6 +59,11 @@ public class STeacher implements Serializable {
     }
 
     public void setSex(Integer sex) {
+        if ("男".equals(sex)) {
+            sex = 1;
+        } else if ("女".equals(sex)) {
+            sex = 0;
+        }
         this.sex = sex;
     }
 
