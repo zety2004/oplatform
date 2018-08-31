@@ -49,6 +49,34 @@ public class TeacherApplyCurriculumController extends BaseController {
     @Autowired
     ConsumablesService consumablesService;
 
+
+    /**
+     * 2018/7/4 17:17
+     * 上传裁剪图片
+     *
+     * @param request （file）
+     * @return java.lang.String
+     * @author 曹良峰
+     */
+    @RequestMapping("/uploadCutImage")
+    @ResponseBody
+    public String uploadCutImage(MultipartHttpServletRequest request) {
+        try {
+            MultipartFile file = request.getFile("file");// 与页面input的name相同
+            String savePath = request.getSession().getServletContext().getRealPath("/")
+                    + "/uploadTempDirectory/" + System.currentTimeMillis() + "." + request.getParameter("type");
+            File fileTemp = new File(savePath);
+            file.transferTo(fileTemp);
+            String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + request.getParameter("type");
+            OssUtil.uploadFile(fileKey, fileTemp);
+            String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+        }
+    }
+
     /**
      * 2018/7/4 17:17
      * 上传文件
