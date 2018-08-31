@@ -5,6 +5,7 @@ import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.STeacherService;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.*;
@@ -54,23 +55,19 @@ public class TestController extends BaseController {
     @RequestMapping("/Upload")
     @ResponseBody
     public String commUploadB(MultipartHttpServletRequest request) {
-        JSONObject json = new JSONObject();
-        json.put("succ", false);
         try {
-            MultipartFile file = request.getFile("uploadfile");// 与页面input的name相同
+            MultipartFile file = request.getFile("file");// 与页面input的name相同
             String savePath = request.getSession().getServletContext().getRealPath("/")
-                    + "/uploadTempDirectory/" + file.getOriginalFilename();
-            System.out.println(savePath);
+                    + "/uploadTempDirectory/" + System.currentTimeMillis()+ "." + request.getParameter("type");
             File fileTemp = new File(savePath);
             file.transferTo(fileTemp);
-            String fileKey = "KCGX" + DateUtil.currentTimestamp2String("yyyyMMddHHmmss");
+            String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + request.getParameter("type");
             OssUtil.uploadFile(fileKey, fileTemp);
-            json.put("succ", true);
-            json.put("fileName", fileKey);
-            return json.toString();
+            String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
         } catch (Exception e) {
             e.printStackTrace();
-            return json.toString();
+            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
         }
     }
 
@@ -129,6 +126,7 @@ public class TestController extends BaseController {
         }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
+
 
     @RequestMapping("/importExcel")
     @ResponseBody
