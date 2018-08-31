@@ -338,7 +338,7 @@ public class TeacherApplyCurriculumController extends BaseController {
     public String delCurriculumApply(Integer id, HttpServletRequest request,
                                      HttpServletResponse response, HttpSession session) {
         SCApply temp = scApplyService.selectByPrimaryKey(id);
-        if (temp.getOperatorId() != null && temp.getStatus() == 3) {
+        if (temp.getOperatorId() != null && temp.getStatus() != 0) {
             return ToolUtil.buildResultStr(StatusCode.UPDATE_ERROR_FOR_IS_EXAMINE, StatusCode.getStatusMsg(StatusCode.UPDATE_ERROR_FOR_IS_EXAMINE));
         } else {
             scApplyService.deleteByPrimaryKey(id);
@@ -358,7 +358,7 @@ public class TeacherApplyCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculumApplyByTeacherId")
     public String queryCurriculumApplyByTeacherId(Integer status, int pageNum, String searchParam, HttpServletRequest request,
                                                   HttpServletResponse response, HttpSession session) {
-        PageTableForm<Map<String, Object>> curriculumChoiceVos = scApplyService.queryByTeacherId(getLoginTeacher(request).getTeacherId(), status,searchParam, pageNum, 10);
+        PageTableForm<Map<String, Object>> curriculumChoiceVos = scApplyService.queryByTeacherId(getLoginTeacher(request).getTeacherId(), status, searchParam, pageNum, 10);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVos);
     }
 
