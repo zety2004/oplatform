@@ -7,6 +7,8 @@ public class CurriculumInsertVo implements Serializable {
 
     private String cover;
 
+    private String wxcover;
+
     private String name;
 
     private String subject;
@@ -44,6 +46,7 @@ public class CurriculumInsertVo implements Serializable {
     public CurriculumInsertVo(Curriculum curriculum) {
         this.id = curriculum.getId();
         this.cover = curriculum.getCover();
+        this.wxcover = curriculum.getWxcover();
         this.name = curriculum.getName();
         this.subject = curriculum.getSubject();
         this.grade = curriculum.getGrade();
@@ -215,5 +218,13 @@ public class CurriculumInsertVo implements Serializable {
 
     public void setTwxdes2(String twxdes2) {
         this.twxdes2 = twxdes2;
+    }
+
+    public String getWxcover() {
+        return wxcover;
+    }
+
+    public void setWxcover(String wxcover) {
+        this.wxcover = wxcover;
     }
 }
