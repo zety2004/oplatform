@@ -149,6 +149,13 @@ public class SchoolCurriculumController extends BaseController {
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), sStudents);
     }
 
+    @ResponseBody
+    @RequestMapping("/verificationStudentNum")
+    public String verificationStudentNum(Integer scaId) {
+        int studentNum = sSyllabusService.selectCountStudentNumBySCId(scaId);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), studentNum);
+    }
+
     /**
      * 2018/8/9 18:06
      * 描述一下方法的作用
