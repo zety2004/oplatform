@@ -1,13 +1,11 @@
 package com.hklk.oplatform.controller.school;
 
 import com.hklk.oplatform.controller.BaseController;
-import com.hklk.oplatform.entity.table.SClass;
-import com.hklk.oplatform.entity.table.SStudent;
-import com.hklk.oplatform.entity.table.STeacher;
-import com.hklk.oplatform.entity.table.SchoolAdmin;
+import com.hklk.oplatform.entity.table.*;
 import com.hklk.oplatform.entity.vo.ImportStudentVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
+import com.hklk.oplatform.service.DicService;
 import com.hklk.oplatform.service.STeacherService;
 import com.hklk.oplatform.util.ExcelUtils;
 import com.hklk.oplatform.util.FileUtils;
@@ -43,6 +41,8 @@ import java.util.Map;
 public class EditTeacherController extends BaseController {
     @Autowired
     STeacherService sTeacherService;
+    @Autowired
+    DicService dicService;
 
     /**
      * 2018/7/4 16:09
@@ -92,7 +92,6 @@ public class EditTeacherController extends BaseController {
                                      HttpServletResponse response, HttpSession session) {
         Integer schoolId = getLoginSchool(request).getSchoolId();
         STeacher param = new STeacher();
-
         param.setPhone(sTeacher.getPhone());
         param.setSchoolId(schoolId);
 
@@ -103,6 +102,22 @@ public class EditTeacherController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.TEACHER_EX, StatusCode.getStatusMsg(StatusCode.TEACHER_EX));
         } else {
             sTeacher.setSchoolId(schoolId);
+            List<Map<String, Object>> tags = dicService.queryForList("4");
+            StringBuffer tag = new StringBuffer();
+            List<Integer> indexs = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                Integer index = (int) (1 + Math.random() * (tags.size() - 1 + 1));
+                while (indexs.contains(index)) {
+                    index = (int) (1 + Math.random() * (tags.size() - 1 + 1));
+                }
+                indexs.add(index);
+                if (i == 2) {
+                    tag.append(tags.get(index).get("name").toString());
+                } else {
+                    tag.append(tags.get(index).get("name").toString()).append(",");
+                }
+            }
+            sTeacher.setTag(tag.toString());
             sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
@@ -246,7 +261,10 @@ public class EditTeacherController extends BaseController {
     @RequestMapping("/delTeacher")
     public String delTeacher(Integer id, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
-        sTeacherService.deleteByPrimaryKey(id);
+        STeacher sTeacher = new STeacher();
+        sTeacher.setId(id);
+        sTeacher.setStatus(0);
+        sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 }

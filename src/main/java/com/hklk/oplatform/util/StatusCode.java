@@ -1,6 +1,8 @@
 package com.hklk.oplatform.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StatusCode {
@@ -134,5 +136,6 @@ public class StatusCode {
         map.put(PARENT_APPLY_CURR_FOR_VER_NUM, "您申请的课程不在选课时间内或选课人数已满！");
         return map.get(code);
     }
+
 }
 
