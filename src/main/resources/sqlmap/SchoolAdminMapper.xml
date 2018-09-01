@@ -36,23 +36,14 @@
 
     <select id="loginSchool" resultMap="BaseResultVoMap" parameterType="map">
         select a.*,s.`status` as school_status,s.name as schoolName,s.school_logo as schoolLogo from hklk_school_admin a left join hklk_school s on a.school_id = s.id
-        where account = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
+        where s.status >0 and  account = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from hklk_school_admin
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.hklk.oplatform.entity.table.SchoolAdmin">
-    insert into hklk_school_admin (id, school_id, nickname,
-      remarks, status, account,
-      pwd
-      )
-    values (#{id,jdbcType=INTEGER}, #{schoolId,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR},
-      #{remarks,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
-      #{pwd,jdbcType=VARCHAR}
-      )
-  </insert>
+
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.SchoolAdmin">
         insert into hklk_school_admin
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -126,16 +117,6 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.SchoolAdmin">
-    update hklk_school_admin
-    set school_id = #{schoolId,jdbcType=INTEGER},
-      nickname = #{nickname,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
-      account = #{account,jdbcType=VARCHAR},
-      pwd = #{pwd,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 
 
     <select id="querySchoolAdminsForCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">

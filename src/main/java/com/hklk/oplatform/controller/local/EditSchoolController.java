@@ -142,7 +142,10 @@ public class EditSchoolController extends BaseController {
     @RequestMapping("/deleteSchool")
     public String deleteSchool(int id, HttpServletRequest request,
                                HttpServletResponse response, HttpSession session) {
-        schoolService.deleteByPrimaryKey(id);
+        School school = new School();
+        school.setId(id);
+        school.setStatus(-1);
+        schoolService.updateByPrimaryKeySelective(school);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 

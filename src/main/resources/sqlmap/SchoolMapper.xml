@@ -118,7 +118,7 @@
     <select id="querySchools" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
-        from hklk_school
+        from hklk_school and status >=0
         <if test="_parameter  != null and _parameter != ''">
             where name like CONCAT('%', #{param}, '%') or school_num like CONCAT('%', #{param}, '%')
         </if>

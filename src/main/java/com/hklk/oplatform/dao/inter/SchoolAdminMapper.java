@@ -10,8 +10,6 @@ public interface
 SchoolAdminMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(SchoolAdmin record);
-
     int insertSelective(SchoolAdmin record);
 
     SchoolAdmin selectByPrimaryKey(Integer id);
@@ -19,8 +17,6 @@ SchoolAdminMapper {
     SchoolAdminVo loginSchool(Map<String,String> map);
 
     int updateByPrimaryKeySelective(SchoolAdmin record);
-
-    int updateByPrimaryKey(SchoolAdmin record);
 
     List<SchoolAdmin> querySchoolAdminsBySchoolId(Integer schoolId);
 

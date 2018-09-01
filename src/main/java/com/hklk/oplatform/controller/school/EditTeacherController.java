@@ -263,7 +263,7 @@ public class EditTeacherController extends BaseController {
                              HttpServletResponse response, HttpSession session) {
         STeacher sTeacher = new STeacher();
         sTeacher.setId(id);
-        sTeacher.setStatus(0);
+        sTeacher.setStatus(-1);
         sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }

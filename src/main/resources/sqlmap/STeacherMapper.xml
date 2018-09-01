@@ -22,7 +22,7 @@
         select
         <include refid="Base_Column_List"/>
         from hklk_school_teacher
-        where 1=1
+        where status >=0
         <if test="id != null">
             and id = #{id,jdbcType=INTEGER}
         </if>
@@ -159,7 +159,7 @@
         select
         <include refid="Base_Column_List"/>
         from hklk_school_teacher
-        where school_id = #{schoolId,jdbcType=INTEGER}
+        where school_id = #{schoolId,jdbcType=INTEGER} and status>=0
         <if test="param != null">
             and (nickname like CONCAT('%',#{param}, '%') or phone like CONCAT('%',#{param}, '%'))
         </if>
@@ -183,7 +183,7 @@
     </resultMap>
     <select id="loginTeacher" resultMap="BaseResultVoMap" parameterType="map">
         select a.*,s.`status` as school_status, s.school_logo,s.name as school_name from hklk_school_teacher a left join hklk_school s on a.school_id = s.id
-        where phone = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
+        where a.phone = #{account,jdbcType=VARCHAR} and a.pwd = #{pwd,jdbcType=VARCHAR}
     </select>
 
 </mapper>
