@@ -70,7 +70,7 @@ public class serviceTest extends AbstractTestCase {
 
     @Test
     public void queryCurriculumApply() {
-        PageTableForm<CurriculumApplyVo> pageTableForm = scApplyService.queryCurriculumApply(1, null, 1, 10);
+        PageTableForm<CurriculumApplyVo> pageTableForm = scApplyService.queryCurriculumApplyForPage(1, null, 1, 10);
     }
 
     @Test

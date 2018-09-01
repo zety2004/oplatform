@@ -25,11 +25,11 @@ public interface SCApplyService {
 
     SCApply selectByPrimaryKey(Integer id);
 
-    PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize);
+    List<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize);
+
+    PageTableForm<CurriculumApplyVo> queryCurriculumApplyForPage(Integer schoolId, Integer status, int pageNum, int pageSize);
 
     PageTableForm<Map<String, Object>> queryCurriculumApplyForExamine(Integer schoolId, int pageNum, int pageSize);
-
-    PageTableForm<CurriculumApplyVo> queryCurriculumApply(Integer isTeacherCurriculum, Integer schoolId, Integer status, int pageNum, int pageSize);
 
     PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int pageNum, int pageSize);
 

@@ -240,9 +240,6 @@
                 and sca.status = #{status,jdbcType=INTEGER}
             </otherwise>
         </choose>
-        <if test="isTeacherCurriculum != null">
-            and c.teacher_id != null
-        </if>
         group by sca.id
     </select>
 

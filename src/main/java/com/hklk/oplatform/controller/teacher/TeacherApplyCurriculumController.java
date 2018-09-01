@@ -283,7 +283,7 @@ public class TeacherApplyCurriculumController extends BaseController {
         if (status == null) {
             status = 0;
         }
-        PageTableForm<CurriculumApplyVo> curriculumPageTableForm = scApplyService.queryCurriculumApply(getLoginTeacher(request).getSchoolId(), status, pageNum, pageSize);
+        PageTableForm<CurriculumApplyVo> curriculumPageTableForm = scApplyService.queryCurriculumApplyForPage(getLoginTeacher(request).getSchoolId(), status, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
 
