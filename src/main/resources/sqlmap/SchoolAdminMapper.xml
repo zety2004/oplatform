@@ -36,7 +36,7 @@
 
     <select id="loginSchool" resultMap="BaseResultVoMap" parameterType="map">
         select a.*,s.`status` as school_status,s.name as schoolName,s.school_logo as schoolLogo from hklk_school_admin a left join hklk_school s on a.school_id = s.id
-        where s.status >0 and  account = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
+        where account = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
