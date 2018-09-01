@@ -47,7 +47,7 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public List<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize) {
+    public List<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status) {
         Map<String, Integer> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("status", status);

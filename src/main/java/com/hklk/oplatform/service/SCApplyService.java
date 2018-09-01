@@ -25,7 +25,7 @@ public interface SCApplyService {
 
     SCApply selectByPrimaryKey(Integer id);
 
-    List<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status, int pageNum, int pageSize);
+    List<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status);
 
     PageTableForm<CurriculumApplyVo> queryCurriculumApplyForPage(Integer schoolId, Integer status, int pageNum, int pageSize);
 

@@ -90,12 +90,12 @@ public class SchoolCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryCurriculumApply")
-    public String queryCurriculumApply(Integer status, int pageNum, HttpServletRequest request,
+    public String queryCurriculumApply(Integer status, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
         if (status == null) {
             status = 0;
         }
-        List<CurriculumApplyVo> curriculumApplyVos = scApplyService.queryCurriculumApply(getLoginSchool(request).getSchoolId(), status, pageNum, pageSize);
+        List<CurriculumApplyVo> curriculumApplyVos = scApplyService.queryCurriculumApply(getLoginSchool(request).getSchoolId(), status);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumApplyVos);
     }
 
