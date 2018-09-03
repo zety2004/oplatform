@@ -41,8 +41,6 @@ import java.util.Map;
 public class EditTeacherController extends BaseController {
     @Autowired
     STeacherService sTeacherService;
-    @Autowired
-    DicService dicService;
 
     /**
      * 2018/7/4 16:09
@@ -101,22 +99,7 @@ public class EditTeacherController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.TEACHER_EX, StatusCode.getStatusMsg(StatusCode.TEACHER_EX));
         } else {
             sTeacher.setSchoolId(schoolId);
-            List<Map<String, Object>> tags = dicService.queryForList("4");
-            StringBuffer tag = new StringBuffer();
-            List<Integer> indexs = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                Integer index = (int) (1 + Math.random() * (tags.size() - 1 + 1));
-                while (indexs.contains(index)) {
-                    index = (int) (1 + Math.random() * (tags.size() - 1 + 1));
-                }
-                indexs.add(index);
-                if (i == 2) {
-                    tag.append(tags.get(index).get("name").toString());
-                } else {
-                    tag.append(tags.get(index).get("name").toString()).append(",");
-                }
-            }
-            sTeacher.setTag(tag.toString());
+            sTeacher.setTag(sTeacherService.getTeacherTag().toString());
             sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
@@ -172,35 +155,9 @@ public class EditTeacherController extends BaseController {
             String[] fieldNames = {"tName", "phone", "sex", "remark"};
             List<STeacher> sTeachers = ExcelUtils.importExcel(fileTemp, STeacher.class, fieldNames, 1, 0, 0);
             Integer schoolId = getLoginSchool(request).getSchoolId();
-            List<Map<String, Object>> errorInsert = new ArrayList<>();
-            int index = 0;
-            for (STeacher sTeacher : sTeachers) {
-                if (sTeacher.gettName() == null || "".equals(sTeacher.gettName())) {
-                    Map<String, Object> importMap = new HashMap<>();
-                    importMap.put("tName", sTeacher.gettName());
-                    importMap.put("phone", sTeacher.getPhone());
-                    importMap.put("reason", "缺少关键字段，请检查后重新导入");
-                    errorInsert.add(importMap);
-                    index++;
-                    continue;
-                }
-                STeacher param = new STeacher();
-                param.setSchoolId(schoolId);
-                param.setPhone(sTeacher.getPhone());
-                STeacher temp = sTeacherService.selectBySTeacher(param);
-                if (temp != null) {
-                    Map<String, Object> importMap = new HashMap<>();
-                    importMap.put("tName", sTeacher.gettName());
-                    importMap.put("phone", sTeacher.getPhone());
-                    importMap.put("reason", "该老师已存在系统中");
-                    errorInsert.add(importMap);
-                    index++;
-                } else {
-                    sTeacher.setSchoolId(schoolId);
-                    sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
-                }
-            }
-
+            Map<String, Object> temp = sTeacherService.insertBatchTeacher(sTeachers, schoolId);
+            List<Map<String, Object>> errorInsert = (List<Map<String, Object>>) temp.get("errorInsert");
+            int index = (Integer) temp.get("index");
             Map<String, Object> result = new HashMap<>();
             result.put("total", sTeachers.size());
             result.put("failList", errorInsert);
