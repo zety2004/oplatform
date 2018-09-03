@@ -183,7 +183,7 @@
     </resultMap>
     <select id="loginTeacher" resultMap="BaseResultVoMap" parameterType="map">
         select a.*,s.`status` as school_status, s.school_logo,s.name as school_name from hklk_school_teacher a left join hklk_school s on a.school_id = s.id
-        where a.phone = #{account,jdbcType=VARCHAR} and a.pwd = #{pwd,jdbcType=VARCHAR}
+        where a.phone = #{account,jdbcType=VARCHAR} and a.pwd = #{pwd,jdbcType=VARCHAR} and a.status>=0
     </select>
 
 </mapper>
