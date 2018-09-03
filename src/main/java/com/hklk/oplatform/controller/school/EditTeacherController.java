@@ -93,7 +93,6 @@ public class EditTeacherController extends BaseController {
         Integer schoolId = getLoginSchool(request).getSchoolId();
         STeacher param = new STeacher();
         param.setPhone(sTeacher.getPhone());
-        param.setSchoolId(schoolId);
 
         STeacher result = sTeacherService.selectBySTeacher(param);
         if (sTeacher.getId() == null && result != null) {
