@@ -43,8 +43,7 @@ public class ParentMessageController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryParentMessage")
-    public String queryTeacherMessage(Integer isRead, HttpServletRequest request,
-                                      HttpServletResponse response, HttpSession session) {
+    public String queryTeacherMessage(Integer isRead, HttpServletRequest request) {
         List<ParentMessage> teacherMessages = parentMessageService.queryParentMessage(getLoginParent(request).getStudentId(), isRead);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), teacherMessages);
     }
@@ -58,8 +57,7 @@ public class ParentMessageController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/updateMessageIsReadByTeacher")
-    public String updateMessageIsReadByTeacher(HttpServletRequest request,
-                                               HttpServletResponse response, HttpSession session) {
+    public String updateMessageIsReadByTeacher(HttpServletRequest request) {
         parentMessageService.updateIsReadByStudentId(getLoginParent(request).getStudentId());
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
@@ -68,14 +66,13 @@ public class ParentMessageController extends BaseController {
      * 2018/7/11 9:43
      * 修改家长单个消息为已读
      *
-     * @param id
+     * @param id 主键
      * @return code: 200  成功
      * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateMessageIsReadById")
-    public String updateMessageIsReadById(Integer id, HttpServletRequest request,
-                                          HttpServletResponse response, HttpSession session) {
+    public String updateMessageIsReadById(Integer id) {
         parentMessageService.updateIsReadById(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
@@ -84,14 +81,13 @@ public class ParentMessageController extends BaseController {
      * 2018/7/20 11:32
      * 描述一下方法的作用
      *
-     * @param id
+     * @param id 主键
      * @return java.lang.String
      * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/delMessageById")
-    public String delMessageById(Integer id, HttpServletRequest request,
-                                 HttpServletResponse response, HttpSession session) {
+    public String delMessageById(Integer id) {
         parentMessageService.deleteByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }

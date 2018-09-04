@@ -295,22 +295,28 @@ public class ParentCurriculumController extends BaseController {
      * 2018/7/16 15:25
      * 家长查询课程页面
      *
+     * @param isEnd 是否完成
      * @return java.lang.String
      * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/queryMyCurriculum")
-    public String queryMyCurriculum(Integer isEnd, HttpServletRequest request,
-                                    HttpServletResponse response, HttpSession session) {
+    public String queryMyCurriculum(Integer isEnd, HttpServletRequest request) {
         LoginParent loginParent = getLoginParent(request);
         List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculumList(loginParent.getStudentId(), isEnd);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), myCurriculum);
     }
 
+    /**
+     * 2018/9/4 20:02
+     * 描述一下方法的作用
+     * @param sccId 取消购买
+     * @author 曹良峰
+     * @return java.lang.String
+     */
     @ResponseBody
     @RequestMapping("/delOrder")
-    public String delOrder(Integer sccId, HttpServletRequest request,
-                           HttpServletResponse response, HttpSession session) {
+    public String delOrder(Integer sccId) {
         studentChoiceService.deleteByPrimaryKey(sccId);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
@@ -324,8 +330,7 @@ public class ParentCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryCurriculumForWeekType")
-    public String queryCurriculumForWeekType(HttpServletRequest request,
-                                             HttpServletResponse response, HttpSession session) {
+    public String queryCurriculumForWeekType(HttpServletRequest request) {
         LoginParent loginParent = getLoginParent(request);
         Map<String, Object> result = new HashMap<>();
         result.put("Mon", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 1));

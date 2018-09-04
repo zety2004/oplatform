@@ -47,8 +47,7 @@ public class LoginParentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/loginWx")
-    public String getWxOpenId(@RequestParam(value = "code") String code, HttpServletRequest request,
-                              HttpServletResponse response, HttpSession session) {
+    public String getWxOpenId(@RequestParam(value = "code") String code) {
 
         String wxResult = HttpRequestUtils.httpGet("https://api.weixin.qq.com/sns/jscode2session?appid=" + PropUtil.getProperty("wxAppid") + "&secret=" + PropUtil.getProperty("wxSecret") + "&js_code=" + code + "&grant_type=authorization_code");
         Map<String, String> resultMap = JsonUtil.jsonToMapStr(wxResult);
@@ -91,8 +90,7 @@ public class LoginParentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/bindingWeChat")
-    public String bindingWeChat(@RequestParam(value = "phone") String phone, @RequestParam(value = "sNum") String sNum, HttpServletRequest request,
-                                HttpServletResponse response, HttpSession session) {
+    public String bindingWeChat(@RequestParam(value = "phone") String phone, @RequestParam(value = "sNum") String sNum, HttpServletRequest request) {
         List<Map<String, Object>> student = sStudentService.queryStudentByPhoneNum(phone, null, sNum);
 
         if (student != null && student.size() != 0) {
@@ -135,8 +133,7 @@ public class LoginParentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/unBindingWeChat")
-    public String unbindingWeChat(@RequestParam(value = "phone") String phone, HttpServletRequest request,
-                                  HttpServletResponse response, HttpSession session) {
+    public String unbindingWeChat(@RequestParam(value = "phone") String phone) {
         List<Map<String, Object>> studentBinding = sStudentService.queryStudentByPhoneNum(phone, null, null);
         for (Map<String, Object> student : studentBinding) {
             SStudent sStudent = new SStudent();
