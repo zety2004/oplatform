@@ -162,6 +162,7 @@
         <![CDATA[
         and sca.max_num <= (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
         and sca.begin_of_select_time<= SYSDATE() and sca.end_of_select_time >= SYSDATE()
+
         ]]>
     </select>
 
@@ -382,13 +383,13 @@
         (SYSDATE()-sca.create_time) as second,
         sca.create_time,
         sca.sccId,
+        sca.max_num as maxNum,
         c.cover,
         IFNULL(
         SUM(cs.num * cs.unit_price),
         0
         ) AS totalPrice,
         sca.pay_state payState
-
         FROM
         (
         SELECT
@@ -397,6 +398,7 @@
         hsca.teacher_id,
         hsca.class_place,
         hsca.status,
+        hsca.max_num,
         scc.order_id orderId,
         scc.create_time,
         scc.id sccId,
