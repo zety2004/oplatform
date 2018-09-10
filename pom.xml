@@ -314,7 +314,19 @@
             <artifactId>aliyun-sdk-oss</artifactId>
             <version>2.8.2</version>
         </dependency>
-
+        <!-- 阿里云短信API -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>3.3.1</version>
+            <scope>compile</scope>
+        </dependency>
         <!--Excel操作-->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -355,11 +367,12 @@
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
-                     <exclude>application.properties</exclude>
-                     <exclude>applicationContext_*.xml</exclude>
-                     <exclude>generatorConfig.xml</exclude>
-                     <exclude>logback.xml</exclude>
-                    <!--<exclude>sqlmap/*</exclude>-->
+                    <exclude>application.properties</exclude>
+                    <exclude>applicationContext_*.xml</exclude>
+                    <exclude>generatorConfig.xml</exclude>
+                    <exclude>logback.xml</exclude>
+                    <exclude>mybatis.xml</exclude>
+                    <!-- <exclude>sqlmap/*</exclude>-->
                 </excludes>
             </resource>
         </resources>
