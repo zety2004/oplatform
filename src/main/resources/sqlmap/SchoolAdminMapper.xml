@@ -7,6 +7,7 @@
         <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
         <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="login_num" property="loginNum" jdbcType="INTEGER"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
     </resultMap>
@@ -32,10 +33,11 @@
         <result column="school_status" property="schoolStatus" jdbcType="INTEGER"/>
         <result column="schoolName" property="schoolName" jdbcType="VARCHAR"/>
         <result column="schoolLogo" property="schoolLogo" jdbcType="VARCHAR"/>
+        <result column="login_num" property="loginNum" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="loginSchool" resultMap="BaseResultVoMap" parameterType="map">
-        select a.*,s.`status` as school_status,s.name as schoolName,s.school_logo as schoolLogo from hklk_school_admin a left join hklk_school s on a.school_id = s.id
+        select a.*,s.`status` as school_status,s.name as schoolName,s.school_logo as schoolLogo,a.login_num as loginNum from hklk_school_admin a left join hklk_school s on a.school_id = s.id
         where account = #{account,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR}
     </select>
 
@@ -113,6 +115,9 @@
             </if>
             <if test="pwd != null">
                 pwd = #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="loginNum != null">
+                login_num = #{loginNum,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

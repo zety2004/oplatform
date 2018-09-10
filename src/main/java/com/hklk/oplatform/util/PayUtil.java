@@ -1,7 +1,5 @@
 package com.hklk.oplatform.util;
 
-import com.hklk.oplatform.provider.PasswordProvider;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -330,47 +328,5 @@ public class PayUtil {
     public static String getDateStr() {
         SimpleDateFormat sdf = new SimpleDateFormat(TIME);
         return sdf.format(new Date());
-    }
-
-
-    /**
-     * 退款
-     *
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-        String out_trade_no = "";   //退款订单
-        int all_total_fee = 100;    //订单金额(这里是按分来计算的)
-        int refund_fee = 0;      //退款金额(这里是按分来计算的)
-        String appid = "";   //微信小程序--》“开发者ID”
-        String mch_id = "";   //商户号，将该值赋值给partner
-        String key = "";   //微信支付商户平台登录）--》“API安全”--》“API密钥”--“设置密钥”（设置之后的那个值就是partnerkey，32位）
-
-        Map<String, Object> packageParams = new HashMap<>();
-        packageParams.put("appid", appid);
-        packageParams.put("mch_id", mch_id);
-        packageParams.put("op_user_id", mch_id);
-        packageParams.put("nonce_str", PayUtil.CreateNoncestr());
-        packageParams.put("out_trade_no", out_trade_no);
-        packageParams.put("out_refund_no", PayUtil.CreateNoncestr());
-        packageParams.put("total_fee", String.valueOf(all_total_fee));
-        packageParams.put("refund_fee", String.valueOf(refund_fee));
-        String sign = PayUtil.createSign(packageParams);
-        packageParams.put("sign", sign);
-
-        String XML = PayUtil.getRequestXml(packageParams);
-
-        String result = PayUtil.httpsRequest("https://api.mch.weixin.qq.com/secapi/pay/refund", "POST", XML);
-        Map<String, String> refundmap = xmlStr2Map(result);
-        if (refundmap.get("return_code").equals("SUCCESS")) {
-            if (refundmap.get("result_code").equals("FAIL")) {
-                System.out.println("退款失败:原因" + refundmap.get("err_code_des"));
-            } else {
-                System.out.println("退款成功");
-            }
-        } else {
-            System.out.println("退款失败:原因" + refundmap.get("return_ms"));
-        }
-
     }
 }

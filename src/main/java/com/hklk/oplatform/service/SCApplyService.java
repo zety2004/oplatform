@@ -35,11 +35,16 @@ public interface SCApplyService {
 
     List<StudentPay> queryStudentBySCAId(Integer scaId);
 
-    PageTableForm<Map<String,Object>> queryByTeacherId(Integer teacherId, Integer status,String searchParam, Integer pageNum, Integer pageSize);
+    PageTableForm<Map<String, Object>> queryByTeacherId(Integer teacherId, Integer status, String searchParam, Integer pageNum, Integer pageSize);
 
     Map<String, List<Map<String, Object>>> queryHotCurriculumForParent(Integer schoolId, Integer grade);
 
     List<Map<String, Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade);
 
     Map<String, Object> selectByApplyCurriculmForParentById(Integer id);
+
+    public static void main(String[] args) {
+        System.out.println(String.valueOf(((Double)( 240.87 * 100)).intValue()));
+        System.out.println("24087".equals(String.valueOf(((Double)( 240.87 * 100)).intValue())));
+    }
 }

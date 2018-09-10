@@ -106,4 +106,9 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
         params.put("scaId", scaId);
         return studentChoiceMapper.queryParentApplyForIsQualified(params);
     }
+
+    @Override
+    public int queryIsCanRefund(Integer scaId) {
+        return studentChoiceMapper.queryIsCanRefund(scaId);
+    }
 }

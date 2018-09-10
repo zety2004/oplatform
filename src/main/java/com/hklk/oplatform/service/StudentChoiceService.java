@@ -27,4 +27,6 @@ public interface StudentChoiceService {
     List<Map<String, Object>> queryMyCurriculumList(Integer studentId, Integer state);
 
     Map<String, Object> selectByOrderId(String orderId);
+
+    int queryIsCanRefund(Integer scaId);
 }

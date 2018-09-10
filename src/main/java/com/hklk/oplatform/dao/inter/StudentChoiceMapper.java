@@ -29,4 +29,6 @@ public interface StudentChoiceMapper {
     Map<String, Object> selectByOrderId(String orderId);
 
     int queryParentApplyForIsQualified(Map<String, Object> param);
+
+    int queryIsCanRefund(Integer scaId);
 }

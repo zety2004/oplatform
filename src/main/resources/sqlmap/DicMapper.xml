@@ -24,9 +24,9 @@
         order by id
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from hklk_dic
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+        delete from hklk_dic
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
 
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.Dic">
         insert into hklk_dic

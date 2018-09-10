@@ -58,7 +58,7 @@ public class TestController extends BaseController {
         try {
             MultipartFile file = request.getFile("file");// 与页面input的name相同
             String savePath = request.getSession().getServletContext().getRealPath("/")
-                    + "/uploadTempDirectory/" + System.currentTimeMillis()+ "." + request.getParameter("type");
+                    + "/uploadTempDirectory/" + System.currentTimeMillis() + "." + request.getParameter("type");
             File fileTemp = new File(savePath);
             file.transferTo(fileTemp);
             String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + request.getParameter("type");
@@ -98,6 +98,29 @@ public class TestController extends BaseController {
         return "OK";
     }
 
+    /**
+     * @author 曹良峰
+     * @Description 上传测试
+     * @Date 16:10 2018/5/24
+     * @Param [request]
+     * @Return java.lang.String
+     **/
+    @RequestMapping("/smsTest")
+    @ResponseBody
+    public String smsTest(String phoneNum) {
+        try {
+            String templateCode = "SMS_143863465";
+            Map<String, String> param = new HashMap<>();
+            param.put("curriculum", "走进社区 发现社会");
+            param.put("reason", "申请人数不足");
+            param.put("person", "杨主任");
+            SmsUtil.sendSms(phoneNum, templateCode, param);
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+        }
+    }
 
     /**
      * 2018/7/4 12:51

@@ -12,6 +12,7 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
         <result column="school_id" property="schoolId" jdbcType="INTEGER"/>
+        <result column="login_num" property="loginNum" jdbcType="INTEGER"/>
         <result column="head_ico" property="headIco" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -151,6 +152,9 @@
             <if test="tag != null">
                 tag = #{tag,jdbcType=VARCHAR},
             </if>
+            <if test="loginNum != null">
+                login_num = #{loginNum,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -180,9 +184,10 @@
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
         <result column="school_status" property="schoolStatus" jdbcType="INTEGER"/>
+        <result column="login_num" property="loginNum" jdbcType="INTEGER"/>
     </resultMap>
     <select id="loginTeacher" resultMap="BaseResultVoMap" parameterType="map">
-        select a.*,s.`status` as school_status, s.school_logo,s.name as school_name from hklk_school_teacher a left join hklk_school s on a.school_id = s.id
+        select a.*,s.`status` as school_status, s.school_logo,s.name as school_name,a.login_num from hklk_school_teacher a left join hklk_school s on a.school_id = s.id
         where a.phone = #{account,jdbcType=VARCHAR} and a.pwd = #{pwd,jdbcType=VARCHAR} and a.status>=0
     </select>
 

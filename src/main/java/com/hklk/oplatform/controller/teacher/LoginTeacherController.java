@@ -70,6 +70,19 @@ public class LoginTeacherController extends BaseController {
             result.put("remark", loginTeacher.getRemark());
             result.put("headIco", loginTeacher.getHeadIco());
             result.put("tag", loginTeacher.getTag());
+            if (teacherVo.getLoginNum() == 0 && teacherVo.getPhone().length() == 11) {
+                Map<String, String> smsParam = new HashMap<>();
+                smsParam.put("attr1", teacherVo.getNickname());
+                try {
+                    SmsUtil.sendSms(teacherVo.getPhone(), "SMS_144147386", smsParam);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            STeacher sTeacher = new STeacher();
+            sTeacher.setId(teacherVo.getId());
+            sTeacher.setLoginNum(teacherVo.getLoginNum() + 1);
+            sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
 
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
         } else if (teacherVo != null && teacherVo.getSchoolStatus() != 1) {

@@ -18,6 +18,8 @@ public class STeacher implements Serializable {
 
     private Integer status;
 
+    private Integer loginNum;
+
     private String pwd;
 
     private Integer schoolId;
@@ -129,5 +131,13 @@ public class STeacher implements Serializable {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public Integer getLoginNum() {
+        return loginNum;
+    }
+
+    public void setLoginNum(Integer loginNum) {
+        this.loginNum = loginNum;
     }
 }

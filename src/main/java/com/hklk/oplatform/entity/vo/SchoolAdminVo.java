@@ -19,6 +19,8 @@ public class SchoolAdminVo implements Serializable {
 
     private Integer schoolStatus;
 
+    private Integer loginNum;
+
     private String schoolName;
     
     private String schoolLogo;
@@ -103,5 +105,13 @@ public class SchoolAdminVo implements Serializable {
 
     public void setSchoolLogo(String schoolLogo) {
         this.schoolLogo = schoolLogo;
+    }
+
+    public Integer getLoginNum() {
+        return loginNum;
+    }
+
+    public void setLoginNum(Integer loginNum) {
+        this.loginNum = loginNum;
     }
 }

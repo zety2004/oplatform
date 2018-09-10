@@ -140,7 +140,6 @@ public class ParentCurriculumController extends BaseController {
     public String insertStudentChoice(Integer scaId, String curriculumName, String payMoney, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
-
         //未绑定学生
         if (loginParent == null || loginParent.getStudentId() == null) {
             return ToolUtil.buildResultStr(StatusCode.NO_BINDING_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_BINDING_STUDENT));
@@ -152,7 +151,7 @@ public class ParentCurriculumController extends BaseController {
         }
         //验证课程是否在选课时间内
         Integer verificationTimeNum = studentChoiceService.queryParentApplyForVerificationTime(scaId);
-        if (verificationTimeNum == 1) {
+        if (verificationTimeNum == 0) {
             return ToolUtil.buildResultStr(StatusCode.PARENT_APPLY_CURR_FOR_VER_NUM, StatusCode.getStatusMsg(StatusCode.PARENT_APPLY_CURR_FOR_VER_NUM));
         }
 
@@ -207,7 +206,8 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("notify_url", PropUtil.getProperty("notifyUrl"));
         parameters.put("openid", getLoginParent(request).getOpenid());
         parameters.put("sign_type", "MD5");
-        parameters.put("total_fee", (int) ((double) order.get("realMoney") * 100)); // 上线后，将此代码放开
+        parameters.put("total_fee", 1); // 上线后，将此代码放开
+        // parameters.put("total_fee", (int) ((double) order.get("realMoney") * 100)); // 上线后，将此代码放开
 
         String sign = PayUtil.getSign(parameters);
         parameters.put("sign", sign);
@@ -224,16 +224,15 @@ public class ParentCurriculumController extends BaseController {
         }
     }
 
-    @RequestMapping("/wxNotify")
+    @RequestMapping("/wxPayNotify")
     @ResponseBody
-    public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
-        String result = PayUtil.reciverWx(request); // 接收到异步的参数
-        Map<String, String> m = new HashMap<>();// 解析xml成map
+    public void wxNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String result = PayUtil.reciverWx(request);
+        Map<String, String> m = new HashMap<>();
         if (m != null && !"".equals(m)) {
             m = PayUtil.xmlStr2Map(result);
         }
-        System.out.println("支付成功反馈:" + result);
-        // 过滤空 设置 TreeMap
+        System.out.println("wxNotify:" + JsonUtil.toJson(m));
         SortedMap<Object, Object> packageParams = new TreeMap<>();
         Iterator it = m.keySet().iterator();
         while (it.hasNext()) {
@@ -245,11 +244,9 @@ public class ParentCurriculumController extends BaseController {
             }
             packageParams.put(parameter, v);
         }
-        // 判断签名是否正确
         String resXml;
         if (PayUtil.isTenpaySign(packageParams)) {
             if ("SUCCESS".equals(packageParams.get("return_code"))) {
-                // 如果返回成功
                 String mch_id = (String) packageParams.get("mch_id"); // 商户号
                 String out_trade_no = (String) packageParams.get("out_trade_no"); // 商户订单号
                 String total_fee = (String) packageParams.get("total_fee");
@@ -258,8 +255,9 @@ public class ParentCurriculumController extends BaseController {
                 String orderId = out_trade_no;
                 Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
                 System.out.println("订单信息:" + orders);
-                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null && total_fee.trim().equals(orders.get("pay_money"))) {
-                    System.out.println("支付成功正在修改状态----------------------------------------------------------");
+                String payMoney = String.valueOf(((Double) ((double) orders.get("payMoney") * 100)).intValue());
+                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null  //&& total_fee.trim().equals(payMoney)
+                        ) {
                     StudentChoice studentChoice = new StudentChoice();
                     studentChoice.setPayState(1);
                     studentChoice.setId((Integer) orders.get("id"));
@@ -274,16 +272,135 @@ public class ParentCurriculumController extends BaseController {
                 } else {
                     resXml = PayUtil.setXML("FAIL", "参数错误");
                 }
-            } else // 如果微信返回支付失败，将错误信息返回给微信
-            {
+            } else {
                 resXml = PayUtil.setXML("FAIL", "交易失败");
             }
         } else {
             resXml = PayUtil.setXML("FAIL", "通知签名验证失败");
         }
+        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+        System.out.println("返回微信消息:" + resXml);
+        out.write(resXml.getBytes());
+        out.flush();
+        out.close();
+    }
 
-        // 处理业务完毕，将业务结果通知给微信
-        // ------------------------------
+    @ResponseBody
+    @RequestMapping("/returnPay")
+    public String returnPay(String orderId) throws Exception {
+        Map<String, Object> order = studentChoiceService.selectByOrderId(orderId);
+        
+        int isCanBeRefund = studentChoiceService.queryIsCanRefund((int) order.get("scaId"));
+
+        if (isCanBeRefund != 1) {
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, "这条订单不满足退款条件哦。");
+        }
+
+        if (Double.valueOf(order.get("payMoney").toString()).intValue() == 0) {
+            this.updateRefundOrder(order);
+            return ToolUtil.buildResultStr(StatusCode.SUCCESS, "取消报名成功");
+        }
+
+        String out_trade_no = orderId;   //退款订单
+        /*int all_total_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();
+        int refund_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();*/
+        int all_total_fee = 1;    //订单金额
+        int refund_fee = 1;      //退款金额
+        String appid = PropUtil.getProperty("wxAppid");
+        String mch_id = PropUtil.getProperty("mchId");
+
+        Map<String, Object> packageParams = new HashMap<>();
+        packageParams.put("appid", appid);
+        packageParams.put("mch_id", mch_id);
+        packageParams.put("op_user_id", mch_id);
+        packageParams.put("nonce_str", PayUtil.CreateNoncestr());
+        packageParams.put("notify_url", PropUtil.getProperty("returnNotifyUrl"));
+        packageParams.put("out_trade_no", out_trade_no);
+        packageParams.put("out_refund_no", PayUtil.CreateNoncestr());
+        packageParams.put("total_fee", String.valueOf(all_total_fee));
+        packageParams.put("refund_fee", String.valueOf(refund_fee));
+        String sign = PayUtil.createSign(packageParams);
+        packageParams.put("sign", sign);
+
+        String XML = PayUtil.getRequestXml(packageParams);
+
+        String result = ClientCustomSSL.doRefund(PropUtil.getProperty("returnUrl"), XML);
+        Map<String, String> refundmap = PayUtil.xmlStr2Map(result);
+        if (refundmap.get("return_code").equals("SUCCESS")) {
+            if (refundmap.get("result_code").equals("FAIL")) {
+                return ToolUtil.buildResultStr(10000, "退款失败:原因" + refundmap.get("err_code_des"));
+            } else {
+                this.updateRefundOrder(order);
+                return ToolUtil.buildResultStr(StatusCode.SUCCESS, "退款成功");
+            }
+        } else {
+            return ToolUtil.buildResultStr(10000, "退款失败:原因" + refundmap.get("return_ms"));
+        }
+    }
+
+    private void updateRefundOrder(Map<String, Object> order) {
+        StudentChoice studentChoice = new StudentChoice();
+        studentChoice.setPayState(2);
+        studentChoice.setId((Integer) order.get("id"));
+        studentChoiceService.updateByPrimaryKeySelective(studentChoice);
+        ParentMessage parentMessage = new ParentMessage();
+        parentMessage.setStudentId((Integer) order.get("studentId"));
+        parentMessage.setMessage("您申报的课程 《" + order.get("curriculumNum") + "》 已经退款成功，请确认信息。");
+        parentMessageService.insertSelective(parentMessage);
+
+    }
+
+    @RequestMapping("/wxRefundNotify")
+    @ResponseBody
+    public void wxRefundNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String result = PayUtil.reciverWx(request);
+        Map<String, String> m = new HashMap<>();
+        if (m != null && !"".equals(m)) {
+            m = PayUtil.xmlStr2Map(result);
+        }
+        System.out.println("wxRefundNotify:" + JsonUtil.toJson(m));
+        SortedMap<Object, Object> packageParams = new TreeMap<>();
+        Iterator it = m.keySet().iterator();
+        while (it.hasNext()) {
+            String parameter = (String) it.next();
+            String parameterValue = m.get(parameter);
+            String v = "";
+            if (null != parameterValue) {
+                v = parameterValue.trim();
+            }
+            packageParams.put(parameter, v);
+        }
+        String resXml;
+        if (PayUtil.isTenpaySign(packageParams)) {
+            if ("SUCCESS".equals(packageParams.get("return_code"))) {
+                String mch_id = (String) packageParams.get("mch_id"); // 商户号
+                String out_trade_no = (String) packageParams.get("out_trade_no"); // 商户订单号
+                String total_fee = (String) packageParams.get("total_fee");
+
+                String orderId = out_trade_no;
+                Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
+                System.out.println("订单信息:" + orders);
+                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null //&& total_fee.trim().equals(String.valueOf(((Double) ((double) orders.get("pay_money") * 100)).intValue());)
+                        ) {
+                    StudentChoice studentChoice = new StudentChoice();
+                    studentChoice.setPayState(2);
+                    studentChoice.setId((Integer) orders.get("id"));
+                    studentChoiceService.updateByPrimaryKeySelective(studentChoice);
+
+                    ParentMessage parentMessage = new ParentMessage();
+                    parentMessage.setStudentId((Integer) orders.get("studentId"));
+                    parentMessage.setMessage("您的订单 " + orderId + " 已经退款成功，请确认信息。");
+                    parentMessageService.insertSelective(parentMessage);
+                    resXml = PayUtil.setXML("SUCCESS", "OK");
+                } else {
+                    resXml = PayUtil.setXML("FAIL", "参数错误");
+                }
+            } else {
+                resXml = PayUtil.setXML("FAIL", "交易失败");
+            }
+        } else {
+            resXml = PayUtil.setXML("FAIL", "通知签名验证失败");
+        }
         BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
         System.out.println("返回微信消息:" + resXml);
         out.write(resXml.getBytes());
@@ -310,9 +427,10 @@ public class ParentCurriculumController extends BaseController {
     /**
      * 2018/9/4 20:02
      * 描述一下方法的作用
+     *
      * @param sccId 取消购买
-     * @author 曹良峰
      * @return java.lang.String
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/delOrder")

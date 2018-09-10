@@ -259,6 +259,7 @@
         <result column="class_time" property="classTime" jdbcType="VARCHAR"/>
         <result column="curriculum_id" property="curriculumId" jdbcType="INTEGER"/>
         <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
+        <result column="is_open_class" property="isOpenClass" jdbcType="INTEGER"/>
     </resultMap>
 
     <select id="queryCurriculumChoice" resultMap="CurriculumChoiceMap" parameterType="map">
@@ -271,9 +272,11 @@
         sca.curr_start_time,
         sca.max_num,
         sca.class_place,
+        sca.is_open_class,
         CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
         choose_time,sca.is_fine_quality,
-        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state !=-1) as
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state not in
+        (-1,2)) as
         student_num,
         <![CDATA[
         CASE
@@ -334,7 +337,8 @@
         sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,sca.applicable_grade as
         grade,st.nickname as
         teacher_name,sca.begin_of_select_time,sca.end_of_select_time,sca.max_num,
-        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state !=-1) as
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state not in
+        (-1,2)) as
         student_num,
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = (select count(1) from
         hklk_student_choice_curriculum scc where scc.sca_id = sca.id) THEN 1 else 0 end
@@ -412,7 +416,8 @@
         chooseTime,
         sca.is_fine_quality as isFineQuality,
         sca.status,
-        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state !=-1) AS
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and scc.pay_state not in
+        (-1,2)) AS
         studentNum,
         <![CDATA[
         CASE
@@ -568,10 +573,11 @@
         4 /*已结束*/
         END AS applyStatus,
         ]]>
-        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and pay_state !=-1) AS
+        (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and pay_state not in (-1,2))
+        AS
         studentNum,
         (sca.max_num - (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and pay_state
-        !=-1)) AS surplus
+        not in (-1,2))) AS surplus
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id

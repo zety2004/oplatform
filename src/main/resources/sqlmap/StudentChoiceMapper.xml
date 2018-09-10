@@ -25,7 +25,9 @@
     <select id="selectByOrderId" resultType="map" parameterType="java.lang.String">
             SELECT
                 scc.id,
+                sca.id as scaId,
                 scc.student_id AS studentId,
+                hc.name as curriculumNum,
                 scc.sca_id scaId,
                 pay_state payState,
                 scc.pay_money payMoney,
@@ -145,7 +147,7 @@
                 FROM
                     hklk_student_choice_curriculum
                 WHERE
-                    student_id = #{studentId,jdbcType=INTEGER} and sca_id = #{scaId,jdbcType=INTEGER} and pay_state != -1
+                    student_id = #{studentId,jdbcType=INTEGER} and sca_id = #{scaId,jdbcType=INTEGER} and pay_state not in (-1,2)
     </select>
 
     <select id="queryParentApplyForIsQualified" resultType="java.lang.Integer" parameterType="map">
@@ -160,8 +162,9 @@
         hklk_school_curriculum_apply sca
         where sca.id = #{scaId,jdbcType=INTEGER}
         <![CDATA[
-        and sca.max_num <= (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
+        and sca.max_num > (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
         and sca.begin_of_select_time<= SYSDATE() and sca.end_of_select_time >= SYSDATE()
+
 
         ]]>
     </select>
@@ -183,9 +186,21 @@
                 FROM
                     hklk_student_choice_curriculum
                 WHERE
-                    student_id = #{studentId,jdbcType=INTEGER} and pay_state !=-1
+                    student_id = #{studentId,jdbcType=INTEGER} and pay_state not in (-1,2)
         )
         GROUP BY ss.week_type) t GROUP BY t.school_id
+    </select>
+
+    <select id="queryIsCanRefund" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(1) from hklk_school_curriculum_apply sca
+        <![CDATA[
+        where
+        sca.id = #{scaId,jdbcType=INTEGER} and (sca.is_open_class is NULL or sca.is_open_class !=1) and
+        (
+        sca.begin_of_select_time <= SYSDATE()
+        and SYSDATE()<= sca.end_of_select_time
+        ) or sca.is_open_class =0
+        ]]>
     </select>
 
     <select id="queryMyCurriculumVerification" resultType="java.lang.Integer" parameterType="java.lang.Integer">
@@ -384,6 +399,8 @@
         sca.create_time,
         sca.sccId,
         sca.max_num as maxNum,
+        sca.isCanSelect,
+        sca.isOpenClass,
         c.cover,
         IFNULL(
         SUM(cs.num * cs.unit_price),
@@ -402,6 +419,10 @@
         scc.order_id orderId,
         scc.create_time,
         scc.id sccId,
+        <![CDATA[
+        (hsca.begin_of_select_time < SYSDATE() and SYSDATE() < hsca.end_of_select_time) as isCanSelect,
+        ]]>
+        hsca.is_open_class as isOpenClass,
         scc.pay_state
         FROM
         hklk_student_choice_curriculum scc
@@ -409,7 +430,7 @@
         WHERE
         scc.student_id = #{studentId,jdbcType=INTEGER}
         <if test="state != 1">
-            and scc.pay_state !=-1
+            and scc.pay_state not in (-1,2)
         </if>
         ) sca
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
@@ -419,12 +440,12 @@
         1 = 1
         <choose>
             <when test="state == 1">
-                AND (sca.status = 4 or sca.pay_state = -1)
+                AND (sca.status = 4 or sca.pay_state in (-1,2))
                 GROUP BY sca.orderId
                 order by sca.create_time desc
             </when>
             <otherwise>
-                AND sca.status != 4 and sca.pay_state != -1
+                AND sca.status != 4 and sca.pay_state not in (-1,2)
                 GROUP BY sca.id
                 order by sca.create_time desc
             </otherwise>

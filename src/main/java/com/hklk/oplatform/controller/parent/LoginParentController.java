@@ -122,12 +122,9 @@ public class LoginParentController extends BaseController {
 
     /**
      * 2018/8/3 10:41
-     * 描述一下方法的作用
+     * 学生解绑微信
      *
      * @param phone
-     * @param request
-     * @param response
-     * @param session
      * @return java.lang.String
      * @author 曹良峰
      */

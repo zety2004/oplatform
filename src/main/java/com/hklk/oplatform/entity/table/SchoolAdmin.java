@@ -12,6 +12,7 @@ public class SchoolAdmin implements Serializable {
     private String remarks;
 
     private Integer status;
+    private Integer loginNum;
 
     private String account;
 
@@ -75,4 +76,11 @@ public class SchoolAdmin implements Serializable {
         this.pwd = pwd == null ? null : pwd.trim();
     }
 
+    public Integer getLoginNum() {
+        return loginNum;
+    }
+
+    public void setLoginNum(Integer loginNum) {
+        this.loginNum = loginNum;
+    }
 }

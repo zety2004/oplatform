@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class CurriculumChoiceVo implements Serializable {
+
+    private static final long serialVersionUID = -6951568016359408100L;
+
     private Integer id;
 
     private String curriculumName;
@@ -34,7 +37,7 @@ public class CurriculumChoiceVo implements Serializable {
 
     private Integer isFineQuality;
 
-    private static final long serialVersionUID = 1L;
+    private Integer isOpenClass;
 
 
     public Integer getId() {
@@ -155,5 +158,13 @@ public class CurriculumChoiceVo implements Serializable {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public Integer getIsOpenClass() {
+        return isOpenClass;
+    }
+
+    public void setIsOpenClass(Integer isOpenClass) {
+        this.isOpenClass = isOpenClass;
     }
 }

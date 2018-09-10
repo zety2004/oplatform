@@ -8,6 +8,7 @@ import com.hklk.oplatform.entity.vo.SchoolAdminVo;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.SchoolAdminService;
+import com.hklk.oplatform.util.SmsUtil;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  学校登陆
+ * 学校登陆
  *
  * @author 曹良峰
  * @since 1.0
@@ -38,11 +39,12 @@ public class LoginSchoolController extends BaseController {
     private TokenManager tokenManager;
 
     /**
-     *  学校登陆
+     * 学校登陆
+     *
+     * @param account 账号
+     * @param pwd     密码
+     * @return code: 200 成功  1008 学校禁用  1000 账号禁用  1001 登陆名或密码错误
      * @author 曹良峰
-     * @param account   账号
-     * @param pwd       密码
-     * @return     code: 200 成功  1008 学校禁用  1000 账号禁用  1001 登陆名或密码错误
      */
     @ResponseBody
     @RequestMapping("/login")
@@ -57,6 +59,21 @@ public class LoginSchoolController extends BaseController {
             result.put("nickName", schoolAdmin.getNickname());
             result.put("schoolName", schoolAdmin.getSchoolName());
             result.put("schoolLogo", schoolAdmin.getSchoolLogo());
+            if (schoolAdmin.getLoginNum() == 0 && schoolAdmin.getAccount().length() == 11) {
+                Map<String, String> smsParam = new HashMap<>();
+                smsParam.put("attr1", schoolAdmin.getNickname());
+                try {
+                    SmsUtil.sendSms(schoolAdmin.getAccount(), "SMS_144147386", smsParam);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            SchoolAdmin loginNum = new SchoolAdmin();
+            loginNum.setId(schoolAdmin.getId());
+            loginNum.setLoginNum(schoolAdmin.getLoginNum() + 1);
+            schoolAdminService.updateByPrimaryKeySelective(loginNum);
+
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
         } else if (schoolAdmin != null && schoolAdmin.getSchoolStatus() != 1) {
             return ToolUtil.buildResultStr(StatusCode.SCHOOL_STATUS, StatusCode.getStatusMsg(StatusCode.SCHOOL_STATUS));
@@ -70,10 +87,11 @@ public class LoginSchoolController extends BaseController {
     /**
      * 2018/7/4 16:02
      * 描述一下方法的作用
-     * @param oldPassword   旧密码
-     * @param newPassword   新密码
-     * @author 曹良峰
+     *
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
      * @return code : 1011 账号不纯在  200 成功  1012 原密码错误  1006 token过期
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateSchoolAdminPassword")
@@ -100,9 +118,10 @@ public class LoginSchoolController extends BaseController {
     /**
      * 2018/7/4 16:05
      * 找回密码
-     * @param account   账号
-     * @author 曹良峰
+     *
+     * @param account 账号
      * @return code ：1011 账号不存在 200 成功
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/findAccountForSchoolAdmin")
@@ -115,12 +134,14 @@ public class LoginSchoolController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }
+
     /**
      * 2018/7/4 16:06
      * 修改昵称
-     * @param nickName  昵称
-     * @author 曹良峰
+     *
+     * @param nickName 昵称
      * @return code:200 成功  1006 token过期
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/updateSchoolNickName")
@@ -136,12 +157,13 @@ public class LoginSchoolController extends BaseController {
         schoolAdminService.updateByPrimaryKeySelective(param);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
-    
+
     /**
      * 2018/7/4 16:07
      * 退出登陆
-     * @author 曹良峰
+     *
      * @return code :200 成功
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/loginOut")
