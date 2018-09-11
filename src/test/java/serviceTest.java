@@ -4,6 +4,7 @@ import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.entity.vo.SchoolVo;
 import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.JsonUtil;
 import comm.AbstractTestCase;
@@ -31,6 +32,8 @@ public class serviceTest extends AbstractTestCase {
     SStudentService sStudentService;
     @Autowired
     FeedBackService feedBackService;
+    @Autowired
+    SchoolService schoolService;
 
     @Autowired
     TeacherMessageService teacherMessageService;
@@ -102,8 +105,15 @@ public class serviceTest extends AbstractTestCase {
     public void queryHotCurriculumForParent() {
         System.out.println(JsonUtil.toJson(scApplyService.queryHotCurriculumForParent(1, 3)));
     }
+
     @Test
     public void getRedisCache() {
-        System.out.println( RedisCache.get("parentToken:0deaba2ce9b647d6b016cd862dc9dbc4"));
+        System.out.println(RedisCache.get("parentToken:0deaba2ce9b647d6b016cd862dc9dbc4"));
+    }
+
+    @Test
+    public void getSchools() {
+        PageTableForm<SchoolVo> pageTableForm = schoolService.querySchools(null, 1, 10);
+        System.out.println(JsonUtil.toJson(pageTableForm));
     }
 }

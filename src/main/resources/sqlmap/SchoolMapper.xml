@@ -125,7 +125,7 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="school_num" property="schoolNum" jdbcType="VARCHAR"/>
         <result column="school_logo" property="schoolLogo" jdbcType="VARCHAR"/>
-        <collection property="list" javaType="java.util.List" ofType="com.hklk.oplatform.entity.table.SchoolAdmin">
+        <collection property="list"  ofType="SchoolAdmin" notNullColumn="a_id">
             <id column="a_id" property="id" jdbcType="INTEGER"/>
             <result column="a_school_id" property="schoolId" jdbcType="INTEGER"/>
             <result column="a_nickname" property="nickname" jdbcType="VARCHAR"/>
@@ -138,9 +138,14 @@
 
     <select id="querySchools" resultMap="SchoolVoMap" parameterType="java.lang.String">
         select
-        s.id, s.name, s.create_time, s.remarks, s.status,s.school_num,s.school_logo,h.id as a_id,
+        s.id, s.name, s.create_time, s.remarks, s.status,s.school_num,s.school_logo,
+        h.id as a_id,
         h.school_id as a_school_id,
-        h.nickname as a_nickname, h.remarks as a_remarks, h.status as a_status, h.account as a_account, h.pwd as a_pwd
+        h.nickname as a_nickname,
+        h.remarks as a_remarks,
+        h.status as a_status,
+        h.account as a_account,
+        h.pwd as a_pwd
         from hklk_school s left join hklk_school_admin h on s.id = h.school_id where s.status >=0
         <if test="_parameter  != null and _parameter != ''">
             and (s.name like CONCAT('%', #{param}, '%') or s.school_num like CONCAT('%', #{param}, '%'))
