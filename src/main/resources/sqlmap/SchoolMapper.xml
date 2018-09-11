@@ -115,12 +115,36 @@
         where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <select id="querySchools" resultMap="BaseResultMap" parameterType="java.lang.String">
+
+    <resultMap id="SchoolVoMap" type="com.hklk.oplatform.entity.vo.SchoolVo">
+
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="school_num" property="schoolNum" jdbcType="VARCHAR"/>
+        <result column="school_logo" property="schoolLogo" jdbcType="VARCHAR"/>
+        <collection property="list" javaType="java.util.List" ofType="com.hklk.oplatform.entity.table.SchoolAdmin">
+            <id column="a_id" property="id" jdbcType="INTEGER"/>
+            <result column="a_school_id" property="schoolId" jdbcType="INTEGER"/>
+            <result column="a_nickname" property="nickname" jdbcType="VARCHAR"/>
+            <result column="a_remarks" property="remarks" jdbcType="VARCHAR"/>
+            <result column="a_status" property="status" jdbcType="INTEGER"/>
+            <result column="a_login_num" property="loginNum" jdbcType="INTEGER"/>
+            <result column="a_account" property="account" jdbcType="VARCHAR"/>
+            <result column="a_pwd" property="pwd" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="querySchools" resultMap="SchoolVoMap" parameterType="java.lang.String">
         select
-        <include refid="Base_Column_List"/>
-        from hklk_school where status >=0
+        s.id, s.name, s.create_time, s.remarks, s.status,s.school_num,s.school_logo,h.id as a_id,
+        h.school_id as a_school_id,
+        h.nickname as a_nickname, h.remarks as a_remarks, h.status as a_status, h.account as a_account, h.pwd as a_pwd
+        from hklk_school s left join hklk_school_admin h on s.id = h.school_id where s.status >=0
         <if test="_parameter  != null and _parameter != ''">
-            and (name like CONCAT('%', #{param}, '%') or school_num like CONCAT('%', #{param}, '%'))
+            and (s.name like CONCAT('%', #{param}, '%') or s.school_num like CONCAT('%', #{param}, '%'))
         </if>
         order by id desc
     </select>

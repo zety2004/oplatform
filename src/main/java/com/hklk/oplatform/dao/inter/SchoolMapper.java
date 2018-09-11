@@ -1,6 +1,7 @@
 package com.hklk.oplatform.dao.inter;
 
 import com.hklk.oplatform.entity.table.School;
+import com.hklk.oplatform.entity.vo.SchoolVo;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface SchoolMapper {
 
     int updateByPrimaryKey(School record);
 
-    List<School> querySchools(String param);
+    List<SchoolVo> querySchools(String param);
 
     School selectSchoolByName(String name);
 }

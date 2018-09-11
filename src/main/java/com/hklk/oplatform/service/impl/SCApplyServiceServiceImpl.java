@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 
 @Service
@@ -137,13 +138,13 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         } else {
             allList = scApplyMapper.queryCurriculumForParent(param);
             int hotNum = allList.size() / 3;
-            for (int i = 1; i <= allList.size(); i++) {
-                if (i < hotNum) {
-                    allList.get(i - 1).put("hot", 1);
+            IntStream.range(0, allList.size()).forEach(index -> {
+                if (index < hotNum) {
+                    allList.get(index).put("hot", 1);
                 } else {
-                    allList.get(i - 1).put("hot", 0);
+                    allList.get(index).put("hot", 0);
                 }
-            }
+            });
         }
         result.put("fineQuality", jpList);
         result.put("all", allList);

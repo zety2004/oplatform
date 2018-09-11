@@ -105,7 +105,4 @@ public class CurriculumServiceImpl implements CurriculumService {
         return curriculumMapper.selectIdByUniqueNum(uniqueNum);
     }
 
-    public static void main(String[] args) {
-
-    }
 }

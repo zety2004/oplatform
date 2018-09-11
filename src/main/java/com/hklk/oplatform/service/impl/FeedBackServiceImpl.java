@@ -31,14 +31,13 @@ public class FeedBackServiceImpl implements FeedBackService {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         feedBackMapper.queryFeedBackList(sign);
         PageTableForm<Map<String, Object>> pageTableForm = new PageTableForm(page);
-
-        for (Map<String, Object> obj : pageTableForm.getObjList()) {
+        pageTableForm.getObjList().forEach(obj -> {
             Map<String, String> temp = selectFeedBack((Integer) obj.get("id"), (String) obj.get("tableName"));
             if (temp != null) {
                 obj.remove("tableName");
                 obj.putAll(temp);
             }
-        }
+        });
         return pageTableForm;
     }
 

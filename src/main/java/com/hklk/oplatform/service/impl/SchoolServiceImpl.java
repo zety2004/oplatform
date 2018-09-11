@@ -49,12 +49,7 @@ public class SchoolServiceImpl implements SchoolService {
     public PageTableForm<SchoolVo> querySchools(String param, int pageNum, int pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         schoolMapper.querySchools(param);
-        List<SchoolVo> result = new ArrayList<>();
-        for (School school : (List<School>) page.getResult()) {
-            List<SchoolAdmin> list = schoolAdminMapper.querySchoolAdminsBySchoolId(school.getId());
-            result.add(new SchoolVo(school, list));
-        }
-        PageTableForm<SchoolVo> pageTableForm = new PageTableForm<SchoolVo>(page, result);
+        PageTableForm<SchoolVo> pageTableForm = new PageTableForm<SchoolVo>(page);
         return pageTableForm;
     }
 
