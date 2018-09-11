@@ -131,7 +131,6 @@
             <result column="a_nickname" property="nickname" jdbcType="VARCHAR"/>
             <result column="a_remarks" property="remarks" jdbcType="VARCHAR"/>
             <result column="a_status" property="status" jdbcType="INTEGER"/>
-            <result column="a_login_num" property="loginNum" jdbcType="INTEGER"/>
             <result column="a_account" property="account" jdbcType="VARCHAR"/>
             <result column="a_pwd" property="pwd" jdbcType="VARCHAR"/>
         </collection>
