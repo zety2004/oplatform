@@ -8,7 +8,6 @@ import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.TeacherVo;
 import com.hklk.oplatform.provider.PasswordProvider;
-import com.hklk.oplatform.service.DicService;
 import com.hklk.oplatform.service.STeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Service
@@ -78,16 +78,16 @@ public class STeacherServiceServiceImpl implements STeacherService {
     public synchronized Map<String, Object> insertBatchTeacher(List<STeacher> sTeachers, Integer schoolId) {
 
         List<Map<String, Object>> errorInsert = new ArrayList<>();
-        int index = 0;
-        for (STeacher sTeacher : sTeachers) {
+        AtomicInteger index = new AtomicInteger();
+        sTeachers.forEach(sTeacher -> {
             if (sTeacher.gettName() == null || "".equals(sTeacher.gettName())) {
                 Map<String, Object> importMap = new HashMap<>();
                 importMap.put("tName", sTeacher.gettName());
                 importMap.put("phone", sTeacher.getPhone());
                 importMap.put("reason", "缺少关键字段，请检查后重新导入");
                 errorInsert.add(importMap);
-                index++;
-                continue;
+                index.getAndIncrement();
+                return;
             }
             STeacher param = new STeacher();
             param.setSchoolId(schoolId);
@@ -99,16 +99,15 @@ public class STeacherServiceServiceImpl implements STeacherService {
                 importMap.put("phone", sTeacher.getPhone());
                 importMap.put("reason", "该老师已存在系统中");
                 errorInsert.add(importMap);
-                index++;
+                index.getAndIncrement();
             } else {
                 sTeacher.setSchoolId(schoolId);
                 sTeacher.setTag(this.getTeacherTag().toString());
                 this.insertOrUpdateByPrimaryKeySelective(sTeacher);
             }
-        }
-
+        });
         Map<String, Object> result = new HashMap<>();
-        result.put("index", index);
+        result.put("index", index.intValue());
         result.put("errorInsert", errorInsert);
 
         return result;

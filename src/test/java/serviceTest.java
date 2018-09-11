@@ -1,3 +1,4 @@
+import com.hklk.oplatform.comm.cache.RedisCache;
 import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
 import com.hklk.oplatform.entity.table.User;
@@ -100,5 +101,9 @@ public class serviceTest extends AbstractTestCase {
     @Test
     public void queryHotCurriculumForParent() {
         System.out.println(JsonUtil.toJson(scApplyService.queryHotCurriculumForParent(1, 3)));
+    }
+    @Test
+    public void getRedisCache() {
+        System.out.println( RedisCache.get("parentToken:0deaba2ce9b647d6b016cd862dc9dbc4"));
     }
 }

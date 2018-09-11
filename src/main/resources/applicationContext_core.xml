@@ -100,11 +100,11 @@
         <!-- 设置切入点 -->
         <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
     </aop:config>
-
+<!--
     <bean id="helloHandler" class="com.hklk.oplatform.socket.HelloWebSocketHandler"/>
-    <!--将 WebSocketHandler 映射到对应路由-->
+    &lt;!&ndash;将 WebSocketHandler 映射到对应路由&ndash;&gt;
     <webscket:handlers>
         <webscket:mapping handler="helloHandler" path="/hello"/>
-    </webscket:handlers>
+    </webscket:handlers>-->
 
 </beans>

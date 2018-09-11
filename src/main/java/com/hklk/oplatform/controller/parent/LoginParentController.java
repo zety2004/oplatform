@@ -58,7 +58,7 @@ public class LoginParentController extends BaseController {
 
             if (student != null && student.size() != 0) {
                 List result = new ArrayList<Map<String, Object>>();
-                for (Map map : student) {
+                student.forEach(map->{
                     LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), resultMap.get("openid"), resultMap.get("session_key"));
                     String token = createToken(loginParent);
                     Map<String, Object> stu = new HashMap<>();
@@ -68,7 +68,18 @@ public class LoginParentController extends BaseController {
                     stu.put("schoolLogo", map.get("schoolLogo"));
                     stu.put("token", token);
                     result.add(stu);
-                }
+                });
+                /*for (Map map : student) {
+                    LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), resultMap.get("openid"), resultMap.get("session_key"));
+                    String token = createToken(loginParent);
+                    Map<String, Object> stu = new HashMap<>();
+                    stu.put("childName", loginParent.getChildName());
+                    stu.put("schoolName", map.get("schoolName"));
+                    stu.put("className", map.get("className"));
+                    stu.put("schoolLogo", map.get("schoolLogo"));
+                    stu.put("token", token);
+                    result.add(stu);
+                }*/
 
                 return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
             } else {

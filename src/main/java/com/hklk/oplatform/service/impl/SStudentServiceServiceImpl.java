@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Service
@@ -70,16 +71,16 @@ public class SStudentServiceServiceImpl implements SStudentService {
     @Override
     public synchronized Map<String, Object> insertBatchStudent(List<SStudent> sStudents, Integer schoolId, Integer classId) {
         List<ImportStudentVo> errorInsert = new ArrayList<>();
-        int index = 0;
-        for (SStudent sStudent : sStudents) {
+        AtomicInteger index = new AtomicInteger();
+        sStudents.forEach((sStudent) -> {
             if (sStudent.getsNum() == null || "".equals(sStudent.getsNum())) {
                 ImportStudentVo importStudentVo = new ImportStudentVo();
                 importStudentVo.setFullName(sStudent.getFullName());
                 importStudentVo.setsNum(sStudent.getsNum());
                 importStudentVo.setReason("缺少关键字段，请检查后重新导入");
                 errorInsert.add(importStudentVo);
-                index++;
-                continue;
+                index.getAndIncrement();
+                return;
             }
             SStudent temp = this.selectBySNumForValidate(schoolId, sStudent.getsNum());
             if (sStudent.getId() == null && temp != null) {
@@ -89,14 +90,14 @@ public class SStudentServiceServiceImpl implements SStudentService {
                 SClass sClass = sClassService.selectByPrimaryKey(temp.getClassId());
                 importStudentVo.setReason("该学生已存在于" + sClass.getName() + "班中");
                 errorInsert.add(importStudentVo);
-                index++;
+                index.getAndIncrement();
             } else {
                 sStudent.setClassId(classId);
                 this.insertOrUpdateByPrimaryKeySelective(sStudent);
             }
-        }
+        });
         Map<String, Object> result = new HashMap<>();
-        result.put("index", index);
+        result.put("index", index.intValue());
         result.put("errorInsert", errorInsert);
         return result;
     }

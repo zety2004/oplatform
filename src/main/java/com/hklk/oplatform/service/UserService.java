@@ -1,10 +1,14 @@
 package com.hklk.oplatform.service;
 
+import com.hklk.oplatform.comm.cache.RedisCache;
 import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     /**
@@ -50,4 +54,8 @@ public interface UserService {
     * @Return int
     **/
     User selectByNameForValidate(String name);
+
+    public static void main(String[] args) {
+        RedisCache.get("123");
+    }
 }
