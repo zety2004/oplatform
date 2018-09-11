@@ -24,6 +24,9 @@ public class SchoolVo implements Serializable {
 
     private List<SchoolAdmin> list;
 
+    public SchoolVo() {
+    }
+
     public SchoolVo(School school, List<SchoolAdmin> list) {
         this.id = school.getId();
         this.name = school.getName();
