@@ -217,7 +217,7 @@
         LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
         where sca.school_id = #{schoolId,jdbcType=INTEGER} and sca.status = 0 and st.status>=0
         group by sca.id) apply
-		GROUP BY apply.applyPerson,apply.applyCurriculumId,apply.beginOfSelectTime,apply.endOfSelectTime,apply.currStartTime
+		GROUP BY apply.applyPerson,apply.applyCurriculumId,apply.beginOfSelectTime,apply.endOfSelectTime,apply.currStartTime,apply.maxNum
 		order by apply.applyTime desc
     </select>
 
