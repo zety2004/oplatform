@@ -43,6 +43,11 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
+    public Map<String, Object> selectByTeacherApplyForAuditing(Integer id) {
+        return scApplyMapper.selectByTeacherApplyForAuditing(id);
+    }
+
+    @Override
     public int insertSelective(SCApply scApply) {
         return scApplyMapper.insertSelective(scApply);
     }

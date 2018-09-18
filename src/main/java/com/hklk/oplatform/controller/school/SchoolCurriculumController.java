@@ -10,6 +10,7 @@ import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.SCApplyService;
 import com.hklk.oplatform.service.SSyllabusService;
 import com.hklk.oplatform.service.TeacherMessageService;
+import com.hklk.oplatform.util.SmsUtil;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class SchoolCurriculumController extends BaseController {
      * 2018/7/4 15:52
      * 查询申报课程
      *
-     * @param status  申报状态
+     * @param status 申报状态
      * @return java.lang.String
      * @author 曹良峰
      */
@@ -169,23 +170,24 @@ public class SchoolCurriculumController extends BaseController {
     public String updateCurriculumApply(String ids, Integer status, String curriculumName, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
         for (String id : ids.split(",")) {
-            SCApply temp = scApplyService.selectByPrimaryKey(Integer.valueOf(id));
-            if (temp.getOperatorId() != null && temp.getStatus() != 0 && status != 0) {
+            Map<String, Object> temp = scApplyService.selectByTeacherApplyForAuditing(Integer.valueOf(id));
+            if (temp.get("operator_id") != null && (int) temp.get("status") != 0 && status != 0) {
                 return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
             } else {
                 if (status == 0) {
-                    int studentNum = sSyllabusService.selectCountStudentNumBySCId(temp.getId());
+                    int studentNum = sSyllabusService.selectCountStudentNumBySCId((int) temp.get("id"));
                     if (studentNum > 0) {
                         return ToolUtil.buildResultStr(StatusCode.HAS_STUDENT, StatusCode.getStatusMsg(StatusCode.HAS_STUDENT));
                     }
                 }
+
                 SCApply scApply = new SCApply();
                 scApply.setId(Integer.valueOf(id));
                 scApply.setStatus(status);
                 scApply.setOperatorId(getLoginSchool(request).getSchoolAdminId());
                 scApplyService.updateByPrimaryKeySelective(scApply);
                 TeacherMessage teacherMessage = new TeacherMessage();
-                teacherMessage.setTeacherId(temp.getTeacherId());
+                teacherMessage.setTeacherId((int) temp.get("teacher_id"));
                 if (status == 1) {
                     teacherMessage.setMessage("您申报的课程 " + curriculumName + " 已经通过审批,进入排课阶段！");
                 } else if (status == 2) {

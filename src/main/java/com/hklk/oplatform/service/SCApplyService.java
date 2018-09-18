@@ -25,6 +25,8 @@ public interface SCApplyService {
 
     SCApply selectByPrimaryKey(Integer id);
 
+    Map<String, Object> selectByTeacherApplyForAuditing(Integer id);
+
     List<CurriculumApplyVo> queryCurriculumApply(Integer schoolId, Integer status);
 
     PageTableForm<CurriculumApplyVo> queryCurriculumApplyForPage(Integer schoolId, Integer status, int pageNum, int pageSize);
@@ -41,12 +43,12 @@ public interface SCApplyService {
 
     Map<String, List<Map<String, Object>>> queryHotCurriculumForParent(Integer schoolId, Integer grade);
 
-    List<Map<String, Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade,Integer weekType);
+    List<Map<String, Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade, Integer weekType);
 
     Map<String, Object> selectByApplyCurriculmForParentById(Integer id);
 
     static void main(String[] args) {
-        System.out.println(String.valueOf(((Double)( 240.87 * 100)).intValue()));
-        System.out.println("24087".equals(String.valueOf(((Double)( 240.87 * 100)).intValue())));
+        System.out.println(String.valueOf(((Double) (240.87 * 100)).intValue()));
+        System.out.println("24087".equals(String.valueOf(((Double) (240.87 * 100)).intValue())));
     }
 }

@@ -17,6 +17,8 @@ public interface SCApplyMapper {
 
     SCApply selectByPrimaryKey(Integer id);
 
+    Map<String, Object> selectByTeacherApplyForAuditing(Integer id);
+
     int updateByPrimaryKeySelective(SCApply record);
 
     List<CurriculumApplyVo> queryCurriculumApply(Map<String, Integer> param);
@@ -36,6 +38,4 @@ public interface SCApplyMapper {
     int queryCurriculumForParentVerification(Map<String, Object> param);
 
     Map<String, Object> selectByApplyCurriculmForParentById(Integer id);
-
-
 }
