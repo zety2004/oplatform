@@ -43,6 +43,8 @@ public class CurriculumInsertVo implements Serializable {
 
     private Integer isPublic;
 
+    private Double price;
+
     public CurriculumInsertVo(Curriculum curriculum) {
         this.id = curriculum.getId();
         this.cover = curriculum.getCover();
@@ -64,6 +66,7 @@ public class CurriculumInsertVo implements Serializable {
         this.isPublic = curriculum.getIsPublic();
         this.twxdes1 = curriculum.getTwxdes1();
         this.twxdes2 = curriculum.getTwxdes2();
+        this.price = curriculum.getPrice();
     }
 
     private static final long serialVersionUID = 1L;
@@ -226,5 +229,13 @@ public class CurriculumInsertVo implements Serializable {
 
     public void setWxcover(String wxcover) {
         this.wxcover = wxcover;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

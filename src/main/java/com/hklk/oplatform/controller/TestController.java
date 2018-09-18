@@ -4,8 +4,10 @@ import com.hklk.oplatform.comm.cache.RedisObjCache;
 import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.table.User;
+import com.hklk.oplatform.entity.vo.CurriculumOrderVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.provider.PasswordProvider;
+import com.hklk.oplatform.service.SCApplyService;
 import com.hklk.oplatform.service.STeacherService;
 import com.hklk.oplatform.service.UserService;
 import com.hklk.oplatform.util.*;
@@ -44,6 +46,8 @@ public class TestController extends BaseController {
 
     @Autowired
     STeacherService sTeacherService;
+    @Autowired
+    SCApplyService scApplyService;
 
     /**
      * @author 曹良峰
@@ -78,24 +82,25 @@ public class TestController extends BaseController {
      * @Param [request, response]
      * @Return java.lang.String
      **/
-    @RequestMapping("/exportExcel")
+    @RequestMapping("/exportExcelForOrders")
     @ResponseBody
-    public String exportExcel(HttpServletRequest request, HttpServletResponse response) {
-        String[] columnHeader = {"id", "username", "password", "createtime", "nickname", "remark", "state", "des", "userIco"};
-        String[] fieldNames = {"主键", "用户名", "密码", "创建时间", "昵称", "备注", "状态", "描述", "头像"};
-        PageTableForm<User> users = userService.queryUsers(new User(), 1, pageSize);
-        List<User> tmp = users.getObjList();
+    public String exportExcelForOrders(String queryParam, Integer isHandle, Integer ishc, HttpServletRequest request,
+                                       HttpServletResponse response, HttpSession session) {
+
+        String[] columnHeader = {"curriculumName", "teacherName", "schoolName", "beginOfSelectTime", "endOfSelectTime", "maxNum", "studentNum", "opPerson", "orderRemark", "kcPrice", "hcPrice"};
+        String[] fieldNames = {"课程名称", "授课老师", "所属学校", "开始选课时间", "结束选课时间", "名额", "已报名人数", "订单操作人", "订单备注", "课程金额", "耗材金额"};
+        List<CurriculumOrderVo> result = scApplyService.queryCurriculumOrderForList(queryParam, isHandle, ishc);
         try {
             ServletOutputStream out = response.getOutputStream();
-            response.setHeader("Content-disposition", "attachment; filename=details.xlsx");
+            response.setHeader("Content-disposition", "attachment; filename=orders.xlsx");
             response.setContentType("application/msexcel");
-            ExcelUtils.exportExcel(out, "xlsx", tmp, fieldNames, columnHeader);
+            ExcelUtils.exportExcel(out, "xlsx", result, fieldNames, columnHeader);
             out.flush();
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "OK";
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
     /**

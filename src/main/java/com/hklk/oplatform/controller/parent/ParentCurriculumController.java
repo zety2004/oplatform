@@ -115,14 +115,14 @@ public class ParentCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryAllCurriculumByParent")
-    public String queryAllCurriculumByParent(Integer isAll, HttpServletRequest request,
+    public String queryAllCurriculumByParent(Integer isAll, Integer weekType, HttpServletRequest request,
                                              HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
         List<Map<String, Object>> curriculumChoiceVos;
         if (isAll == null || "".equals(isAll)) {
-            curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), null);
+            curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), null, weekType);
         } else {
-            curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), loginParent.getGrade());
+            curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), loginParent.getGrade(), weekType);
         }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVos);
     }
@@ -137,8 +137,7 @@ public class ParentCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/saveStudentChoice")
-    public String insertStudentChoice(Integer scaId, String curriculumName, String payMoney, HttpServletRequest request,
-                                      HttpServletResponse response, HttpSession session) {
+    public String insertStudentChoice(Integer scaId, int isHc, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
         //未绑定学生
         if (loginParent == null || loginParent.getStudentId() == null) {
@@ -155,30 +154,27 @@ public class ParentCurriculumController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.PARENT_APPLY_CURR_FOR_VER_NUM, StatusCode.getStatusMsg(StatusCode.PARENT_APPLY_CURR_FOR_VER_NUM));
         }
 
-        Map<String, Object> isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
-        if (isApply != null) {
-            if ((int) isApply.get("pay_state") == 0) {
-                return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已申请该课程，尚未付款，请前往订单页完成支付！");
-            } else {
-                return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已申请该课程！");
-            }
-        }
-        //验证不同课程是否时间冲突
-        Integer num = studentChoiceService.queryParentApplyForVerification(loginParent.getSchoolId(), scaId, loginParent.getStudentId());
-        if (num > 1) {
-            return ToolUtil.buildResultStr(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY, StatusCode.getStatusMsg(StatusCode.INSERT_ERROR_FOR_PARENT_APPLY));
+        int isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
+        if (isApply > 0) {
+            return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您申请的课程存在时间冲突，或存在未支付的订单！");
         } else {
+            Map<String, Object> objectMap = studentChoiceService.queryCurriculumForParentApply(scaId);
             String orderId = System.currentTimeMillis() + "";
             StudentChoice studentChoice = new StudentChoice();
             studentChoice.setOrderId(orderId);
             studentChoice.setScaId(scaId);
             studentChoice.setStudentId(loginParent.getStudentId());
-            studentChoice.setPayMoney(payMoney);
-            studentChoice.setCommodityName(curriculumName);
+            studentChoice.setPayMoney((Double) objectMap.get("kcPrice") + (Double) objectMap.get("hcPrice"));
+            if (isHc == 0) {
+                studentChoice.setPayHcMoney(0.00);
+            } else {
+                studentChoice.setPayHcMoney((Double) objectMap.get("hcPrice"));
+            }
+            studentChoice.setCommodityName(objectMap.get("name").toString());
             studentChoiceService.insertSelective(studentChoice);
             ParentMessage parentMessage = new ParentMessage();
             parentMessage.setStudentId(loginParent.getStudentId());
-            parentMessage.setMessage("您为 " + loginParent.getChildName() + "同学成功报名 " + curriculumName + " 课程！请确认支付。");
+            parentMessage.setMessage("您为 " + loginParent.getChildName() + "同学成功报名 " + objectMap.get("name").toString() + " 课程！请确认支付。");
             parentMessageService.insertSelective(parentMessage);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), orderId);
         }
@@ -190,14 +186,12 @@ public class ParentCurriculumController extends BaseController {
     public String wxPay(String orderId, HttpServletRequest request,
                         HttpServletResponse response, HttpSession session) {
         Map<String, Object> order = studentChoiceService.selectByOrderId(orderId);
-        if ((double) order.get("payMoney") == (double) order.get("realMoney") && (double) order.get("payMoney") == 0) {
+        if ((double) order.get("payMoney") == 0) {
             StudentChoice studentChoice = new StudentChoice();
             studentChoice.setId((int) order.get("id"));
             studentChoice.setPayState(1);
             studentChoiceService.updateByPrimaryKeySelective(studentChoice);
             return ToolUtil.buildResultStr(StatusCode.DONOT_NEED_PAY, "订单金额为0，无需支付!");
-        } else if ((double) order.get("payMoney") != (double) order.get("realMoney")) {
-            return ToolUtil.buildResultStr(StatusCode.ERROR, "订单金额不正确，支付失败!");
         }
         Map<String, Object> parameters = PayUtil.getWXPrePayID();
         parameters.put("body", "好课乐课-课程选课");
@@ -206,8 +200,8 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("notify_url", PropUtil.getProperty("notifyUrl"));
         parameters.put("openid", getLoginParent(request).getOpenid());
         parameters.put("sign_type", "MD5");
-        parameters.put("total_fee", 1); // 上线后，将此代码放开
-        // parameters.put("total_fee", (int) ((double) order.get("realMoney") * 100)); // 上线后，将此代码放开
+        // parameters.put("total_fee", 1); // 上线后，将此代码放开
+        parameters.put("total_fee", (int) ((double) order.get("payMoney") * 100)); // 上线后，将此代码放开
 
         String sign = PayUtil.getSign(parameters);
         parameters.put("sign", sign);
@@ -256,8 +250,7 @@ public class ParentCurriculumController extends BaseController {
                 Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
                 System.out.println("订单信息:" + orders);
                 String payMoney = String.valueOf(((Double) ((double) orders.get("payMoney") * 100)).intValue());
-                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null  //&& total_fee.trim().equals(payMoney)
-                        ) {
+                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null && total_fee.trim().equals(payMoney)) {
                     StudentChoice studentChoice = new StudentChoice();
                     studentChoice.setPayState(1);
                     studentChoice.setId((Integer) orders.get("id"));
@@ -266,7 +259,7 @@ public class ParentCurriculumController extends BaseController {
 
                     ParentMessage parentMessage = new ParentMessage();
                     parentMessage.setStudentId((Integer) orders.get("studentId"));
-                    parentMessage.setMessage("您的订单 " + orderId + " 已经支付成功，请确认信息。");
+                    parentMessage.setMessage("您的申请的课程  《" + orders.get("curriculumNum") + "》  已经支付成功，请确认信息。");
                     parentMessageService.insertSelective(parentMessage);
                     resXml = PayUtil.setXML("SUCCESS", "OK");
                 } else {
@@ -289,7 +282,7 @@ public class ParentCurriculumController extends BaseController {
     @RequestMapping("/returnPay")
     public String returnPay(String orderId) throws Exception {
         Map<String, Object> order = studentChoiceService.selectByOrderId(orderId);
-        
+
         int isCanBeRefund = studentChoiceService.queryIsCanRefund((int) order.get("scaId"));
 
         if (isCanBeRefund != 1) {
@@ -302,10 +295,10 @@ public class ParentCurriculumController extends BaseController {
         }
 
         String out_trade_no = orderId;   //退款订单
-        /*int all_total_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();
-        int refund_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();*/
-        int all_total_fee = 1;    //订单金额
-        int refund_fee = 1;      //退款金额
+        int all_total_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();
+        int refund_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();
+//        int all_total_fee = 1;    //订单金额
+//        int refund_fee = 1;      //退款金额
         String appid = PropUtil.getProperty("wxAppid");
         String mch_id = PropUtil.getProperty("mchId");
 
@@ -380,8 +373,7 @@ public class ParentCurriculumController extends BaseController {
                 String orderId = out_trade_no;
                 Map<String, Object> orders = studentChoiceService.selectByOrderId(orderId);
                 System.out.println("订单信息:" + orders);
-                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null //&& total_fee.trim().equals(String.valueOf(((Double) ((double) orders.get("pay_money") * 100)).intValue());)
-                        ) {
+                if (PropUtil.getProperty("mchId").equals(mch_id) && orders != null && total_fee.trim().equals(String.valueOf(((Double) ((double) orders.get("pay_money") * 100)).intValue()))) {
                     StudentChoice studentChoice = new StudentChoice();
                     studentChoice.setPayState(2);
                     studentChoice.setId((Integer) orders.get("id"));

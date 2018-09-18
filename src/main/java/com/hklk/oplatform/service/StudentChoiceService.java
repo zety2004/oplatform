@@ -14,13 +14,13 @@ public interface StudentChoiceService {
 
     int updateByPrimaryKeySelective(StudentChoice record);
 
-    int queryParentApplyForVerification(Integer schoolId, Integer scaId, Integer studentId);
+    Map<String, Object> queryCurriculumForParentApply(Integer scaId);
 
     int queryParentApplyForVerificationTime(Integer scaId);
 
     int queryParentApplyForIsQualified(Integer schoolId, String grade, Integer scaId);
 
-    Map<String, Object> queryParentApplyForIsApply(Integer scaId, Integer studentId);
+    int queryParentApplyForIsApply(Integer scaId, Integer studentId);
 
     List<Map<String, Object>> queryMyCurriculum(Integer studentId, Integer weekType);
 

@@ -43,6 +43,8 @@ public class Curriculum implements Serializable {
 
     private String twxdes2;
 
+    private Double price;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -203,6 +205,14 @@ public class Curriculum implements Serializable {
 
     public void setWxcover(String wxcover) {
         this.wxcover = wxcover;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
 

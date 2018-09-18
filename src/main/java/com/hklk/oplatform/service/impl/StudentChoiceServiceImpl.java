@@ -47,7 +47,7 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
     }
 
     @Override
-    public Map<String, Object> queryParentApplyForIsApply(Integer scaId, Integer studentId) {
+    public int queryParentApplyForIsApply(Integer scaId, Integer studentId) {
         Map<String, Object> params = new HashMap<>();
         params.put("scaId", scaId);
         params.put("studentId", studentId);
@@ -55,12 +55,10 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
     }
 
     @Override
-    public int queryParentApplyForVerification(Integer schoolId, Integer scaId, Integer studentId) {
+    public Map<String, Object> queryCurriculumForParentApply(Integer scaId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("schoolId", schoolId);
         params.put("scaId", scaId);
-        params.put("studentId", studentId);
-        return studentChoiceMapper.queryParentApplyForVerification(params);
+        return studentChoiceMapper.queryCurriculumForParentApply(params);
     }
 
     @Override

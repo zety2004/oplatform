@@ -84,7 +84,6 @@ public class SchoolCurriculumController extends BaseController {
      * 查询申报课程
      *
      * @param status  申报状态
-     * @param pageNum 分页参数
      * @return java.lang.String
      * @author 曹良峰
      */
@@ -111,7 +110,6 @@ public class SchoolCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculumApplyForExamine")
     public String queryCurriculumApplyForExamine(int pageNum, HttpServletRequest request,
                                                  HttpServletResponse response, HttpSession session) {
-
         PageTableForm<Map<String, Object>> curriculumPageTableForm = scApplyService.queryCurriculumApplyForExamine(getLoginSchool(request).getSchoolId(), pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
     }
@@ -181,7 +179,6 @@ public class SchoolCurriculumController extends BaseController {
                         return ToolUtil.buildResultStr(StatusCode.HAS_STUDENT, StatusCode.getStatusMsg(StatusCode.HAS_STUDENT));
                     }
                 }
-
                 SCApply scApply = new SCApply();
                 scApply.setId(Integer.valueOf(id));
                 scApply.setStatus(status);

@@ -14,9 +14,13 @@ public class StudentChoice implements Serializable {
 
     private Integer payState;
 
+    private Integer isHc;
+
     private String orderId;
 
-    private String payMoney;
+    private Double payMoney;
+
+    private Double payHcMoney;
 
     private String commodityName;
 
@@ -72,11 +76,11 @@ public class StudentChoice implements Serializable {
         this.orderId = orderId;
     }
 
-    public String getPayMoney() {
+    public Double getPayMoney() {
         return payMoney;
     }
 
-    public void setPayMoney(String payMoney) {
+    public void setPayMoney(Double payMoney) {
         this.payMoney = payMoney;
     }
 
@@ -94,5 +98,21 @@ public class StudentChoice implements Serializable {
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public Double getPayHcMoney() {
+        return payHcMoney;
+    }
+
+    public void setPayHcMoney(Double payHcMoney) {
+        this.payHcMoney = payHcMoney;
+    }
+
+    public Integer getIsHc() {
+        return isHc;
+    }
+
+    public void setIsHc(Integer isHc) {
+        this.isHc = isHc;
     }
 }

@@ -9,8 +9,10 @@
         <result column="pay_state" property="payState" jdbcType="INTEGER"/>
         <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
         <result column="pay_money" property="payMoney" jdbcType="DOUBLE"/>
+        <result column="pay_hc_money" property="payHcMoney" jdbcType="DOUBLE"/>
         <result column="commodity_name" property="commodityName" jdbcType="VARCHAR"/>
         <result column="transaction_id" property="transactionId" jdbcType="VARCHAR"/>
+        <result column="is_hc" property="isHc" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, student_id, sca_id, create_time, pay_state
@@ -31,14 +33,13 @@
                 scc.sca_id scaId,
                 pay_state payState,
                 scc.pay_money payMoney,
+                scc.pay_hc_money payHcMoney,
                 scc.commodity_name commodityName,
-                scc.order_id as orderId,
-                IFNULL(sum(cm.unit_price*cm.num),0) realMoney
+                scc.order_id as orderId
             FROM
                 hklk_student_choice_curriculum scc
             LEFT JOIN hklk_school_curriculum_apply sca ON scc.sca_id = sca.id
             LEFT JOIN hklk_curriculum hc ON sca.curriculum_id = hc.id
-            LEFT JOIN hklk_consumables cm ON hc.id = cm.curriculum_id
             where scc.order_id =  #{orderId,jdbcType=VARCHAR}
             GROUP BY scc.id
     </select>
@@ -73,6 +74,9 @@
             <if test="payMoney != null">
                 pay_money,
             </if>
+            <if test="payHcMoney != null">
+                pay_hc_money,
+            </if>
             <if test="commodityName != null">
                 commodity_name,
             </if>
@@ -101,6 +105,9 @@
             </if>
             <if test="payMoney != null">
                 #{payMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="payHcMoney != null">
+                #{payHcMoney,jdbcType=VARCHAR},
             </if>
             <if test="commodityName != null">
                 #{commodityName,jdbcType=VARCHAR},
@@ -131,6 +138,12 @@
             <if test="payMoney != null">
                 pay_money = #{payMoney,jdbcType=VARCHAR},
             </if>
+            <if test="payHcMoney != null">
+                pay_hc_money = #{payHcMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="isHc != null">
+                is_hc = #{isHc,jdbcType=INTEGER},
+            </if>
             <if test="commodityName != null">
                 commodity_name = #{commodityName,jdbcType=VARCHAR},
             </if>
@@ -141,13 +154,25 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="queryParentApplyForIsApply" resultType="map" parameterType="map">
+    <select id="queryParentApplyForIsApply" resultType="java.lang.Integer" parameterType="map">
                 SELECT
-                    sca_id,pay_state
+                    count(1)
                 FROM
-                    hklk_student_choice_curriculum
+                    hklk_student_choice_curriculum scc
+                LEFT JOIN hklk_school_syllabus ss ON ss.sca_id = scc.sca_id
                 WHERE
-                    student_id = #{studentId,jdbcType=INTEGER} and sca_id = #{scaId,jdbcType=INTEGER} and pay_state not in (-1,2)
+                    ss.id IS NOT NULL and scc.pay_state not in (-1,2)
+                AND scc.student_id = #{studentId,jdbcType=INTEGER}
+                AND ss.week_type IN (
+                    SELECT
+                        ss.week_type
+                    FROM
+                        hklk_school_curriculum_apply sca
+                    LEFT JOIN hklk_school_syllabus ss ON sca.id = ss.sca_id
+                    WHERE
+                        ss.id IS NOT NULL
+                    AND sca.id = #{scaId,jdbcType=INTEGER}
+                )
     </select>
 
     <select id="queryParentApplyForIsQualified" resultType="java.lang.Integer" parameterType="map">
@@ -165,30 +190,22 @@
         and sca.max_num > (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
         and sca.begin_of_select_time<= SYSDATE() and sca.end_of_select_time >= SYSDATE()
 
-
         ]]>
     </select>
 
-    <select id="queryParentApplyForVerification" resultType="java.lang.Integer" parameterType="map">
-        select max(num) from (SELECT
-            count(1) as num,sca.school_id
+    <select id="queryCurriculumForParentApply" resultType="map" parameterType="map">
+        SELECT
+            sca.id,
+            hc.`name`,
+            hc.price kcPrice,
+            sum(h2.unit_price * h2.num) hcPrice
         FROM
             hklk_school_curriculum_apply sca
-        RIGHT JOIN hklk_school_syllabus ss ON sca.id = ss.sca_id
-        WHERE
-            sca.school_id = #{schoolId,jdbcType=INTEGER}
-        AND sca_id IN (
-            SELECT
-                 #{scaId,jdbcType=INTEGER}
-            UNION
-                SELECT
-                    sca_id
-                FROM
-                    hklk_student_choice_curriculum
-                WHERE
-                    student_id = #{studentId,jdbcType=INTEGER} and pay_state not in (-1,2)
-        )
-        GROUP BY ss.week_type) t GROUP BY t.school_id
+        LEFT JOIN hklk_curriculum hc ON sca.curriculum_id = hc.id
+        LEFT JOIN hklk_consumables h2 ON hc.id = h2.curriculum_id
+        where sca.id = #{scaId,jdbcType=INTEGER})
+        GROUP BY
+            sca.id
     </select>
 
     <select id="queryIsCanRefund" resultType="java.lang.Integer" parameterType="java.lang.Integer">
@@ -200,6 +217,15 @@
         sca.begin_of_select_time <= SYSDATE()
         and SYSDATE()<= sca.end_of_select_time
         ) or sca.is_open_class =0
+
+
+
+
+
+
+
+
+
         ]]>
     </select>
 

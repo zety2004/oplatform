@@ -33,6 +33,8 @@ public class CurriculumOrderVo implements Serializable {
     private String opPerson;
 
     private Integer ishc;
+    private Double kcPrice;
+    private Double hcPrice;
 
     private static final long serialVersionUID = 1L;
 
@@ -155,5 +157,21 @@ public class CurriculumOrderVo implements Serializable {
 
     public void setIshc(Integer ishc) {
         this.ishc = ishc;
+    }
+
+    public Double getKcPrice() {
+        return kcPrice;
+    }
+
+    public void setKcPrice(Double kcPrice) {
+        this.kcPrice = kcPrice;
+    }
+
+    public Double getHcPrice() {
+        return hcPrice;
+    }
+
+    public void setHcPrice(Double hcPrice) {
+        this.hcPrice = hcPrice;
     }
 }

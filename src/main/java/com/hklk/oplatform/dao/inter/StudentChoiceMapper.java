@@ -14,7 +14,7 @@ public interface StudentChoiceMapper {
 
     int updateByPrimaryKeySelective(StudentChoice record);
 
-    int queryParentApplyForVerification(Map<String, Object> param);
+    Map<String, Object> queryCurriculumForParentApply(Map<String, Object> param);
 
     int queryParentApplyForVerificationTime(Map<String, Object> param);
 
@@ -24,7 +24,7 @@ public interface StudentChoiceMapper {
 
     int queryMyCurriculumVerification(Map<String, Object> param);
 
-    Map<String, Object> queryParentApplyForIsApply(Map<String, Object> param);
+    int queryParentApplyForIsApply(Map<String, Object> param);
 
     Map<String, Object> selectByOrderId(String orderId);
 

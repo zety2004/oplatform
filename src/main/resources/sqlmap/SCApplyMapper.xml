@@ -329,9 +329,11 @@
         <result column="op_person" property="opPerson" jdbcType="VARCHAR"/>
         <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
         <result column="ishc" property="ishc" jdbcType="INTEGER"/>
+        <result column="kcPrice" property="kcPrice" jdbcType="DOUBLE"/>
+        <result column="hcPrice" property="hcPrice" jdbcType="DOUBLE"/>
     </resultMap>
 
-    <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="java.lang.Integer">
+    <select id="queryCurriculumOrder" resultMap="CurriculumOrderMap" parameterType="map">
         select * from (
         SELECT
         sca.id,c.`name` as curriculum_name,sca.curriculum_id,hs.name as school_name,sca.applicable_grade as
@@ -342,7 +344,8 @@
         student_num,
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = (select count(1) from
         hklk_student_choice_curriculum scc where scc.sca_id = sca.id) THEN 1 else 0 end
-        is_sign,sca.order_remark,h.nickname as op_person,sca.is_fine_quality,count(h2.id) as ishc
+        is_sign,sca.order_remark,h.nickname as op_person,sca.is_fine_quality,count(h2.id) as ishc,
+        IFNULL(c.price,0) kcPrice,IFNULL(sum(h2.unit_price*h2.num),0) hcPrice
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
@@ -493,6 +496,9 @@
         GROUP BY
         sca.id
         ) h LEFT JOIN hklk_school_syllabus ss ON h.id = ss.sca_id and ss.id is not null
+        <if test="weekType!=null">
+            and ss.week_type=#{weekType}
+        </if>
     </select>
 
     <select id="queryCurriculumForParent" resultType="java.util.HashMap" parameterType="map">
@@ -594,15 +600,20 @@
             <choose>
                 <when test="grade!=null">
                     and h.grade like CONCAT('%', #{grade}, '%')
+                    <if test="weekType!=null">
+                        and ss.week_type=#{weekType}
+                    </if>
                     group by h.id
                     ORDER BY h.applyStatus,h.currStartTime DESC
                 </when>
                 <otherwise>
+                    <if test="weekType!=null">
+                        and ss.week_type=#{weekType}
+                    </if>
                     group by h.id
                     ORDER BY h.surplus
                 </otherwise>
             </choose>
-
         </if>
         <if test="isFineQuality==1">/*查询精品*/
             and h.isFineQuality = 1
