@@ -1,15 +1,14 @@
 package com.hklk.oplatform.controller.school;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.ParentMessage;
 import com.hklk.oplatform.entity.table.SCApply;
 import com.hklk.oplatform.entity.table.TeacherMessage;
 import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
-import com.hklk.oplatform.service.CurriculumService;
-import com.hklk.oplatform.service.SCApplyService;
-import com.hklk.oplatform.service.SSyllabusService;
-import com.hklk.oplatform.service.TeacherMessageService;
+import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.SmsUtil;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
@@ -44,6 +43,8 @@ public class SchoolCurriculumController extends BaseController {
     SSyllabusService sSyllabusService;
     @Autowired
     TeacherMessageService teacherMessageService;
+    @Autowired
+    ParentMessageService parentMessageService;
 
     /**
      * 2018/7/4 15:50
@@ -167,8 +168,8 @@ public class SchoolCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/updateCurriculumApply")
-    public String updateCurriculumApply(String ids, Integer status, String curriculumName, HttpServletRequest request,
-                                        HttpServletResponse response, HttpSession session) {
+    public String updateCurriculumApply(String ids, Integer status, String curriculumName, String closeReason, HttpServletRequest request,
+                                        HttpServletResponse response, HttpSession session) throws ClientException {
         for (String id : ids.split(",")) {
             Map<String, Object> temp = scApplyService.selectByTeacherApplyForAuditing(Integer.valueOf(id));
             if (temp.get("operator_id") != null && (int) temp.get("status") != 0 && status != 0) {
@@ -180,10 +181,13 @@ public class SchoolCurriculumController extends BaseController {
                         return ToolUtil.buildResultStr(StatusCode.HAS_STUDENT, StatusCode.getStatusMsg(StatusCode.HAS_STUDENT));
                     }
                 }
-
                 SCApply scApply = new SCApply();
                 scApply.setId(Integer.valueOf(id));
                 scApply.setStatus(status);
+                if (status == -1) {
+                    scApply.setIsOpenClass(0);
+                    scApply.setCloseReason(closeReason);
+                }
                 scApply.setOperatorId(getLoginSchool(request).getSchoolAdminId());
                 scApplyService.updateByPrimaryKeySelective(scApply);
                 TeacherMessage teacherMessage = new TeacherMessage();
@@ -194,6 +198,29 @@ public class SchoolCurriculumController extends BaseController {
                     teacherMessage.setMessage("您申报的课程 " + curriculumName + " 被驳回！");
                 } else if (status == 0) {
                     teacherMessage.setMessage("您申报的课程 " + curriculumName + " 被退回到未审核状态！");
+                } else if (status == -1) {
+                    Map<String, String> teacherSmsParam = new HashMap<>();
+                    teacherSmsParam.put("curriculum", curriculumName);
+                    teacherSmsParam.put("reason", closeReason);
+                    teacherSmsParam.put("person", getLoginSchool(request).getNickName() + ",电话:" + getLoginSchool(request).getAccount());
+
+                    SmsUtil.sendSms(temp.get("phone").toString(), "SMS_143863465", teacherSmsParam);
+                    List<StudentPay> sStudents = scApplyService.queryStudentBySCAId(Integer.valueOf(id));
+                    sStudents.forEach(obj -> {
+                        Map<String, String> parentSmsParam = new HashMap<>();
+                        parentSmsParam.put("attr1", obj.getFullName());
+                        parentSmsParam.put("attr2", curriculumName);
+                        parentSmsParam.put("attr3", closeReason);
+                        try {
+                            SmsUtil.sendSms(obj.getParentPhone(), "SMS_144450653", parentSmsParam);
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                        }
+                        ParentMessage parentMessage = new ParentMessage();
+                        parentMessage.setStudentId(obj.getId());
+                        parentMessage.setMessage("您申请的课程 《" + curriculumName + "》 已取消开课，请<a href = \"https://www.baidu.com\" >点击</a >退款");
+                        parentMessageService.insertSelective(parentMessage);
+                    });
                 }
                 teacherMessageService.insertSelective(teacherMessage);
             }

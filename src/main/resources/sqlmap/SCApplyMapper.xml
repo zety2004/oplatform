@@ -19,6 +19,9 @@
         <result column="order_remark" property="orderRemark" jdbcType="VARCHAR"/>
         <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
         <result column="applicable_grade" property="grade" jdbcType="VARCHAR"/>
+        <result column="close_reason" property="closeReason" jdbcType="VARCHAR"/>
+        <result column="is_open_class" property="isOpenClass" jdbcType="INTEGER"/>
+
     </resultMap>
     <sql id="Base_Column_List">
     id, curriculum_id, apply_time, apply_remark, teacher_id, status, operator_id, begin_of_select_time,
@@ -91,6 +94,12 @@
             <if test="grade != null">
                 applicable_grade,
             </if>
+            <if test="closeReason != null">
+                close_reason,
+            </if>
+            <if test="isOpenClass != null">
+                is_open_class,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -137,6 +146,12 @@
             </if>
             <if test="grade != null">
                 #{grade,jdbcType=VARCHAR},
+            </if>
+            <if test="closeReason != null">
+                #{closeReason,jdbcType=VARCHAR},
+            </if>
+            <if test="isOpenClass != null">
+                #{isOpenClass,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -251,6 +266,22 @@
         group by sca.id
     </select>
 
+    <select id="queryCurriculumListForTask" resultType="map">
+        SELECT
+        sca.id,c.`name` curriculumName,st.phone,sca.curr_start_time currStartTime
+        FROM
+        hklk_school_curriculum_apply sca
+        LEFT JOIN hklk_school_syllabus ss ON sca.id = ss.sca_id
+        left join hklk_curriculum c on sca.curriculum_id = c.id
+        left join hklk_school_teacher st on sca.teacher_id = st.id
+        WHERE
+        <![CDATA[
+        end_of_select_time < SYSDATE()
+        ]]>
+        AND sca.`status` = 3 and sca.is_open_class is null
+        AND ss.id IS NOT NULL
+     </select>
+
     <resultMap id="CurriculumChoiceMap" type="com.hklk.oplatform.entity.vo.CurriculumChoiceVo">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="curriculum_name" property="curriculumName" jdbcType="VARCHAR"/>
@@ -269,6 +300,7 @@
         <result column="is_fine_quality" property="isFineQuality" jdbcType="INTEGER"/>
         <result column="is_open_class" property="isOpenClass" jdbcType="INTEGER"/>
     </resultMap>
+
 
     <select id="queryCurriculumChoice" resultMap="CurriculumChoiceMap" parameterType="map">
         SELECT

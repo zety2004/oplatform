@@ -43,6 +43,11 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
+    public List<Map<String,Object>> queryCurriculumListForTask() {
+        return scApplyMapper.queryCurriculumListForTask();
+    }
+
+    @Override
     public Map<String, Object> selectByTeacherApplyForAuditing(Integer id) {
         return scApplyMapper.selectByTeacherApplyForAuditing(id);
     }

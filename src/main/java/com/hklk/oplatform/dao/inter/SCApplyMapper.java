@@ -27,6 +27,8 @@ public interface SCApplyMapper {
 
     List<CurriculumChoiceVo> queryCurriculumChoice(Map<String, Object> param);
 
+    List<Map<String,Object>> queryCurriculumListForTask();
+
     List<StudentPay> queryStudentBySCAId(Integer scaId);
 
     List<CurriculumOrderVo> queryCurriculumOrder(Map<String, Object> param);

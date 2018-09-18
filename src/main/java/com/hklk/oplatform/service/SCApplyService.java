@@ -23,6 +23,8 @@ public interface SCApplyService {
 
     PageTableForm<CurriculumOrderVo> queryCurriculumOrder(String queryParam, Integer isHandle, Integer ishc, int pageNum, int pageSize);
 
+    List<Map<String,Object>> queryCurriculumListForTask();
+
     SCApply selectByPrimaryKey(Integer id);
 
     Map<String, Object> selectByTeacherApplyForAuditing(Integer id);

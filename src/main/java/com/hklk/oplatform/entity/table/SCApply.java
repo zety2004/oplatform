@@ -38,6 +38,9 @@ public class SCApply implements Serializable {
 
     private String grade;
 
+    private String closeReason;
+    private Integer isOpenClass;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -174,5 +177,21 @@ public class SCApply implements Serializable {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public String getCloseReason() {
+        return closeReason;
+    }
+
+    public void setCloseReason(String closeReason) {
+        this.closeReason = closeReason;
+    }
+
+    public Integer getIsOpenClass() {
+        return isOpenClass;
+    }
+
+    public void setIsOpenClass(Integer isOpenClass) {
+        this.isOpenClass = isOpenClass;
     }
 }
