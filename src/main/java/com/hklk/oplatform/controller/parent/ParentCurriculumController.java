@@ -164,10 +164,11 @@ public class ParentCurriculumController extends BaseController {
             studentChoice.setOrderId(orderId);
             studentChoice.setScaId(scaId);
             studentChoice.setStudentId(loginParent.getStudentId());
-            studentChoice.setPayMoney((Double) objectMap.get("kcPrice") + (Double) objectMap.get("hcPrice"));
             if (isHc == 0) {
+                studentChoice.setPayMoney((Double) objectMap.get("kcPrice"));
                 studentChoice.setPayHcMoney(0.00);
             } else {
+                studentChoice.setPayMoney((Double) objectMap.get("kcPrice") + (Double) objectMap.get("hcPrice"));
                 studentChoice.setPayHcMoney((Double) objectMap.get("hcPrice"));
             }
             studentChoice.setCommodityName(objectMap.get("name").toString());
