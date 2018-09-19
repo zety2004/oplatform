@@ -38,23 +38,24 @@ public class PlatformTask {
             Map<String, String> teacherSmsParam = new HashMap<>();
             teacherSmsParam.put("attr1", obj.get("curriculumName").toString());
             teacherSmsParam.put("attr2", obj.get("currStartTime").toString());
-            try {
+        /*    try {
                 SmsUtil.sendSms(obj.get("phone").toString(), "SMS_144450668", teacherSmsParam);
             } catch (ClientException e) {
                 e.printStackTrace();
-            }
+            }*/
             scApplyService.updateByPrimaryKeySelective(scApply);
             List<StudentPay> studentPays = scApplyService.queryStudentBySCAId((int) obj.get("id"));
             studentPays.forEach(studentPay -> {
-                try {
+
                     Map<String, String> parentSmsParam = new HashMap<>();
                     parentSmsParam.put("attr1", studentPay.getFullName());
                     parentSmsParam.put("attr2", obj.get("curriculumName").toString());
                     parentSmsParam.put("attr3", obj.get("currStartTime").toString());
+             /*   try {
                     SmsUtil.sendSms(studentPay.getParentPhone(), "SMS_144450674", parentSmsParam);
                 } catch (ClientException e) {
                     e.printStackTrace();
-                }
+                }*/
             });
 
         });

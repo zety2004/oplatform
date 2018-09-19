@@ -25,13 +25,12 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * JSON转换工具类
- * 
  */
 public final class JsonUtil {
 
     /**
      * 将对象转换成json
-     * 
+     *
      * @param obj
      * @return
      */
@@ -41,7 +40,7 @@ public final class JsonUtil {
 
     /**
      * 将对象转换成json(并自定义日期格式)
-     * 
+     *
      * @param obj
      * @param dateformat
      * @return
@@ -62,7 +61,7 @@ public final class JsonUtil {
 
     /**
      * 将对象中被@Expose注解的属性转换成json
-     * 
+     *
      * @param obj
      * @return
      */
@@ -72,7 +71,7 @@ public final class JsonUtil {
 
     /**
      * 将对象中被@Expose注解的属性转换成json(并自定义日期格式)
-     * 
+     *
      * @param obj
      * @param dateformat
      * @return
@@ -93,7 +92,7 @@ public final class JsonUtil {
 
     /**
      * 不序列化对象的空值
-     * 
+     *
      * @param obj
      * @return
      */
@@ -103,7 +102,7 @@ public final class JsonUtil {
 
     /**
      * 将对象转换成json，忽略属性名含有str的属性
-     * 
+     *
      * @param obj
      * @param str
      * @return
@@ -128,7 +127,7 @@ public final class JsonUtil {
 
     /**
      * 将对象转换成json，只保留fields属性
-     * 
+     *
      * @param obj
      * @param fields
      * @return
@@ -156,13 +155,12 @@ public final class JsonUtil {
         return gson.toJson(obj);
     }
 
-    
+
     /**
      * 将json格式转换成List对象
-     * 
+     *
      * @param json
-     * @param type
-     *            如： Type type = new TypeToken<List<?>>() {}.getType();
+     * @param type 如： Type type = new TypeToken<List<?>>() {}.getType();
      * @return
      */
     public static <T> List<T> jsonToList(String json, Type type) {
@@ -172,10 +170,10 @@ public final class JsonUtil {
         }
         return list;
     }
-    
+
     /**
      * 将json转换成任意对象
-     * 
+     *
      * @param json
      * @return
      */
@@ -187,7 +185,7 @@ public final class JsonUtil {
 
     /**
      * 将json转换成bean对象
-     * 
+     *
      * @param json
      * @param clazz
      * @return
@@ -195,25 +193,17 @@ public final class JsonUtil {
     public static <T> T jsonToBean(final String json, final Class<T> clazz) {
         return gson.fromJson(json, clazz);
     }
-    
+
     /**
      * 将json转换成bean对象
-     * 
+     *
      * @param json
      * @param clazz
      * @return
      */
     public static <T> T jsonToBeanDateForLong(String json, Class<T> clazz) {
-        T obj = null;
-
-        Gson builder = new GsonBuilder().registerTypeHierarchyAdapter(Date.class, new JsonDeserializer() {
-
-            @Override
-            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                return new Date(json.getAsJsonPrimitive().getAsLong());
-            }
-
-        }).setDateFormat(DateFormat.LONG).serializeNulls().create();
+        T obj;
+        Gson builder = new GsonBuilder().registerTypeHierarchyAdapter(Date.class, (JsonDeserializer) (json1, typeOfT, context) -> new Date(json1.getAsJsonPrimitive().getAsLong())).setDateFormat(DateFormat.LONG).serializeNulls().create();
 
         obj = builder.fromJson(json, clazz);
         return obj;
@@ -221,60 +211,59 @@ public final class JsonUtil {
 
     /**
      * 将json转换成map对象
-     * 
+     *
      * @param json
      * @return
      */
     public static Map<Object, Object> jsonToMap(final String json) {
-        Map<Object, Object> map = null;
+        Map<Object, Object> map;
         Type type = new TypeToken<Map<Object, Object>>() {
         }.getType();
         map = gson.fromJson(json, type);
         if (map == null) {
-            map = new HashMap<Object, Object>();
+            map = new HashMap<>();
         }
         return map;
     }
-    
-    
-    
+
+
     /**
      * 将json转换成map对象
-     * 
+     *
      * @param json
      * @return
      */
     public static Map<String, String> jsonToMapStr(final String json) {
-        Map<String, String> map = null;
+        Map<String, String> map;
         Type type = new TypeToken<Map<String, String>>() {
         }.getType();
         map = gson.fromJson(json, type);
         if (map == null) {
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
         }
         return map;
     }
 
     /**
      * 将json转换成List对象
-     * 
+     *
      * @param json
      * @return
      */
     public static <T> List<T> jsonToList(final String json) {
-        List<T> list = null;
+        List<T> list;
         Type type = new TypeToken<List<T>>() {
         }.getType();
         list = gson.fromJson(json, type);
         if (list == null) {
-            list = new ArrayList<T>();
+            list = new ArrayList<>();
         }
         return list;
     }
 
     /**
      * 在json字符串中，根据key值找到value
-     * 
+     *
      * @param json
      * @param key
      * @return
@@ -285,7 +274,7 @@ public final class JsonUtil {
 
     /**
      * 为了不引入包，从StringUtils中复制过来
-     * 
+     *
      * @param cs
      * @return
      */
@@ -311,11 +300,11 @@ public final class JsonUtil {
      **/
     public static Class<Object> getSuperClassGenricType(final Class clz) {
         Type type = clz.getGenericSuperclass();
-        if(!(type instanceof ParameterizedType)) {
+        if (!(type instanceof ParameterizedType)) {
             return Object.class;
         }
-        Type[] params = ((ParameterizedType)type).getActualTypeArguments();
-        if(!(params[0] instanceof Class)) {
+        Type[] params = ((ParameterizedType) type).getActualTypeArguments();
+        if (!(params[0] instanceof Class)) {
             return Object.class;
         }
         return (Class) params[0];
@@ -324,6 +313,7 @@ public final class JsonUtil {
     private static Gson gson;
     private static Gson gsonDefault;
     private static Gson gsonWithExpose;
+
     static {
         gson = new GsonBuilder().serializeNulls().create();
         gsonDefault = new Gson();
