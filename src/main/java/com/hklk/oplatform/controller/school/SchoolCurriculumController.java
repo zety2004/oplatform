@@ -172,7 +172,8 @@ public class SchoolCurriculumController extends BaseController {
                                         HttpServletResponse response, HttpSession session) throws ClientException {
         for (String id : ids.split(",")) {
             Map<String, Object> temp = scApplyService.selectByTeacherApplyForAuditing(Integer.valueOf(id));
-            if (temp.get("operator_id") != null && (int) temp.get("status") != 0 && status != 0) {
+            boolean isOp = (int) temp.get("status") != 0 && status != 0 && (int) temp.get("status") != -1 && status != -1;
+            if (temp.get("operator_id") != null && isOp) {
                 return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
             } else {
                 if (status == 0) {
