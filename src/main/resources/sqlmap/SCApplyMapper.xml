@@ -393,7 +393,8 @@
         CASE WHEN <![CDATA[ sca.end_of_select_time<  now() ]]>  or sca.max_num = (select count(1) from
         hklk_student_choice_curriculum scc where scc.sca_id = sca.id) THEN 1 else 0 end
         is_sign,sca.order_remark,h.nickname as op_person,sca.is_fine_quality,count(h2.id) as ishc,
-        IFNULL(c.price,0) kcPrice,IFNULL(sum(h2.unit_price*h2.num),0) hcPrice
+        IFNULL(c.price,0) kcPrice,IFNULL(sum(h2.unit_price*h2.num),0) hcPrice,
+        sca.status
         FROM
         hklk_school_curriculum_apply sca
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
