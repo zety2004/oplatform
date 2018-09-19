@@ -203,7 +203,7 @@
             hklk_school_curriculum_apply sca
         LEFT JOIN hklk_curriculum hc ON sca.curriculum_id = hc.id
         LEFT JOIN hklk_consumables h2 ON hc.id = h2.curriculum_id
-        where sca.id = #{scaId,jdbcType=INTEGER})
+        where sca.id = #{scaId,jdbcType=INTEGER}
         GROUP BY
             sca.id
     </select>
