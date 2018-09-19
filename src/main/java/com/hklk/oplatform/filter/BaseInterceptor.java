@@ -14,7 +14,7 @@ public class BaseInterceptor {
     @Autowired
     AuthenticationRpcService authenticationRpcService;
 
-    private String getLocalToken(HttpServletRequest request) {
+    protected String getLocalToken(HttpServletRequest request) {
         String token = request.getHeader("Access-Toke");
         return token == null ? null : token;
     }

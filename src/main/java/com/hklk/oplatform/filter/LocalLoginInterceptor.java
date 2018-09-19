@@ -21,10 +21,6 @@ public class LocalLoginInterceptor extends BaseInterceptor implements HandlerInt
     @Autowired
     AuthenticationRpcService authenticationRpcService;
 
-    private String getLocalToken(HttpServletRequest request) {
-        String token = request.getHeader("Access-Toke");
-        return token == null ? null : token;
-    }
 
     private boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String token = getLocalToken(request);

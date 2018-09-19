@@ -35,7 +35,7 @@ public interface SCApplyService {
 
     PageTableForm<Map<String, Object>> queryCurriculumApplyForExamine(Integer schoolId, int pageNum, int pageSize);
 
-    PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param,int isEnd, int pageNum, int pageSize);
+    PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param,Integer isEnd, int pageNum, int pageSize);
 
     List<StudentPay> queryStudentBySCAId(Integer scaId);
 
