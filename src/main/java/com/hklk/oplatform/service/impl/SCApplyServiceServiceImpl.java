@@ -208,7 +208,9 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
             result.put("wxdes", new String((byte[]) result.get("wxdes")));
         }
         List<Consumables> consumables = consumablesMapper.queryConsumablesByCurId((Integer) result.get("curriculumId"));
+        List<Map<String, Object>> mapList = scApplyMapper.queryStudentBySCAIdForParent(id);
         result.put("consumables", consumables);
+        result.put("students", mapList);
         return result;
     }
 }

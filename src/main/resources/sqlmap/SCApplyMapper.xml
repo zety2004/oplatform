@@ -449,6 +449,18 @@
         where scc.sca_id = #{scaId,jdbcType=INTEGER} and scc.pay_state = 1
     </select>
 
+    <select id="queryStudentBySCAIdForParent" resultType="map"
+            parameterType="java.lang.Integer">
+        SELECT
+            ss.id,ss.full_name sName,hd.name grade
+        FROM
+            hklk_student_choice_curriculum scc
+        LEFT JOIN hklk_school_student ss ON scc.student_id = ss.id
+        left join hklk_school_class h on ss.class_id = h.id
+        left join hklk_dic hd on h.grade = hd.id
+        where scc.sca_id = #{scaId,jdbcType=INTEGER} and scc.pay_state = 1
+    </select>
+
     <select id="queryByTeacherId" resultType="map" parameterType="map">
         SELECT
         sca.id,
