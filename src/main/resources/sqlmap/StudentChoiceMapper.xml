@@ -191,6 +191,10 @@
         and sca.begin_of_select_time<= SYSDATE() and sca.end_of_select_time >= SYSDATE()
 
 
+
+
+
+
         ]]>
     </select>
 
@@ -218,6 +222,10 @@
         sca.begin_of_select_time <= SYSDATE()
         and SYSDATE()<= sca.end_of_select_time
         ) or sca.is_open_class =0
+
+
+
+
 
 
 
@@ -430,10 +438,8 @@
         sca.isCanSelect,
         sca.isOpenClass,
         c.cover,
-        IFNULL(
-        SUM(cs.num * cs.unit_price),
-        0
-        ) AS totalPrice,
+        sca.pay_money AS totalPrice,
+        sca.pay_hc_money as hcPrice,
         sca.pay_state payState
         FROM
         (
@@ -447,6 +453,8 @@
         scc.order_id orderId,
         scc.create_time,
         scc.id sccId,
+        scc.pay_money,
+        scc.pay_hc_money,
         <![CDATA[
         (hsca.begin_of_select_time < SYSDATE() and SYSDATE() < hsca.end_of_select_time) as isCanSelect,
         ]]>
@@ -468,7 +476,7 @@
         1 = 1
         <choose>
             <when test="state == 1">
-                AND (sca.status = 4 or sca.pay_state in (-1,2))
+                AND (sca.status in (-1,4) or sca.pay_state in (-1,2))
                 GROUP BY sca.orderId
                 order by sca.create_time desc
             </when>
