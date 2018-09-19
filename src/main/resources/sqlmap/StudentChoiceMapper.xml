@@ -190,6 +190,7 @@
         and sca.max_num > (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
         and sca.begin_of_select_time<= SYSDATE() and sca.end_of_select_time >= SYSDATE()
 
+
         ]]>
     </select>
 
@@ -197,8 +198,8 @@
         SELECT
             sca.id,
             hc.`name`,
-            hc.price kcPrice,
-            sum(h2.unit_price * h2.num) hcPrice
+            IFNULL(hc.price,0) kcPrice,
+            IFNULL(sum(h2.unit_price * h2.num),0) hcPrice
         FROM
             hklk_school_curriculum_apply sca
         LEFT JOIN hklk_curriculum hc ON sca.curriculum_id = hc.id
@@ -217,6 +218,7 @@
         sca.begin_of_select_time <= SYSDATE()
         and SYSDATE()<= sca.end_of_select_time
         ) or sca.is_open_class =0
+
 
 
 
