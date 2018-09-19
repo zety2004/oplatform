@@ -43,7 +43,7 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public List<Map<String,Object>> queryCurriculumListForTask() {
+    public List<Map<String, Object>> queryCurriculumListForTask() {
         return scApplyMapper.queryCurriculumListForTask();
     }
 
@@ -87,11 +87,12 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int pageNum, int pageSize) {
+    public PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int isEnd, int pageNum, int pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         Map<String, Object> params = new HashMap<>();
         params.put("schoolId", schoolId);
         params.put("param", param);
+        params.put("isEnd", isEnd);
         scApplyMapper.queryCurriculumChoice(params);
         PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = new PageTableForm<>(page);
         return curriculumChoiceVoPageTableForm;
