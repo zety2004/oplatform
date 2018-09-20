@@ -34,6 +34,8 @@ public class serviceTest extends AbstractTestCase {
     FeedBackService feedBackService;
     @Autowired
     SchoolService schoolService;
+    @Autowired
+    StudentChoiceService studentChoiceService;
 
     @Autowired
     TeacherMessageService teacherMessageService;
@@ -51,8 +53,8 @@ public class serviceTest extends AbstractTestCase {
 
     @Test
     public void redisTest() {
-        Integer id = curriculumService.selectIdByUniqueNum("3423424");
-        System.out.println(id);
+        List<Map<String,Object>> result = studentChoiceService.queryMyCurriculum(344,3);
+        System.out.println(JsonUtil.toJson(result));
     }
 
     @Test

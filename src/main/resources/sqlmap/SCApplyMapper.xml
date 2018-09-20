@@ -34,7 +34,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="selectByTeacherApplyForAuditing" resultType="map" parameterType="java.lang.Integer">
+    <select id="selectByTeacherApplyForAuditing" resultType="java.util.Map" parameterType="java.lang.Integer">
         select
         sca.id,sca.teacher_id,h.phone,sca.status,sca.operator_id
         from hklk_school_curriculum_apply sca left join hklk_school_teacher h on sca.teacher_id = h.id
@@ -233,7 +233,7 @@
         <result column="student_num" property="studentNum" jdbcType="INTEGER"/>
     </resultMap>
 
-    <select id="queryCurriculumApplyForExamine" resultType="map" parameterType="map">
+    <select id="queryCurriculumApplyForExamine" resultType="java.util.Map" parameterType="map">
         select apply.*,COUNT(id) as num ,GROUP_CONCAT(id) ids from (
         select sca.id,CONCAT(st.nickname,'/',st.phone) as applyPerson,
         c.`name` as applyCurriculum,c.id as applyCurriculumId, IFNULL(SUM(cs.num*cs.unit_price),0) as totalPrice,
@@ -332,7 +332,7 @@
         group by sca.id
     </select>
 
-    <select id="queryCurriculumListForTask" resultType="map">
+    <select id="queryCurriculumListForTask" resultType="java.util.Map">
         SELECT
         sca.id,c.`name` curriculumName,st.phone,sca.curr_start_time currStartTime
         FROM
@@ -456,7 +456,7 @@
         where scc.sca_id = #{scaId,jdbcType=INTEGER} and scc.pay_state = 1
     </select>
 
-    <select id="queryStudentBySCAIdForParent" resultType="map"
+    <select id="queryStudentBySCAIdForParent" resultType="java.util.Map"
             parameterType="java.lang.Integer">
         SELECT
             ss.id,ss.full_name sName,hd.name grade
@@ -468,7 +468,7 @@
         where scc.sca_id = #{scaId,jdbcType=INTEGER} and scc.pay_state = 1
     </select>
 
-    <select id="queryByTeacherId" resultType="map" parameterType="map">
+    <select id="queryByTeacherId" resultType="java.util.Map" parameterType="map">
         SELECT
         sca.id,
         c.`name` AS curriculumName,
@@ -531,42 +531,6 @@
         order by sca.apply_time desc
     </select>
 
-    <select id="queryCurriculumForParentVerification" resultType="java.lang.Integer" parameterType="java.lang.Integer">
-        SELECT count(1)
-        FROM
-        (
-        SELECT
-        sca.id,
-        sca.is_fine_quality as isFineQuality,
-        sca.applicable_grade AS grade,
-        sca.curriculum_id as curriculumId,
-        sca.status
-        FROM
-        hklk_school_curriculum_apply sca
-        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
-        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
-        LEFT JOIN hklk_consumables cs on sca.curriculum_id = cs.curriculum_id
-        WHERE
-        sca.status = 3 and st.status>=0
-        AND sca.school_id = #{schoolId,jdbcType=INTEGER}
-        <if test="isFineQuality==-1">/*查询精品*/
-            <choose>
-                <when test="grade!=null">
-                    and sca.applicable_grade like CONCAT('%', #{grade}, '%')
-                </when>
-            </choose>
-        </if>
-
-        <if test="isFineQuality==1">/*查询精品*/
-            and sca.is_fine_quality = 1
-        </if>
-        GROUP BY
-        sca.id
-        ) h LEFT JOIN hklk_school_syllabus ss ON h.id = ss.sca_id and ss.id is not null
-        <if test="weekType!=null">
-            and ss.week_type=#{weekType}
-        </if>
-    </select>
 
     <select id="queryCurriculumForParent" resultType="java.util.HashMap" parameterType="map">
         SELECT *,
@@ -691,7 +655,7 @@
     </select>
 
 
-    <select id="selectByApplyCurriculmForParentById" resultType="map" parameterType="java.lang.Integer">
+    <select id="selectByApplyCurriculmForParentById" resultType="java.util.Map" parameterType="java.lang.Integer">
         select tmp.*,
         group_concat(
         case

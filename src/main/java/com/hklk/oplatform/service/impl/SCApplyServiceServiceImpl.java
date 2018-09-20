@@ -142,29 +142,24 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         Map<String, Object> param = new HashMap<>();
         param.put("schoolId", schoolId);
         param.put("isFineQuality", 1);
-        int jpNum = scApplyMapper.queryCurriculumForParentVerification(param);
-        List<Map<String, Object>> jpList;
-        if (jpNum == 0) {
+        List<Map<String, Object>> jpList = scApplyMapper.queryCurriculumForParent(param);
+        if (jpList.get(0).get("id") == null) {
             jpList = null;
-        } else {
-            jpList = scApplyMapper.queryCurriculumForParent(param);
         }
         param.put("isFineQuality", -1);
         param.put("grade", grade);
-        int allNum = scApplyMapper.queryCurriculumForParentVerification(param);
-        List<Map<String, Object>> allList;
-        if (allNum == 0) {
+        List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
+        if (allList.get(0).get("id") == null) {
             allList = null;
         } else {
-            allList = scApplyMapper.queryCurriculumForParent(param);
             int hotNum = allList.size() / 3;
-            IntStream.range(0, allList.size()).forEach(index -> {
-                if (index < hotNum) {
-                    allList.get(index).put("hot", 1);
+            for (int i = 1; i <= allList.size(); i++) {
+                if (i < hotNum) {
+                    allList.get(i - 1).put("hot", 1);
                 } else {
-                    allList.get(index).put("hot", 0);
+                    allList.get(i - 1).put("hot", 0);
                 }
-            });
+            }
         }
         result.put("fineQuality", jpList);
         result.put("all", allList);
@@ -179,11 +174,10 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         param.put("grade", grade);
         param.put("weekType", weekType);
         param.put("isFineQuality", -1);
-        int num = scApplyMapper.queryCurriculumForParentVerification(param);
-        if (num == 0) {
+        List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
+        if (allList.get(0).get("id") == null) {
             return null;
         } else {
-            List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
             if (grade == null) {
                 int hotNum = allList.size() / 3;
                 for (int i = 1; i <= allList.size(); i++) {

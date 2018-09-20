@@ -22,8 +22,6 @@ public interface StudentChoiceMapper {
 
     List<Map<String, Object>> queryMyCurriculumList(Map<String, Object> param);
 
-    int queryMyCurriculumVerification(Map<String, Object> param);
-
     int queryParentApplyForIsApply(Map<String, Object> param);
 
     int queryParentApplyForIsCollision(Map<String, Object> param);

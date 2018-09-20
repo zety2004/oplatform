@@ -2,10 +2,7 @@ package com.hklk.oplatform.controller.school;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.hklk.oplatform.controller.BaseController;
-import com.hklk.oplatform.entity.table.Curriculum;
-import com.hklk.oplatform.entity.table.ParentMessage;
-import com.hklk.oplatform.entity.table.SCApply;
-import com.hklk.oplatform.entity.table.TeacherMessage;
+import com.hklk.oplatform.entity.table.*;
 import com.hklk.oplatform.entity.vo.*;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.*;
@@ -200,6 +197,9 @@ public class SchoolCurriculumController extends BaseController {
                 } else if (status == 0) {
                     teacherMessage.setMessage("您申报的课程 " + curriculumName + " 被退回到未审核状态！");
                 } else if (status == -1) {
+
+                    sSyllabusService.querySyllabusForSCAId(Integer.valueOf(id)).forEach(obj -> sSyllabusService.insertForEnd(obj));
+
                     Map<String, String> teacherSmsParam = new HashMap<>();
                     teacherSmsParam.put("curriculum", curriculumName);
                     teacherSmsParam.put("reason", closeReason);

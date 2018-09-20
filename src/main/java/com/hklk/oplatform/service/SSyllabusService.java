@@ -33,4 +33,8 @@ public interface SSyllabusService {
     List<Map<String, String>> querySyllabusByTeacher(Integer weekType, Integer teacherId);
 
     int selectMaxTimeType(Integer schoolId);
+
+    List<SSyllabus> querySyllabusForSCAId(Integer scaId);
+
+    int insertForEnd(SSyllabus record);
 }

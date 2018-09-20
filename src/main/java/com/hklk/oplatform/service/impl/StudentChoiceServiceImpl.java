@@ -1,20 +1,11 @@
 package com.hklk.oplatform.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.hklk.oplatform.dao.inter.StudentChoiceMapper;
-import com.hklk.oplatform.dao.inter.UserMapper;
-import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.StudentChoice;
-import com.hklk.oplatform.entity.table.User;
-import com.hklk.oplatform.entity.vo.PageTableForm;
-import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.StudentChoiceService;
-import com.hklk.oplatform.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,11 +72,10 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
         Map<String, Object> params = new HashMap<>();
         params.put("studentId", studentId);
         params.put("weekType", weekType);
-        int num = studentChoiceMapper.queryMyCurriculumVerification(params);
-        if (num == 0) {
+        List<Map<String, Object>> result = studentChoiceMapper.queryMyCurriculum(params);
+        if (result.get(0).get("id") == null) {
             return null;
         } else {
-            List<Map<String, Object>> result = studentChoiceMapper.queryMyCurriculum(params);
             return result;
         }
     }

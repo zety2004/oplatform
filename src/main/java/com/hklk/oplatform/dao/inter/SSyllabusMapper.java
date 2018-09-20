@@ -10,7 +10,9 @@ public interface SSyllabusMapper {
 
     int deleteBySchoolId(Integer schoolId);
 
-    int insert(SSyllabus record);
+    List<SSyllabus> querySyllabusForSCAId(Integer scaId);
+
+    int insertForEnd(SSyllabus record);
 
     int insertSelective(SSyllabus record);
 
@@ -19,8 +21,6 @@ public interface SSyllabusMapper {
     int selectCountStudentNumBySCId(Integer scaId);
 
     int updateByPrimaryKeySelective(SSyllabus record);
-
-    int updateByPrimaryKey(SSyllabus record);
 
     List<Map<String, String>> queryMapByWeekType(Map<String, Object> param);
 

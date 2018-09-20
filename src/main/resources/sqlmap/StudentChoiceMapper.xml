@@ -201,13 +201,6 @@
         <![CDATA[
         and sca.max_num > (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
         and sca.begin_of_select_time<= SYSDATE() and sca.end_of_select_time >= SYSDATE()
-
-
-
-
-
-
-
         ]]>
     </select>
 
@@ -235,62 +228,7 @@
         sca.begin_of_select_time <= SYSDATE()
         and SYSDATE()<= sca.end_of_select_time
         ) or sca.is_open_class =0)
-
-
-
-
-
-
         ]]>
-    </select>
-
-    <select id="queryMyCurriculumVerification" resultType="java.lang.Integer" parameterType="java.lang.Integer">
-        SELECT
-        count(1)
-        FROM
-        (
-        SELECT
-        sca.id,
-        sca.curriculum_id,
-        sca.teacher_id,
-        sca.applyStatus
-        FROM
-        (
-        SELECT
-        hsca.id,
-        hsca.curriculum_id,
-        hsca.teacher_id,
-        hsca.status as applyStatus
-        FROM
-        hklk_student_choice_curriculum scc
-        LEFT JOIN hklk_school_curriculum_apply hsca ON scc.sca_id = hsca.id
-        WHERE
-        scc.student_id = #{studentId,jdbcType=INTEGER}
-        and scc.pay_state = 1
-        and hsca.status != -1
-        GROUP BY
-        hsca.id
-        ) sca
-        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
-        LEFT JOIN hklk_school_teacher st ON st.id = sca.teacher_id
-        LEFT JOIN hklk_consumables cs ON sca.curriculum_id = cs.curriculum_id
-        GROUP BY
-        sca.id
-        ) tmp
-        LEFT JOIN hklk_school_syllabus h ON tmp.id = h.sca_id
-        WHERE
-        1 = 1
-        <if test="weekType != null">
-            and h.week_type = #{weekType,jdbcType=INTEGER}
-        </if>
-        <choose>
-            <when test="state == 1">
-                and tmp.applyStatus = 4
-            </when>
-            <otherwise>
-                and tmp.applyStatus != 4
-            </otherwise>
-        </choose>
     </select>
 
 

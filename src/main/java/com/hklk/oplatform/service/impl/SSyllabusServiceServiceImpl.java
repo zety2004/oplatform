@@ -46,6 +46,16 @@ public class SSyllabusServiceServiceImpl implements SSyllabusService {
     }
 
     @Override
+    public List<SSyllabus> querySyllabusForSCAId(Integer scaId) {
+        return sSyllabusMapper.querySyllabusForSCAId(scaId);
+    }
+
+    @Override
+    public int insertForEnd(SSyllabus record) {
+        return sSyllabusMapper.insertForEnd(record);
+    }
+
+    @Override
     public int insertOrUpdateByPrimaryKeySelective(SSyllabus sSyllabus, SCApply scApply) {
         scApplyMapper.updateByPrimaryKeySelective(scApply);
         if (sSyllabus.getId() != null) {

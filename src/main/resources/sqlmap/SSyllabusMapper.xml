@@ -34,12 +34,19 @@
     <delete id="deleteBySchoolId" parameterType="java.lang.Integer">
     delete from hklk_school_syllabus
     where school_id = #{schoolId,jdbcType=INTEGER}
-  </delete>
+    </delete>
 
-    <insert id="insert" parameterType="com.hklk.oplatform.entity.table.SSyllabus">
-    insert into hklk_school_syllabus (id, sca_id, school_id, 
+    <select id="querySyllabusForSCAId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_school_syllabus scc
+        where scc.sca_id = #{scaId,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertForEnd" parameterType="com.hklk.oplatform.entity.table.SSyllabus">
+    insert into hklk_school_syllabus_end (sca_id, school_id,
       time_type, week_type,class_time)
-    values (#{id,jdbcType=INTEGER}, #{scaId,jdbcType=INTEGER}, #{schoolId,jdbcType=INTEGER}, 
+    values (#{scaId,jdbcType=INTEGER}, #{schoolId,jdbcType=INTEGER},
       #{timeType,jdbcType=INTEGER}, #{weekType,jdbcType=INTEGER}, #{classTime,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.hklk.oplatform.entity.table.SSyllabus">
@@ -106,17 +113,9 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.hklk.oplatform.entity.table.SSyllabus">
-    update hklk_school_syllabus
-    set sca_id = #{scaId,jdbcType=INTEGER},
-      school_id = #{schoolId,jdbcType=INTEGER},
-      time_type = #{timeType,jdbcType=INTEGER},
-      week_type = #{weekType,jdbcType=INTEGER},
-      class_time = #{classTime,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 
-    <select id="queryMapByWeekType" parameterType="map" resultType="map">
+
+    <select id="queryMapByWeekType" parameterType="map" resultType="java.util.Map">
         SELECT
         sca.id,
         sca.begin_of_select_time as beginOfSelectTime,
@@ -139,13 +138,13 @@
         LEFT JOIN hklk_school_curriculum_apply sca ON ss.sca_id = sca.id
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
-        where ss.school_id = #{schoolId}
+        where ss.school_id = #{schoolId} and sca.status !=-1
         <if test="weekType != null">
             and ss.week_type = #{weekType}
         </if>
     </select>
 
-    <select id="queryMapByTimeType" parameterType="map" resultType="map">
+    <select id="queryMapByTimeType" parameterType="map" resultType="java.util.Map">
         SELECT
         sca.id,
         DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d') as beginOfSelectTime,
@@ -213,7 +212,7 @@
         LEFT JOIN hklk_school_curriculum_apply sca ON ss.sca_id = sca.id
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
-        where ss.school_id = #{schoolId}
+        where ss.school_id = #{schoolId} and sca.status != -1
         <if test="timeType != null">
             and ss.time_type = #{timeType}
         </if>
@@ -221,7 +220,7 @@
     </select>
 
 
-    <select id="queryMapByTimeTypeForEnd" parameterType="map" resultType="map">
+    <select id="queryMapByTimeTypeForEnd" parameterType="map" resultType="java.util.Map">
         SELECT
         sca.id,
         DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d') as beginOfSelectTime,
@@ -256,7 +255,7 @@
         where ss.school_id = #{schoolId}
     </select>
 
-    <select id="querySyllabusByTeacher" parameterType="map" resultType="map">
+    <select id="querySyllabusByTeacher" parameterType="map" resultType="java.util.Map">
         SELECT
         sca.id,
         sca.begin_of_select_time as beginOfSelectTime,
