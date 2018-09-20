@@ -219,6 +219,7 @@ public class SchoolCurriculumController extends BaseController {
                         }
                         ParentMessage parentMessage = new ParentMessage();
                         parentMessage.setStudentId(obj.getId());
+                        parentMessage.setSign(3);
                         parentMessage.setMessage("您申请的课程 《" + curriculumName + "》 已取消开课，请<a href = \"https://www.baidu.com\" >点击</a >退款");
                         parentMessageService.insertSelective(parentMessage);
                     });

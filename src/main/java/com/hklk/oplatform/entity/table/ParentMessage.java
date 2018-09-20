@@ -14,6 +14,8 @@ public class ParentMessage implements Serializable {
 
     private Integer isRead;
 
+    private Integer sign;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -54,5 +56,13 @@ public class ParentMessage implements Serializable {
 
     public void setIsRead(Integer isRead) {
         this.isRead = isRead;
+    }
+
+    public Integer getSign() {
+        return sign;
+    }
+
+    public void setSign(Integer sign) {
+        this.sign = sign;
     }
 }

@@ -515,7 +515,7 @@
                 and sca.status = #{status,jdbcType=INTEGER}
             </when>
             <otherwise>
-                and sca.status !=4
+                and sca.status not in (-1,4)
             </otherwise>
         </choose>
         <if test="searchParam!=null">

@@ -167,16 +167,14 @@ public class ParentCurriculumController extends BaseController {
             if (isHc == 0) {
                 studentChoice.setPayMoney((Double) objectMap.get("kcPrice"));
                 studentChoice.setPayHcMoney(0.00);
+                studentChoice.setIsHc(isHc);
             } else {
                 studentChoice.setPayMoney((Double) objectMap.get("kcPrice") + (Double) objectMap.get("hcPrice"));
                 studentChoice.setPayHcMoney((Double) objectMap.get("hcPrice"));
+                studentChoice.setIsHc(1);
             }
             studentChoice.setCommodityName(objectMap.get("name").toString());
             studentChoiceService.insertSelective(studentChoice);
-            ParentMessage parentMessage = new ParentMessage();
-            parentMessage.setStudentId(loginParent.getStudentId());
-            parentMessage.setMessage("您为 " + loginParent.getChildName() + "同学成功报名 " + objectMap.get("name").toString() + " 课程！请确认支付。");
-            parentMessageService.insertSelective(parentMessage);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), orderId);
         }
     }
@@ -260,6 +258,7 @@ public class ParentCurriculumController extends BaseController {
 
                     ParentMessage parentMessage = new ParentMessage();
                     parentMessage.setStudentId((Integer) orders.get("studentId"));
+                    parentMessage.setSign(1);
                     parentMessage.setMessage("您的申请的课程  《" + orders.get("curriculumNum") + "》  已经支付成功，请确认信息。");
                     parentMessageService.insertSelective(parentMessage);
                     resXml = PayUtil.setXML("SUCCESS", "OK");
@@ -339,6 +338,7 @@ public class ParentCurriculumController extends BaseController {
         studentChoiceService.updateByPrimaryKeySelective(studentChoice);
         ParentMessage parentMessage = new ParentMessage();
         parentMessage.setStudentId((Integer) order.get("studentId"));
+        parentMessage.setSign(2);
         parentMessage.setMessage("您申报的课程 《" + order.get("curriculumNum") + "》 已经退款成功，请确认信息。");
         parentMessageService.insertSelective(parentMessage);
 
