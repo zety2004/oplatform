@@ -203,6 +203,12 @@
             <if test="grade != null">
                 applicable_grade = #{grade,jdbcType=VARCHAR},
             </if>
+            <if test="isOpenClass != null">
+                is_open_class = #{isOpenClass,jdbcType=INTEGER},
+            </if>
+            <if test="closeReason != null">
+                close_reason = #{closeReason,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
