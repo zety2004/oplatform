@@ -10,6 +10,8 @@ public class SClass implements Serializable {
 
     private Integer grade;
 
+    private Integer status;
+
     private String remark;
 
     private String name;
@@ -74,5 +76,13 @@ public class SClass implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

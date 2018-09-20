@@ -8,6 +8,8 @@ public class SStudent implements Serializable {
 
     private Integer classId;
 
+    private Integer status;
+
     private String fullName;
 
     private String sex;
@@ -101,4 +103,11 @@ public class SStudent implements Serializable {
         this.createTime = createTime;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

@@ -55,6 +55,14 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
     }
 
     @Override
+    public int queryParentApplyForIsCollision(Integer scaId, Integer studentId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("scaId", scaId);
+        params.put("studentId", studentId);
+        return studentChoiceMapper.queryParentApplyForIsCollision(params);
+    }
+
+    @Override
     public Map<String, Object> queryCurriculumForParentApply(Integer scaId) {
         Map<String, Object> params = new HashMap<>();
         params.put("scaId", scaId);

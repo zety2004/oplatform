@@ -22,6 +22,8 @@ public interface StudentChoiceService {
 
     int queryParentApplyForIsApply(Integer scaId, Integer studentId);
 
+    int queryParentApplyForIsCollision(Integer scaId, Integer studentId);
+
     List<Map<String, Object>> queryMyCurriculum(Integer studentId, Integer weekType);
 
     List<Map<String, Object>> queryMyCurriculumList(Integer studentId, Integer state);

@@ -9,6 +9,7 @@
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="create_by" property="createBy" jdbcType="INTEGER"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, school_id, grade, remark, name, create_by,create_time
@@ -99,6 +100,9 @@
             </if>
             <if test="createBy != null">
                 create_by = #{createBy,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

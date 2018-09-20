@@ -68,7 +68,6 @@ public class LoginSchoolController extends BaseController {
                     e.printStackTrace();
                 }
             }
-
             SchoolAdmin loginNum = new SchoolAdmin();
             loginNum.setId(schoolAdmin.getId());
             loginNum.setLoginNum(schoolAdmin.getLoginNum() + 1);

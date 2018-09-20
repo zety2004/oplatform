@@ -23,7 +23,10 @@ public class SClassServiceServiceImpl implements SClassService {
 
     @Override
     public int deleteByPrimaryKey(Integer id) {
-        return sClassMapper.deleteByPrimaryKey(id);
+        SClass sClass = new SClass();
+        sClass.setId(id);
+        sClass.setStatus(0);
+        return sClassMapper.updateByPrimaryKeySelective(sClass);
     }
 
     @Override

@@ -156,7 +156,12 @@ public class ParentCurriculumController extends BaseController {
 
         int isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
         if (isApply > 0) {
-            return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您申请的课程存在时间冲突，或存在未支付的订单！");
+            return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已经申请过该课程,或存在未支付订单！");
+        }
+
+        int isCollision = studentChoiceService.queryParentApplyForIsCollision(scaId, loginParent.getStudentId());
+        if (isCollision > 0) {
+            return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您申请的课程存在时间冲突！");
         } else {
             Map<String, Object> objectMap = studentChoiceService.queryCurriculumForParentApply(scaId);
             String orderId = System.currentTimeMillis() + "";
@@ -199,7 +204,7 @@ public class ParentCurriculumController extends BaseController {
         parameters.put("notify_url", PropUtil.getProperty("notifyUrl"));
         parameters.put("openid", getLoginParent(request).getOpenid());
         parameters.put("sign_type", "MD5");
-        // parameters.put("total_fee", 1); // 上线后，将此代码放开
+        //parameters.put("total_fee", 1); // 上线后，将此代码放开
         parameters.put("total_fee", (int) ((double) order.get("payMoney") * 100)); // 上线后，将此代码放开
 
         String sign = PayUtil.getSign(parameters);
@@ -293,7 +298,6 @@ public class ParentCurriculumController extends BaseController {
             this.updateRefundOrder(order);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, "取消报名成功");
         }
-
         String out_trade_no = orderId;   //退款订单
         int all_total_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();
         int refund_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();

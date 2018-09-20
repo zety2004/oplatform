@@ -26,6 +26,8 @@ public interface StudentChoiceMapper {
 
     int queryParentApplyForIsApply(Map<String, Object> param);
 
+    int queryParentApplyForIsCollision(Map<String, Object> param);
+
     Map<String, Object> selectByOrderId(String orderId);
 
     int queryParentApplyForIsQualified(Map<String, Object> param);

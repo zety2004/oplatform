@@ -26,7 +26,10 @@ public class SStudentServiceServiceImpl implements SStudentService {
 
     @Override
     public int deleteByPrimaryKey(Integer id) {
-        return sStudentMapper.deleteByPrimaryKey(id);
+        SStudent sStudent = new SStudent();
+        sStudent.setId(id);
+        sStudent.setStatus(0);
+        return sStudentMapper.updateByPrimaryKeySelective(sStudent);
     }
 
     @Override
