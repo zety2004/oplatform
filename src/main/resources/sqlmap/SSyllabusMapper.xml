@@ -130,6 +130,52 @@
         sca.class_place as classPlace,
         sca.is_fine_quality as isFineQuality,
         ss.class_time as classTime,
+        <![CDATA[
+        CASE
+        WHEN sca.begin_of_select_time > SYSDATE() THEN
+        0 /*未开课*/
+        WHEN sca.begin_of_select_time< SYSDATE()
+        AND SYSDATE()
+        < sca.end_of_select_time THEN
+        1 /*开始选课*/
+        WHEN sca.end_of_select_time< SYSDATE()
+        AND SYSDATE()
+        < sca.curr_start_time THEN
+        2 /*备课中*/
+        WHEN SYSDATE() > sca.curr_start_time and SYSDATE()< date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(tc.class_hours / count(ts.id)) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        3 /*开始上课*/
+        WHEN SYSDATE()> date_add(
+        sca.curr_start_time,
+        INTERVAL (
+        SELECT
+        CEILING(tc.class_hours / count(ts.id)) * 7
+        FROM
+        hklk_curriculum tc
+        LEFT JOIN hklk_school_curriculum_apply tsca ON tc.id = tsca.curriculum_id
+        LEFT JOIN hklk_school_syllabus ts ON tsca.id = ts.sca_id
+        WHERE
+        tsca.id = sca.id
+        GROUP BY
+        tsca.id
+        ) DAY
+        ) THEN
+        4 /*已结束*/
+        END AS applyStatus,
+        ]]>
         (select count(1) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id) as studentNum,
         (select count(tss.id) from hklk_school_syllabus tss where tss.school_id=ss.school_id and tss.sca_id = sca.id) as
         weeklyNum
