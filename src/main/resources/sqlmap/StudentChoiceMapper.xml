@@ -190,6 +190,7 @@
                 select count(1) from hklk_school_curriculum_apply sca
                 where sca.applicable_grade like CONCAT('%', #{grade}, '%')
                 and sca.school_id = #{schoolId,jdbcType=INTEGER}
+                and sca.status != -1
                 and sca.id = #{scaId,jdbcType=INTEGER}
     </select>
 
@@ -200,6 +201,8 @@
         <![CDATA[
         and sca.max_num > (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
         and sca.begin_of_select_time<= SYSDATE() and sca.end_of_select_time >= SYSDATE()
+
+
 
 
 
@@ -236,6 +239,8 @@
 
 
 
+
+
         ]]>
     </select>
 
@@ -262,6 +267,7 @@
         WHERE
         scc.student_id = #{studentId,jdbcType=INTEGER}
         and scc.pay_state = 1
+        and hsca.status != -1
         GROUP BY
         hsca.id
         ) sca
