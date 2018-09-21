@@ -198,7 +198,10 @@ public class SchoolCurriculumController extends BaseController {
                     teacherMessage.setMessage("您申报的课程 " + curriculumName + " 被退回到未审核状态！");
                 } else if (status == -1) {
 
-                    sSyllabusService.querySyllabusForSCAId(Integer.valueOf(id)).forEach(obj -> sSyllabusService.insertForEnd(obj));
+                    sSyllabusService.querySyllabusForSCAId(Integer.valueOf(id)).forEach(obj -> {
+
+                        sSyllabusService.insertForEnd(obj);
+                    });
 
                     Map<String, String> teacherSmsParam = new HashMap<>();
                     teacherSmsParam.put("curriculum", curriculumName);
