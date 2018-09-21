@@ -53,7 +53,7 @@ public class serviceTest extends AbstractTestCase {
 
     @Test
     public void redisTest() {
-        List<Map<String,Object>> result = studentChoiceService.queryMyCurriculum(344,3);
+        List<Map<String, Object>> result = studentChoiceService.queryMyCurriculum(344, 3);
         System.out.println(JsonUtil.toJson(result));
     }
 
@@ -94,6 +94,12 @@ public class serviceTest extends AbstractTestCase {
     public void queryCurriculumOrder() {
 
         scApplyService.queryStudentBySCAId(17);
+    }
+
+    @Test
+    public void queryAllCurriculumForParent() {
+
+        List<Map<String, Object>> curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(28, 1, null);
     }
 
     @Test

@@ -73,7 +73,7 @@ public class StudentChoiceServiceImpl implements StudentChoiceService {
         params.put("studentId", studentId);
         params.put("weekType", weekType);
         List<Map<String, Object>> result = studentChoiceMapper.queryMyCurriculum(params);
-        if (result == null || result.get(0).get("id") == null) {
+        if (result.size() == 0 || result.get(0).get("id") == null) {
             return null;
         } else {
             return result;
