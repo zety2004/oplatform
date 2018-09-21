@@ -143,13 +143,13 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         param.put("schoolId", schoolId);
         param.put("isFineQuality", 1);
         List<Map<String, Object>> jpList = scApplyMapper.queryCurriculumForParent(param);
-        if (jpList.get(0) == null || jpList.get(0).get("id") == null) {
+        if (jpList == null || jpList.get(0).get("id") == null) {
             jpList = null;
         }
         param.put("isFineQuality", -1);
         param.put("grade", grade);
         List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
-        if (allList.get(0) == null || allList.get(0).get("id") == null) {
+        if (allList == null || allList.get(0).get("id") == null) {
             allList = null;
         } else {
             int hotNum = allList.size() / 3;
@@ -175,7 +175,7 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         param.put("weekType", weekType);
         param.put("isFineQuality", -1);
         List<Map<String, Object>> allList = scApplyMapper.queryCurriculumForParent(param);
-        if (allList.get(0) == null || allList.get(0).get("id") == null) {
+        if (allList == null || allList.get(0).get("id") == null) {
             return null;
         } else {
             if (grade == null) {
