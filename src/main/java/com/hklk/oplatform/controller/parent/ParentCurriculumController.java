@@ -337,6 +337,7 @@ public class ParentCurriculumController extends BaseController {
     private void updateRefundOrder(Map<String, Object> order) {
         StudentChoice studentChoice = new StudentChoice();
         studentChoice.setPayState(2);
+        studentChoice.setRefundTime(new Date());
         studentChoice.setId((Integer) order.get("id"));
         studentChoiceService.updateByPrimaryKeySelective(studentChoice);
         ParentMessage parentMessage = new ParentMessage();

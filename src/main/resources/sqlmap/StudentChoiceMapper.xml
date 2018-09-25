@@ -6,6 +6,7 @@
         <result column="student_id" property="studentId" jdbcType="INTEGER"/>
         <result column="sca_id" property="scaId" jdbcType="INTEGER"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="refund_time" property="refundTime" jdbcType="TIMESTAMP"/>
         <result column="pay_state" property="payState" jdbcType="INTEGER"/>
         <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
         <result column="pay_money" property="payMoney" jdbcType="DOUBLE"/>
@@ -129,6 +130,9 @@
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="refundTime != null">
+                refund_time = #{refundTime,jdbcType=TIMESTAMP},
+            </if>
             <if test="payState != null">
                 pay_state = #{payState,jdbcType=INTEGER},
             </if>
@@ -201,6 +205,8 @@
         <![CDATA[
         and sca.max_num > (select count(id) from hklk_student_choice_curriculum scc where scc.sca_id = #{scaId,jdbcType=INTEGER})
         and sca.begin_of_select_time<= SYSDATE() and sca.end_of_select_time >= SYSDATE()
+
+
         ]]>
     </select>
 
@@ -228,6 +234,8 @@
         sca.begin_of_select_time <= SYSDATE()
         and SYSDATE()<= sca.end_of_select_time
         ) or sca.is_open_class =0)
+
+
         ]]>
     </select>
 

@@ -1,6 +1,7 @@
 import com.hklk.oplatform.comm.cache.RedisCache;
 import com.hklk.oplatform.entity.table.Consumables;
 import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.StudentChoice;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
 import com.hklk.oplatform.entity.vo.PageTableForm;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +96,13 @@ public class serviceTest extends AbstractTestCase {
     public void queryCurriculumOrder() {
 
         scApplyService.queryStudentBySCAId(17);
+    }
+    @Test
+    public void updateStudentChoice() {
+        StudentChoice studentChoice = new StudentChoice();
+        studentChoice.setRefundTime(new Date());
+        studentChoice.setId(43);
+        studentChoiceService.updateByPrimaryKeySelective(studentChoice);
     }
 
     @Test

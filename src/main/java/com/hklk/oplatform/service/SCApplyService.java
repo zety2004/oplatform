@@ -23,7 +23,7 @@ public interface SCApplyService {
 
     PageTableForm<CurriculumOrderVo> queryCurriculumOrder(String queryParam, Integer isHandle, Integer ishc, int pageNum, int pageSize);
 
-    List<Map<String,Object>> queryCurriculumListForTask();
+    List<Map<String, Object>> queryCurriculumListForTask();
 
     SCApply selectByPrimaryKey(Integer id);
 
@@ -35,7 +35,7 @@ public interface SCApplyService {
 
     PageTableForm<Map<String, Object>> queryCurriculumApplyForExamine(Integer schoolId, int pageNum, int pageSize);
 
-    PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param,Integer isEnd, int pageNum, int pageSize);
+    PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int pageNum, int pageSize);
 
     List<StudentPay> queryStudentBySCAId(Integer scaId);
 
@@ -48,6 +48,10 @@ public interface SCApplyService {
     List<Map<String, Object>> queryAllCurriculumForParent(Integer schoolId, Integer grade, Integer weekType);
 
     Map<String, Object> selectByApplyCurriculmForParentById(Integer id);
+
+    PageTableForm<CurriculumChoiceVo> queryCurriculumChoiceForEnd(Integer schoolId, String param, int pageNum, int pageSize);
+
+    List<StudentPay> queryStudentBySCAIdForEnd(Integer scaId);
 
     static void main(String[] args) {
         System.out.println(String.valueOf(((Double) (240.87 * 100)).intValue()));

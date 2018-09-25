@@ -20,9 +20,6 @@ import java.io.IOException;
 public class GetConfigServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-
-
-
     /**
      * @see HttpServlet#HttpServlet()
      */

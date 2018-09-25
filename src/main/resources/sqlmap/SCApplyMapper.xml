@@ -295,20 +295,67 @@
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
         RIGHT JOIN hklk_school_syllabus h on sca.id = h.sca_id
         WHERE
-        <choose>
-            <when test="isEnd==1">
-                sca.STATUS in (-1,4)
-            </when>
-            <otherwise>
-                sca.STATUS = 3
-            </otherwise>
-        </choose>
+        sca.STATUS = 3
         and sca.school_id = #{schoolId,jdbcType=INTEGER} and st.status>=0
         <if test="param != null">
             and c.name like CONCAT('%', #{param}, '%')
         </if>
         GROUP BY sca.id
     </select>
+
+    <select id="queryCurriculumChoiceForEnd" resultMap="CurriculumChoiceMap" parameterType="map">
+        SELECT
+        sca.id,
+        c.`name` AS curriculum_name,
+        sca.applicable_grade as grade,
+        sca.curriculum_id,
+        CONCAT(st.nickname,'/',st.phone) AS teacher_name,
+        sca.curr_start_time,
+        sca.max_num,
+        sca.class_place,
+        sca.is_open_class,
+        sca.status,
+        CONCAT(DATE_FORMAT(sca.begin_of_select_time,'%Y-%m-%d'),' 至 ',DATE_FORMAT(sca.end_of_select_time,'%Y-%m-%d')) as
+        choose_time,sca.is_fine_quality,
+        (select count(distinct scc.student_id) from hklk_student_choice_curriculum scc where scc.sca_id = sca.id and
+        scc.pay_state != -1 ) as
+        student_num,
+        <![CDATA[
+        CASE
+        WHEN sca.begin_of_select_time > SYSDATE()  THEN
+        0/*未开课*/
+        WHEN sca.begin_of_select_time < SYSDATE() and SYSDATE() < sca.end_of_select_time THEN
+        1/*开始选课*/
+        WHEN sca.end_of_select_time < SYSDATE() and SYSDATE() < sca.curr_start_time THEN
+        2/*备课中*/
+        WHEN SYSDATE() > sca.curr_start_time and SYSDATE() < date_add(
+        sca.curr_start_time,
+        INTERVAL (SELECT CEILING(tc.class_hours/count(ts.id))*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
+        ) THEN
+        3/*开始上课*/
+        WHEN SYSDATE() > date_add(
+        sca.curr_start_time,
+        INTERVAL (SELECT CEILING(tc.class_hours/count(ts.id))*7 from hklk_curriculum tc LEFT JOIN hklk_school_curriculum_apply tsca on tc.id = tsca.curriculum_id left join hklk_school_syllabus ts on tsca.id = ts.sca_id where tsca.id = sca.id GROUP BY tsca.id) DAY
+        ) THEN
+        4/*已结束*/
+        END as apply_status
+        ]]>
+        ,
+        concat(group_concat(h.week_type),'|',max(h.class_time)) class_time
+        FROM
+        hklk_school_curriculum_apply sca
+        LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
+        LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
+        RIGHT JOIN hklk_school_syllabus h on sca.id = h.sca_id
+        WHERE
+        sca.STATUS in (-1,4)
+        and sca.school_id = #{schoolId,jdbcType=INTEGER} and st.status>=0
+        <if test="param != null">
+            and c.name like CONCAT('%', #{param}, '%')
+        </if>
+        GROUP BY sca.id
+    </select>
+
 
     <select id="queryCurriculumApply" resultMap="CurriculumApplyMap" parameterType="map">
         select sca.id,CONCAT(st.nickname,'/',st.phone) as apply_person,
@@ -448,12 +495,23 @@
     <select id="queryStudentBySCAId" resultMap="StudentPayMap"
             parameterType="java.lang.Integer">
         SELECT
-            ss.*,scc.pay_state,h.name as class_name
+            ss.id,ss.class_id,ss.full_name,ss.sex,ss.parent_name,ss.parent_phone,ss.s_num,scc.create_time,ss.wechat_id,scc.pay_state,h.name as class_name
         FROM
             hklk_student_choice_curriculum scc
         LEFT JOIN hklk_school_student ss ON scc.student_id = ss.id
         left join hklk_school_class h on ss.class_id = h.id
         where scc.sca_id = #{scaId,jdbcType=INTEGER} and scc.pay_state = 1
+    </select>
+
+    <select id="queryStudentBySCAIdForEnd" resultMap="StudentPayMap"
+            parameterType="java.lang.Integer">
+        SELECT
+            ss.id,ss.class_id,ss.full_name,ss.sex,ss.parent_name,ss.parent_phone,ss.s_num,scc.create_time,ss.wechat_id,scc.pay_state,h.name as class_name
+        FROM
+            hklk_student_choice_curriculum scc
+        LEFT JOIN hklk_school_student ss ON scc.student_id = ss.id
+        left join hklk_school_class h on ss.class_id = h.id
+        where scc.sca_id = #{scaId,jdbcType=INTEGER} and scc.pay_state != -1  GROUP BY scc.student_id
     </select>
 
     <select id="queryStudentBySCAIdForParent" resultType="java.util.Map"

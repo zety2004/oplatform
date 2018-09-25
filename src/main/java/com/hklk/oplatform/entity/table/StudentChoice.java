@@ -12,6 +12,8 @@ public class StudentChoice implements Serializable {
 
     private Date createTime;
 
+    private Date refundTime;
+
     private Integer payState;
 
     private Integer isHc;
@@ -114,5 +116,13 @@ public class StudentChoice implements Serializable {
 
     public void setIsHc(Integer isHc) {
         this.isHc = isHc;
+    }
+
+    public Date getRefundTime() {
+        return refundTime;
+    }
+
+    public void setRefundTime(Date refundTime) {
+        this.refundTime = refundTime;
     }
 }

@@ -87,12 +87,11 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
     }
 
     @Override
-    public PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, Integer isEnd, int pageNum, int pageSize) {
+    public PageTableForm<CurriculumChoiceVo> queryCurriculumChoice(Integer schoolId, String param, int pageNum, int pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         Map<String, Object> params = new HashMap<>();
         params.put("schoolId", schoolId);
         params.put("param", param);
-        params.put("isEnd", isEnd);
         scApplyMapper.queryCurriculumChoice(params);
         PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = new PageTableForm<>(page);
         return curriculumChoiceVoPageTableForm;
@@ -206,5 +205,21 @@ public class SCApplyServiceServiceImpl implements SCApplyService {
         result.put("consumables", consumables);
         result.put("students", mapList);
         return result;
+    }
+
+    @Override
+    public PageTableForm<CurriculumChoiceVo> queryCurriculumChoiceForEnd(Integer schoolId, String param, int pageNum, int pageSize) {
+        Page page = PageHelper.startPage(pageNum, pageSize, true);
+        Map<String, Object> params = new HashMap<>();
+        params.put("schoolId", schoolId);
+        params.put("param", param);
+        scApplyMapper.queryCurriculumChoiceForEnd(params);
+        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = new PageTableForm<>(page);
+        return curriculumChoiceVoPageTableForm;
+    }
+
+    @Override
+    public List<StudentPay> queryStudentBySCAIdForEnd(Integer scaId) {
+        return scApplyMapper.queryStudentBySCAIdForEnd(scaId);
     }
 }

@@ -126,9 +126,15 @@ public class SchoolCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculumChoice")
     public String queryCurriculumChoice(int pageNum, String param, Integer isEnd, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
-        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm = scApplyService.queryCurriculumChoice(getLoginSchool(request).getSchoolId(), param, isEnd, pageNum, pageSize);
+        PageTableForm<CurriculumChoiceVo> curriculumChoiceVoPageTableForm;
+        if (isEnd == null || isEnd == 0) {
+            curriculumChoiceVoPageTableForm = scApplyService.queryCurriculumChoice(getLoginSchool(request).getSchoolId(), param, pageNum, pageSize);
+        } else {
+            curriculumChoiceVoPageTableForm = scApplyService.queryCurriculumChoiceForEnd(getLoginSchool(request).getSchoolId(), param, pageNum, pageSize);
+        }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVoPageTableForm);
     }
+
 
     /**
      * 2018/7/4 15:55
@@ -140,9 +146,14 @@ public class SchoolCurriculumController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryStudentBySCAId")
-    public String queryStudentBySCAId(Integer scaId, HttpServletRequest request,
+    public String queryStudentBySCAId(Integer scaId, Integer isEnd, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
-        List<StudentPay> sStudents = scApplyService.queryStudentBySCAId(scaId);
+        List<StudentPay> sStudents;
+        if (isEnd == null || isEnd == 0) {
+            sStudents = scApplyService.queryStudentBySCAId(scaId);
+        } else {
+            sStudents = scApplyService.queryStudentBySCAIdForEnd(scaId);
+        }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), sStudents);
     }
 

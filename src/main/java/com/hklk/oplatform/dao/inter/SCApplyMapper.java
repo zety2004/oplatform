@@ -40,4 +40,9 @@ public interface SCApplyMapper {
     Map<String, Object> selectByApplyCurriculmForParentById(Integer id);
 
     List<Map<String, Object>> queryStudentBySCAIdForParent(Integer scaId);
+
+    List<CurriculumChoiceVo> queryCurriculumChoiceForEnd(Map<String, Object> param);
+
+    List<StudentPay> queryStudentBySCAIdForEnd(Integer scaId);
+
 }
