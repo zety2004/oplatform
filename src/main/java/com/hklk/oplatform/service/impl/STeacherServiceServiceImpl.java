@@ -75,6 +75,11 @@ public class STeacherServiceServiceImpl implements STeacherService {
     }
 
     @Override
+    public int queryCurriculumByTeacherId(Integer id) {
+        return sTeacherMapper.queryCurriculumByTeacherId(id);
+    }
+
+    @Override
     public synchronized Map<String, Object> insertBatchTeacher(List<STeacher> sTeachers, Integer schoolId) {
 
         List<Map<String, Object>> errorInsert = new ArrayList<>();

@@ -1,6 +1,5 @@
 package com.hklk.oplatform.service;
 
-import com.hklk.oplatform.entity.table.SStudent;
 import com.hklk.oplatform.entity.table.STeacher;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.TeacherVo;
@@ -21,6 +20,8 @@ public interface STeacherService {
     PageTableForm<STeacher> queryTeacherBySchoolId(Integer schoolId, String param, int pageNum, int pageSize);
 
     List<STeacher> queryTeacherBySchoolIdForList(Integer schoolId);
+
+    int queryCurriculumByTeacherId(Integer id);
 
     TeacherVo loginTeacher(String account, String pwd);
 

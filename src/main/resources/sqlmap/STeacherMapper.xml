@@ -171,6 +171,10 @@
     </select>
 
 
+    <select id="queryCurriculumByTeacherId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(1) from hklk_school_curriculum_apply sca where sca.teacher_id = #{id} and sca.`status`=3
+    </select>
+
     <resultMap id="BaseResultVoMap" type="com.hklk.oplatform.entity.vo.TeacherVo">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="school_id" property="schoolId" jdbcType="INTEGER"/>

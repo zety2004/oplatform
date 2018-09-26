@@ -9,15 +9,13 @@ import java.util.Map;
 public interface STeacherMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(STeacher record);
-
     int insertSelective(STeacher record);
 
     STeacher selectBySTeacher(STeacher sTeacher);
 
     int updateByPrimaryKeySelective(STeacher sTeacher);
 
-    int updateByPrimaryKey(STeacher sTeacher);
+    int queryCurriculumByTeacherId(Integer id);
 
     List<STeacher> queryTeacherBySchoolId(Map<String,Object> param);
 

@@ -89,6 +89,8 @@ public class StatusCode {
     //该课程已有学生申报，修改失败！
     public final static int HAS_STUDENT = 1031;
 
+    public final static int IS_APPLY_CURRICULUM = 1032;
+
     public static String getStatusMsg(Object code) {
         Map<Object, String> map = new HashMap<Object, String>();
         map.put(SUCCESS, "成功");
@@ -132,6 +134,7 @@ public class StatusCode {
         map.put(STUDENT_IS_NO_QUALIFIED, "您的孩子不符合该课程的申报条件，该课程不属于您孩子的学校或不符合年级!");
         map.put(HAS_STUDENT, "该课程已有学生申报，修改失败！");
         map.put(PARENT_APPLY_CURR_FOR_VER_NUM, "您申请的课程不在选课时间内或选课人数已满！");
+        map.put(IS_APPLY_CURRICULUM, "该老师已经申请了课程并通过了审核，如需继续操作，请先取消开课！");
         return map.get(code);
     }
 

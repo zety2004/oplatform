@@ -184,7 +184,7 @@
         LEFT JOIN hklk_school_curriculum_apply sca ON ss.sca_id = sca.id
         LEFT JOIN hklk_school_teacher st ON sca.teacher_id = st.id
         LEFT JOIN hklk_curriculum c ON sca.curriculum_id = c.id
-        where ss.school_id = #{schoolId} and sca.status !=-1
+        where ss.school_id = #{schoolId} and sca.status !=-1 and st.status >=0
         <if test="weekType != null">
             and ss.week_type = #{weekType}
         </if>

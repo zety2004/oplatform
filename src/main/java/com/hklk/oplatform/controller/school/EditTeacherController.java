@@ -180,7 +180,6 @@ public class EditTeacherController extends BaseController {
         STeacher sTeacher = new STeacher();
         sTeacher.setId(id);
         sTeacher.setPwd("93b1c7f49c7b917831a942fd90ffe0ca");
-
         sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
@@ -198,6 +197,13 @@ public class EditTeacherController extends BaseController {
     @RequestMapping("/updateTeacherStatus")
     public String updateTeacherStatus(Integer id, Integer status, HttpServletRequest request,
                                       HttpServletResponse response, HttpSession session) {
+        if (status == 0) {
+            Integer count = sTeacherService.queryCurriculumByTeacherId(id);
+            if (count > 0) {
+                return ToolUtil.buildResultStr(StatusCode.IS_APPLY_CURRICULUM, StatusCode.getStatusMsg(StatusCode.IS_APPLY_CURRICULUM));
+            }
+        }
+
         STeacher param = new STeacher();
         param.setId(id);
         param.setStatus(status);
@@ -217,6 +223,11 @@ public class EditTeacherController extends BaseController {
     @RequestMapping("/delTeacher")
     public String delTeacher(Integer id, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
+        Integer count = sTeacherService.queryCurriculumByTeacherId(id);
+        if (count > 0) {
+            return ToolUtil.buildResultStr(StatusCode.IS_APPLY_CURRICULUM, StatusCode.getStatusMsg(StatusCode.IS_APPLY_CURRICULUM));
+        }
+
         STeacher sTeacher = new STeacher();
         sTeacher.setId(id);
         sTeacher.setStatus(-1);
