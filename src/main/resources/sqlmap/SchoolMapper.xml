@@ -15,10 +15,10 @@
     <sql id="Base_Column_List">
         id, name, create_time, remarks, status,school_num,school_logo
     </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="selectByPrimaryKey" resultType="map" parameterType="java.lang.Integer">
         select
-        <include refid="Base_Column_List"/>
-        from hklk_school
+        id, name, create_time as createTime, remarks, status,school_num as schoolNum,school_logo schoolLogo,h.channel_id channelId
+        from hklk_school left join hklk_channel_school h on hklk_school.id = h.school_id
         where id = #{id,jdbcType=INTEGER}
     </select>
 

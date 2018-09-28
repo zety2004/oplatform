@@ -4,6 +4,7 @@ import com.hklk.oplatform.entity.table.School;
 import com.hklk.oplatform.entity.vo.SchoolVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SchoolMapper {
     int deleteByPrimaryKey(Integer id);
@@ -12,7 +13,7 @@ public interface SchoolMapper {
 
     int insertSelective(School record);
 
-    School selectByPrimaryKey(Integer id);
+    Map<String, Object> selectByPrimaryKey(Integer id);
 
     School selectSchoolBySign(String sign);
 

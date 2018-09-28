@@ -27,6 +27,9 @@
             <if test="remark != null">
                 remark = #{remark,jdbcType=INTEGER},
             </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>

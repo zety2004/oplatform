@@ -1,6 +1,7 @@
 package com.hklk.oplatform.entity.table;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Channel implements Serializable {
     private static final long serialVersionUID = 7313659403786010724L;
@@ -9,6 +10,10 @@ public class Channel implements Serializable {
     private String channelName;
 
     private String remark;
+
+    private Date createTime;
+
+    private Integer status;
 
 
     public Integer getId() {
@@ -33,5 +38,21 @@ public class Channel implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

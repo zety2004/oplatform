@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * 管理学校
@@ -68,8 +69,7 @@ public class EditSchoolController extends BaseController {
     @RequestMapping("/selectSchoolById")
     public String selectSchoolById(int id, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
-
-        School school = schoolService.selectByPrimaryKey(id);
+        Map<String,Object> school = schoolService.selectByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), school);
     }
 

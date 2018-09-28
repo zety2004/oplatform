@@ -11,6 +11,8 @@ import com.hklk.oplatform.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 
 @Service
 public class SchoolServiceImpl implements SchoolService {
@@ -33,7 +35,7 @@ public class SchoolServiceImpl implements SchoolService {
 
 
     @Override
-    public School selectByPrimaryKey(Integer id) {
+    public Map<String,Object> selectByPrimaryKey(Integer id) {
         return schoolMapper.selectByPrimaryKey(id);
     }
 

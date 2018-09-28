@@ -4,8 +4,6 @@ import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.Channel;
 import com.hklk.oplatform.entity.table.ChannelCurriculum;
 import com.hklk.oplatform.entity.table.ChannelSchool;
-import com.hklk.oplatform.entity.vo.PageTableForm;
-import com.hklk.oplatform.entity.vo.SchoolVo;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.SchoolChannelService;
 import com.hklk.oplatform.util.StatusCode;
@@ -15,9 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

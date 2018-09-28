@@ -4,13 +4,15 @@ import com.hklk.oplatform.entity.table.School;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.SchoolVo;
 
+import java.util.Map;
+
 public interface SchoolService {
 
     int deleteByPrimaryKey(Integer id);
 
     int insertSelective(School record);
 
-    School selectByPrimaryKey(Integer id);
+    Map<String,Object> selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(School record);
 
