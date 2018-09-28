@@ -17,6 +17,7 @@ public class School implements Serializable {
     private String schoolNum;
 
     private String schoolLogo;
+    private String sign;
 
 
     public Integer getId() {
@@ -73,5 +74,13 @@ public class School implements Serializable {
 
     public void setSchoolLogo(String schoolLogo) {
         this.schoolLogo = schoolLogo;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 }

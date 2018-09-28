@@ -5,15 +5,11 @@ import com.github.pagehelper.PageHelper;
 import com.hklk.oplatform.dao.inter.SchoolAdminMapper;
 import com.hklk.oplatform.dao.inter.SchoolMapper;
 import com.hklk.oplatform.entity.table.School;
-import com.hklk.oplatform.entity.table.SchoolAdmin;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.SchoolVo;
 import com.hklk.oplatform.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
@@ -34,6 +30,7 @@ public class SchoolServiceImpl implements SchoolService {
     public int insertSelective(School record) {
         return schoolMapper.insertSelective(record);
     }
+
 
     @Override
     public School selectByPrimaryKey(Integer id) {
@@ -56,5 +53,10 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public School selectSchoolByName(String name) {
         return schoolMapper.selectSchoolByName(name);
+    }
+
+    @Override
+    public School selectSchoolBySign(String sign) {
+        return schoolMapper.selectSchoolBySign(sign);
     }
 }

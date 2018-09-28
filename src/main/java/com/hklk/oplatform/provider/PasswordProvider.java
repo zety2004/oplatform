@@ -76,13 +76,4 @@ public class PasswordProvider {
         }
         return value;
     }
-
-
-
-
-    public static void main(String[] args) throws FileNotFoundException {
-        System.err.println("加密        后:" + encrypt("12345678"));
-        File file = new File("D:\\zookeeper-3.4.12.tar.gz");
-        System.out.println(getMd5ByFile(file));
-    }
 }

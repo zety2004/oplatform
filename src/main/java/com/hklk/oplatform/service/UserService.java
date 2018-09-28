@@ -1,14 +1,10 @@
 package com.hklk.oplatform.service;
 
-import com.hklk.oplatform.comm.cache.RedisCache;
 import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.entity.table.User;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
     /**
@@ -35,7 +31,7 @@ public interface UserService {
     * @Param []
     * @Return java.util.List<com.hklk.oplatform.entity.table.User>
     **/
-    public PageTableForm<User> queryUsers(User user, int pageNum, int pageSize);
+    PageTableForm<User> queryUsers(User user, int pageNum, int pageSize);
 
     /**
     * @author 曹良峰
@@ -54,8 +50,4 @@ public interface UserService {
     * @Return int
     **/
     User selectByNameForValidate(String name);
-
-    public static void main(String[] args) {
-        RedisCache.get("123");
-    }
 }

@@ -26,14 +26,6 @@
         t.enc_des, t.status,t.teacher_id
         ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc
         from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id
-        where 1=1
-        <if test="teacherId!=null">
-            and (is_public = 1 or teacher_id in
-            (select id from hklk_school_teacher st where st.school_id = #{teacherId}))
-        </if>
-        <if test="isPublic!=null">
-            and is_public = 1
-        </if>
         GROUP BY t.id ) cc
         where status=1
         <if test="name != null">
@@ -48,11 +40,10 @@
         <if test="subject != null">
             and cc.subject like CONCAT('%', #{subject}, '%')
         </if>
-
         order by id desc
     </select>
 
-    <select id="queryCurriculumsForTeacher" resultType="map"
+    <select id="queryCurriculumsForSchool" resultType="map"
             parameterType="com.hklk.oplatform.entity.table.Curriculum">
         select id,cover,name,subject,grade,learning_style as learningStyle,class_hours as classHours,
         collection_num as collectionNum , author,enc_des as encDes, status,is_public as isPublic,
@@ -61,7 +52,13 @@
         t.id, t.cover, t.name, t.subject, t.grade, t.learning_style, t.class_hours, t.collection_num, t.author,
         t.enc_des, t.status,t.is_public,t.teacher_id
         ,(CASE count(c.id) WHEN 0 THEN 'false' ELSE 'true' END) as ishc,t.enclosure
-        from hklk_curriculum t LEFT join hklk_consumables c on t.id=c.curriculum_id GROUP BY t.id ) cc
+        FROM
+        hklk_channel_school sc
+        LEFT JOIN hklk_channel_curriculum hcc ON sc.channel_id = hcc.channel_id
+        LEFT JOIN hklk_curriculum t ON hcc.curriculum_id = t.id
+        LEFT JOIN hklk_consumables c ON t.id = c.curriculum_id
+        where sc.school_id = #{teacherId}
+        GROUP BY t.id ) cc
         where status=1
         <if test="name != null">
             and cc.name like CONCAT('%', #{name}, '%')

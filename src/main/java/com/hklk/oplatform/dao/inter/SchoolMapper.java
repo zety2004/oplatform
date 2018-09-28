@@ -14,6 +14,8 @@ public interface SchoolMapper {
 
     School selectByPrimaryKey(Integer id);
 
+    School selectSchoolBySign(String sign);
+
     int updateByPrimaryKeySelective(School record);
 
     int updateByPrimaryKey(School record);

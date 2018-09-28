@@ -20,7 +20,7 @@ public interface CurriculumMapper {
 
     List<CurriculumForListVo> queryCurriculums(Curriculum curriculum);
 
-    List<Map<String, Object>> queryCurriculumsForTeacher(Curriculum curriculum);
+    List<Map<String, Object>> queryCurriculumsForSchool(Curriculum curriculum);
 
     int selectIdByUniqueNum(String uniqueNum);
 }

@@ -37,9 +37,9 @@ public class CurriculumServiceImpl implements CurriculumService {
     }
 
     @Override
-    public PageTableForm<Map<String, Object>> queryCurriculumsForTeacher(Curriculum curriculum, int pageNum, int pageSize) {
+    public PageTableForm<Map<String, Object>> queryCurriculumsForSchool(Curriculum curriculum, int pageNum, int pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
-        curriculumMapper.queryCurriculumsForTeacher(curriculum);
+        curriculumMapper.queryCurriculumsForSchool(curriculum);
         PageTableForm<Map<String, Object>> pageTableForm = new PageTableForm(page);
         return pageTableForm;
     }

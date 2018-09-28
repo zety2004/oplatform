@@ -9,6 +9,7 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="school_num" property="schoolNum" jdbcType="VARCHAR"/>
         <result column="school_logo" property="schoolLogo" jdbcType="VARCHAR"/>
+        <result column="sign" property="sign" jdbcType="VARCHAR"/>
 
     </resultMap>
     <sql id="Base_Column_List">
@@ -19,6 +20,13 @@
         <include refid="Base_Column_List"/>
         from hklk_school
         where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectSchoolBySign" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from hklk_school
+        where sign = #{sign,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from hklk_school
@@ -125,7 +133,7 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="school_num" property="schoolNum" jdbcType="VARCHAR"/>
         <result column="school_logo" property="schoolLogo" jdbcType="VARCHAR"/>
-        <collection property="list"  ofType="SchoolAdmin" notNullColumn="a_id">
+        <collection property="list" ofType="SchoolAdmin" notNullColumn="a_id">
             <id column="a_id" property="id" jdbcType="INTEGER"/>
             <result column="a_school_id" property="schoolId" jdbcType="INTEGER"/>
             <result column="a_nickname" property="nickname" jdbcType="VARCHAR"/>

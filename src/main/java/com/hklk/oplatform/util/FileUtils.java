@@ -9,10 +9,6 @@
  */
 package com.hklk.oplatform.util;
 
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import java.io.*;
 import java.nio.channels.FileChannel;
 

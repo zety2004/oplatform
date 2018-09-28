@@ -1,12 +1,14 @@
 package com.hklk.oplatform.controller.local;
 
 import com.hklk.oplatform.controller.BaseController;
+import com.hklk.oplatform.entity.table.ChannelSchool;
 import com.hklk.oplatform.entity.table.School;
 import com.hklk.oplatform.entity.table.SchoolAdmin;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.SchoolVo;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.SchoolAdminService;
+import com.hklk.oplatform.service.SchoolChannelService;
 import com.hklk.oplatform.service.SchoolService;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
@@ -33,6 +35,9 @@ public class EditSchoolController extends BaseController {
     SchoolService schoolService;
     @Autowired
     SchoolAdminService schoolAdminService;
+    @Autowired
+    SchoolChannelService schoolChannelService;
+
 
     /**
      * 2018/7/4 17:50
@@ -98,15 +103,31 @@ public class EditSchoolController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/addSchool")
-    public String addSchool(School school, HttpServletRequest request,
+    public String addSchool(School school, Integer channelId, HttpServletRequest request,
                             HttpServletResponse response, HttpSession session) {
         School tmp = schoolService.selectSchoolByName(school.getName());
         if (tmp != null) {
             return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
         } else {
+            String sign = ToolUtil.createId(32);
+            school.setSign(sign);
             schoolService.insertSelective(school);
+            insertSchoolChannel(sign, channelId, null);
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
+    }
+
+    public void insertSchoolChannel(String sign, Integer channelId, Integer schoolId) {
+        ChannelSchool channelSchool = new ChannelSchool();
+        channelSchool.setChannelId(channelId);
+        if (schoolId != null) {
+            schoolChannelService.delChannelSchoolBySchoolId(schoolId);
+            channelSchool.setSchoolId(schoolId);
+        } else {
+            School school = schoolService.selectSchoolBySign(sign);
+            channelSchool.setSchoolId(school.getId());
+        }
+        schoolChannelService.insertChannelSchool(channelSchool);
     }
 
     /**
@@ -119,13 +140,14 @@ public class EditSchoolController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/updateSchool")
-    public String updateSchool(School school, HttpServletRequest request,
+    public String updateSchool(School school, Integer channelId, HttpServletRequest request,
                                HttpServletResponse response, HttpSession session) {
         School tmp = schoolService.selectSchoolByName(school.getName());
         if (tmp != null && tmp.getId() != school.getId()) {
             return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
         } else {
             schoolService.updateByPrimaryKeySelective(school);
+            insertSchoolChannel(null, channelId, school.getId());
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }
