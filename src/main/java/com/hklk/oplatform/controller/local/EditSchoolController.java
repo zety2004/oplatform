@@ -109,10 +109,14 @@ public class EditSchoolController extends BaseController {
         if (tmp != null) {
             return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
         } else {
-            String sign = ToolUtil.createId(32);
-            school.setSign(sign);
+
+
             schoolService.insertSelective(school);
-            insertSchoolChannel(sign, channelId, null);
+            if (channelId != null) {
+                String sign = ToolUtil.createId(32);
+                school.setSign(sign);
+                insertSchoolChannel(sign, channelId, null);
+            }
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }
@@ -147,7 +151,9 @@ public class EditSchoolController extends BaseController {
             return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
         } else {
             schoolService.updateByPrimaryKeySelective(school);
-            insertSchoolChannel(null, channelId, school.getId());
+            if (channelId != null) {
+                insertSchoolChannel(null, channelId, school.getId());
+            }
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
         }
     }
