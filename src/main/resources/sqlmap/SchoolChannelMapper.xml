@@ -53,17 +53,23 @@
 
     <select id="queryChannels" resultType="map">
         SELECT
-            sc.id,
-            channel_name AS channelName,
-            status,
-            create_time createTime,
-            remark,
-            GROUP_CONCAT(cc.curriculum_id) AS curriculumIds
+        sc.id,
+        channel_name AS channelName,
+        status,
+        create_time createTime,
+        remark,
+        GROUP_CONCAT(cc.curriculum_id) AS curriculumIds
         FROM
-            hklk_school_channel sc
+        hklk_school_channel sc
         LEFT JOIN hklk_channel_curriculum cc ON sc.id = cc.channel_id
+        <if test="name != null">
+            and sc.channel_name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="status != null">
+            and sc.status = #{status}
+        </if>
         GROUP BY
-            sc.id
+        sc.id
     </select>
 
     <select id="queryChannelCurriculumById" resultType="map" parameterType="java.lang.Integer">
