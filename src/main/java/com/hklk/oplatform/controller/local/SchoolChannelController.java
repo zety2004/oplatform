@@ -40,13 +40,28 @@ public class SchoolChannelController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/addOrUpdateChannel")
-    public String insertOrUpdateChannel(Channel channel) {
+    public String insertOrUpdateChannel(Channel channel, String curriculumIds) {
         if (channel.getId() == null) {
+            String sign = ToolUtil.createId(32);
+            channel.setSign(sign);
             schoolChannelService.insertChannel(channel);
+            if (curriculumIds != null) {
+                insertChannelCurriculumForSign(sign, curriculumIds);
+            }
         } else {
             schoolChannelService.updateChannel(channel);
         }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
+
+    private void insertChannelCurriculumForSign(String sign, String curriculumIds) {
+        Integer channelId = schoolChannelService.queryChannelBySign(sign);
+        Arrays.asList(curriculumIds.split(",")).forEach(curriculumId -> {
+            ChannelCurriculum channelCurriculum = new ChannelCurriculum();
+            channelCurriculum.setCurriculumId(Integer.valueOf(curriculumId));
+            channelCurriculum.setChannelId(channelId);
+            schoolChannelService.insertChannelCurriculum(channelCurriculum);
+        });
     }
 
     /**

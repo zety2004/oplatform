@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SchoolChannelService {
+    int queryChannelBySign(String sign);
 
     int insertChannel(Channel bean);
 

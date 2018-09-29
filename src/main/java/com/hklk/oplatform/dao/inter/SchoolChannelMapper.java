@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface SchoolChannelMapper {
+    int queryChannelBySign(String sign);
+
     int insertChannel(Channel bean);
 
     int insertChannelSchool(ChannelSchool bean);

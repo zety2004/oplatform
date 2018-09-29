@@ -19,6 +19,11 @@ public class SchoolChannelServiceImpl implements SchoolChannelService {
     SchoolChannelMapper schoolChannelMapper;
 
     @Override
+    public int queryChannelBySign(String sign) {
+        return schoolChannelMapper.queryChannelBySign(sign);
+    }
+
+    @Override
     public int insertChannel(Channel bean) {
         return schoolChannelMapper.insertChannel(bean);
     }

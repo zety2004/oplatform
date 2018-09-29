@@ -15,6 +15,8 @@ public class Channel implements Serializable {
 
     private Integer status;
 
+    private String sign;
+
 
     public Integer getId() {
         return id;
@@ -54,5 +56,13 @@ public class Channel implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 }
