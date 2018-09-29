@@ -62,6 +62,9 @@
             <if test="schoolLogo != null">
                 school_logo,
             </if>
+            <if test="sign != null">
+                sign,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -84,6 +87,9 @@
             </if>
             <if test="schoolLogo != null">
                 #{schoolLogo,jdbcType=VARCHAR},
+            </if>
+            <if test="sign != null">
+                #{sign,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
