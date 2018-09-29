@@ -17,8 +17,8 @@
     </sql>
     <select id="selectByPrimaryKey" resultType="map" parameterType="java.lang.Integer">
         select
-        id, name, create_time as createTime, remarks, status,school_num as schoolNum,school_logo schoolLogo,h.channel_id channelId
-        from hklk_school left join hklk_channel_school h on hklk_school.id = h.school_id
+        s.id, s.name, s.create_time as createTime, s.remarks, s.status,s.school_num as schoolNum,s.school_logo schoolLogo,h.channel_id channelId
+        from hklk_school s left join hklk_channel_school h on s.id = h.school_id
         where id = #{id,jdbcType=INTEGER}
     </select>
 
