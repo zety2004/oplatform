@@ -74,9 +74,9 @@
     </select>
 
     <select id="queryChannelCurriculumById" resultType="map" parameterType="java.lang.Integer">
-    select c.id from
-    hklk_channel_curriculum cc
-    left join hklk_curriculum c on cc.curriculum_id = c.id where cc.channel_id = #{id}
+        select c.id from
+        hklk_channel_curriculum cc
+        left join hklk_curriculum c on cc.curriculum_id = c.id where cc.channel_id = #{id}
     </select>
 
     <select id="queryCurriculumAll" resultType="map" parameterType="map">
@@ -96,6 +96,5 @@
             and c.subject like CONCAT('%', #{subject}, '%')
         </if>
     </select>
-
 
 </mapper>

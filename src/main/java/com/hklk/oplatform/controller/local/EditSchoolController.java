@@ -69,7 +69,7 @@ public class EditSchoolController extends BaseController {
     @RequestMapping("/selectSchoolById")
     public String selectSchoolById(int id, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
-        Map<String,Object> school = schoolService.selectByPrimaryKey(id);
+        Map<String, Object> school = schoolService.selectByPrimaryKey(id);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), school);
     }
 
@@ -109,10 +109,10 @@ public class EditSchoolController extends BaseController {
         if (tmp != null) {
             return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
         } else {
+            String sign = ToolUtil.createId(32);
+            school.setSign(sign);
             schoolService.insertSelective(school);
             if (channelId != null) {
-                String sign = ToolUtil.createId(32);
-                school.setSign(sign);
                 insertSchoolChannel(sign, channelId, null);
             }
             return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
