@@ -68,6 +68,7 @@ public class SchoolChannelController extends BaseController {
     }
 
     private void insertChannelCurriculumById(Integer id, String curriculumIds) {
+        schoolChannelService.delChannelCurriculumByChannelId(id);
         Arrays.asList(curriculumIds.split(",")).forEach(curriculumId -> {
             ChannelCurriculum channelCurriculum = new ChannelCurriculum();
             channelCurriculum.setCurriculumId(Integer.valueOf(curriculumId));
@@ -155,9 +156,15 @@ public class SchoolChannelController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryCurriculumAll")
-    public String queryCurriculumAll() {
-        List<Map<String, Object>> result = schoolChannelService.queryCurriculumAll();
+    public String queryCurriculumAll(String name, String grade, String learningStyle, String subject) {
+        List<Map<String, Object>> result = schoolChannelService.queryCurriculumAll(name, grade, learningStyle, subject);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
     }
 
+    @ResponseBody
+    @RequestMapping("/delChannel")
+    public String delChannel(Integer id) {
+        schoolChannelService.delChannel(id);
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+    }
 }

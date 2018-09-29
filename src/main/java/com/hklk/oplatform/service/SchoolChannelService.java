@@ -28,5 +28,5 @@ public interface SchoolChannelService {
 
     List<Map<String, Object>> queryChannelCurriculumById(Integer id);
 
-    List<Map<String, Object>> queryCurriculumAll();
+    List<Map<String, Object>> queryCurriculumAll(String name, String grade, String learningStyle, String subject);
 }

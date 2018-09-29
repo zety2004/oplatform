@@ -8,6 +8,7 @@ import com.hklk.oplatform.service.SchoolChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,12 @@ public class SchoolChannelServiceImpl implements SchoolChannelService {
     }
 
     @Override
-    public List<Map<String, Object>> queryCurriculumAll() {
-        return schoolChannelMapper.queryCurriculumAll();
+    public List<Map<String, Object>> queryCurriculumAll(String name, String grade, String learningStyle, String subject) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("name", name);
+        param.put("grade", grade);
+        param.put("learningStyle", learningStyle);
+        param.put("subject", subject);
+        return schoolChannelMapper.queryCurriculumAll(param);
     }
 }
