@@ -19,7 +19,7 @@
         select
         s.id, s.name, s.create_time as createTime, s.remarks, s.status,s.school_num as schoolNum,s.school_logo schoolLogo,h.channel_id channelId
         from hklk_school s left join hklk_channel_school h on s.id = h.school_id
-        where id = #{id,jdbcType=INTEGER}
+        where s.id = #{id,jdbcType=INTEGER}
     </select>
 
     <select id="selectSchoolBySign" resultMap="BaseResultMap" parameterType="java.lang.String">
