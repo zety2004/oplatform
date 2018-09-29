@@ -62,6 +62,7 @@
         FROM
         hklk_school_channel sc
         LEFT JOIN hklk_channel_curriculum cc ON sc.id = cc.channel_id
+        where 1=1
         <if test="name != null">
             and sc.channel_name like CONCAT('%', #{name}, '%')
         </if>
@@ -78,10 +79,22 @@
     left join hklk_curriculum c on cc.curriculum_id = c.id where cc.channel_id = #{id}
     </select>
 
-    <select id="queryCurriculumAll" resultType="map" parameterType="java.lang.Integer">
-    select c.id,c.name,c.grade,c.subject,c.learning_style
-    from
-    hklk_curriculum c
+    <select id="queryCurriculumAll" resultType="map" parameterType="map">
+        select c.id,c.name,c.grade,c.subject,c.learning_style
+        from
+        hklk_curriculum c where 1=1
+        <if test="name != null">
+            and c.name like CONCAT('%', #{name}, '%')
+        </if>
+        <if test="grade != null">
+            and c.grade like CONCAT('%', #{grade}, '%')
+        </if>
+        <if test="learningStyle != null">
+            and c.learning_style like CONCAT('%', #{learningStyle}, '%')
+        </if>
+        <if test="subject != null">
+            and c.subject like CONCAT('%', #{subject}, '%')
+        </if>
     </select>
 
 
