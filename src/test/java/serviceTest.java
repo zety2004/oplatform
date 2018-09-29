@@ -42,6 +42,9 @@ public class serviceTest extends AbstractTestCase {
     @Autowired
     TeacherMessageService teacherMessageService;
 
+    @Autowired
+    SchoolChannelService schoolChannelService;
+
 
     @Test
     public void loginTest() {
@@ -93,10 +96,17 @@ public class serviceTest extends AbstractTestCase {
     }
 
     @Test
+    public void insertChannelCurriculumBySchoolId() {
+        System.out.println(11111111);
+        schoolChannelService.insertChannelCurriculumBySchoolId(32, 29);
+    }
+
+    @Test
     public void queryCurriculumOrder() {
 
         scApplyService.queryStudentBySCAId(17);
     }
+
     @Test
     public void updateStudentChoice() {
         StudentChoice studentChoice = new StudentChoice();

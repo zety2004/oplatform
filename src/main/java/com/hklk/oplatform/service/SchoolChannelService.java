@@ -3,7 +3,6 @@ package com.hklk.oplatform.service;
 import com.hklk.oplatform.entity.table.Channel;
 import com.hklk.oplatform.entity.table.ChannelCurriculum;
 import com.hklk.oplatform.entity.table.ChannelSchool;
-import com.hklk.oplatform.util.ToolUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,8 @@ public interface SchoolChannelService {
     int insertChannelSchool(ChannelSchool bean);
 
     int insertChannelCurriculum(ChannelCurriculum bean);
+
+    int insertChannelCurriculumBySchoolId(Integer schoolId,Integer curriculumId);
 
     int delChannel(Integer id);
 
@@ -30,4 +31,5 @@ public interface SchoolChannelService {
     List<Map<String, Object>> queryChannelCurriculumById(Integer id);
 
     List<Map<String, Object>> queryCurriculumAll(String name, String grade, String learningStyle, String subject);
+
 }

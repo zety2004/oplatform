@@ -48,6 +48,8 @@ public class TeacherApplyCurriculumController extends BaseController {
     SSyllabusService sSyllabusService;
     @Autowired
     ConsumablesService consumablesService;
+    @Autowired
+    SchoolChannelService schoolChannelService;
 
 
     /**
@@ -141,7 +143,10 @@ public class TeacherApplyCurriculumController extends BaseController {
         curriculum.setTeacherId(getLoginTeacher(request).getTeacherId());
         CurriculumInsertVo curriculumInsertVo = new CurriculumInsertVo(curriculum);
         curriculumService.addCurriculum(curriculumInsertVo);
+
         Integer id = curriculumService.selectIdByUniqueNum(curriculum.getUniqueNum());
+
+        schoolChannelService.insertChannelCurriculumBySchoolId(getLoginTeacher(request).getSchoolId(), id);
         System.out.println(curriculum.getUniqueNum());
         Object returnMessage;
         if (id == null) {

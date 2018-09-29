@@ -40,6 +40,14 @@ public class SchoolChannelServiceImpl implements SchoolChannelService {
     }
 
     @Override
+    public int insertChannelCurriculumBySchoolId(Integer schoolId, Integer curriculumId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("schoolId", schoolId);
+        param.put("curriculumId", curriculumId);
+        return schoolChannelMapper.insertChannelCurriculumBySchoolId(param);
+    }
+
+    @Override
     public int delChannel(Integer id) {
         return schoolChannelMapper.delChannel(id);
     }
@@ -81,4 +89,5 @@ public class SchoolChannelServiceImpl implements SchoolChannelService {
         param.put("subject", subject);
         return schoolChannelMapper.queryCurriculumAll(param);
     }
+
 }

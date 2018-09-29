@@ -16,6 +16,8 @@ public interface SchoolChannelMapper {
 
     int insertChannelCurriculum(ChannelCurriculum bean);
 
+    int insertChannelCurriculumBySchoolId(Map<String, Object> param);
+
     int delChannel(Integer id);
 
     int delChannelSchoolBySchoolId(Integer id);
@@ -29,4 +31,6 @@ public interface SchoolChannelMapper {
     List<Map<String, Object>> queryChannelCurriculumById(Integer id);
 
     List<Map<String, Object>> queryCurriculumAll(Map<String, Object> param);
+
+
 }

@@ -22,6 +22,11 @@
         values (#{channelId,jdbcType=INTEGER}, #{curriculumId,jdbcType=INTEGER})
     </insert>
 
+    <insert id="insertChannelCurriculumBySchoolId" parameterType="map">
+        insert into hklk_channel_curriculum (channel_id, curriculum_id)
+        SELECT channel_id, #{curriculumId} FROM hklk_channel_school WHERE school_id = ${schoolId}
+    </insert>
+
     <update id="updateChannel" parameterType="com.hklk.oplatform.entity.table.Channel">
         update hklk_school_channel
         <set>
