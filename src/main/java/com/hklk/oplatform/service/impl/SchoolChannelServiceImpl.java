@@ -60,8 +60,11 @@ public class SchoolChannelServiceImpl implements SchoolChannelService {
     }
 
     @Override
-    public List<Map<String, Object>> queryChannels() {
-        return schoolChannelMapper.queryChannels();
+    public List<Map<String, Object>> queryChannels(String name, Integer status) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("name", name);
+        param.put("status", status);
+        return schoolChannelMapper.queryChannels(param);
     }
 
     @Override

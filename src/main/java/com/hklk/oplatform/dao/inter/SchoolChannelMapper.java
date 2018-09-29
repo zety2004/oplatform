@@ -24,7 +24,7 @@ public interface SchoolChannelMapper {
 
     int updateChannel(Channel bean);
 
-    List<Map<String, Object>> queryChannels();
+    List<Map<String, Object>> queryChannels(Map<String, Object> param);
 
     List<Map<String, Object>> queryChannelCurriculumById(Integer id);
 

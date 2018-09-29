@@ -127,8 +127,8 @@ public class SchoolChannelController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryChannels")
-    public String queryChannels() {
-        List<Map<String, Object>> result = schoolChannelService.queryChannels();
+    public String queryChannels(String name, Integer status) {
+        List<Map<String, Object>> result = schoolChannelService.queryChannels(name, status);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
     }
 
