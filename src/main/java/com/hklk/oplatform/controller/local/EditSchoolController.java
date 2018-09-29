@@ -109,8 +109,6 @@ public class EditSchoolController extends BaseController {
         if (tmp != null) {
             return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
         } else {
-
-
             schoolService.insertSelective(school);
             if (channelId != null) {
                 String sign = ToolUtil.createId(32);

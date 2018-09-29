@@ -9,7 +9,7 @@
 
     <insert id="insertChannel" parameterType="com.hklk.oplatform.entity.table.Channel">
         insert into hklk_school_channel (channel_name, remark,sign)
-        values (#{channelName,jdbcType=VARCHAR}, #{remark,jdbcType=INTEGER})
+        values (#{channelName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR})
     </insert>
 
     <insert id="insertChannelSchool" parameterType="com.hklk.oplatform.entity.table.ChannelSchool">
