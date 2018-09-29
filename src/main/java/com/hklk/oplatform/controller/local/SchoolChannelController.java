@@ -46,20 +46,32 @@ public class SchoolChannelController extends BaseController {
             channel.setSign(sign);
             schoolChannelService.insertChannel(channel);
             if (curriculumIds != null) {
-                insertChannelCurriculumForSign(sign, curriculumIds);
+                insertChannelCurriculumBySign(sign, curriculumIds);
             }
         } else {
             schoolChannelService.updateChannel(channel);
+            if (curriculumIds != null) {
+                insertChannelCurriculumById(channel.getId(), curriculumIds);
+            }
         }
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
     }
 
-    private void insertChannelCurriculumForSign(String sign, String curriculumIds) {
+    private void insertChannelCurriculumBySign(String sign, String curriculumIds) {
         Integer channelId = schoolChannelService.queryChannelBySign(sign);
         Arrays.asList(curriculumIds.split(",")).forEach(curriculumId -> {
             ChannelCurriculum channelCurriculum = new ChannelCurriculum();
             channelCurriculum.setCurriculumId(Integer.valueOf(curriculumId));
             channelCurriculum.setChannelId(channelId);
+            schoolChannelService.insertChannelCurriculum(channelCurriculum);
+        });
+    }
+
+    private void insertChannelCurriculumById(Integer id, String curriculumIds) {
+        Arrays.asList(curriculumIds.split(",")).forEach(curriculumId -> {
+            ChannelCurriculum channelCurriculum = new ChannelCurriculum();
+            channelCurriculum.setCurriculumId(Integer.valueOf(curriculumId));
+            channelCurriculum.setChannelId(id);
             schoolChannelService.insertChannelCurriculum(channelCurriculum);
         });
     }
