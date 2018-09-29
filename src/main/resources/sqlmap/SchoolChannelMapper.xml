@@ -55,7 +55,7 @@
         SELECT
             sc.id,
             channel_name AS channelName,
-            STATUS,
+            status,
             create_time createTime,
             remark,
             GROUP_CONCAT(cc.curriculum_id) AS curriculumIds
