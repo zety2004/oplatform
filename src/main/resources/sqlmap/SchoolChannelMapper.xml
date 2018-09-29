@@ -52,7 +52,18 @@
     </delete>
 
     <select id="queryChannels" resultType="map">
-    select id,channel_name as channelName,status,create_time createTime, remark from hklk_school_channel sc
+        SELECT
+            sc.id,
+            channel_name AS channelName,
+            STATUS,
+            create_time createTime,
+            remark,
+            GROUP_CONCAT(cc.curriculum_id) AS curriculumIds
+        FROM
+            hklk_school_channel sc
+        LEFT JOIN hklk_channel_curriculum cc ON sc.id = cc.channel_id
+        GROUP BY
+            sc.id
     </select>
 
     <select id="queryChannelCurriculumById" resultType="map" parameterType="java.lang.Integer">
