@@ -21,6 +21,8 @@ public interface CurriculumService {
      **/
     PageTableForm<CurriculumForListVo> queryCurriculums(Curriculum curriculum, int pageNum, int pageSize);
 
+    List<CurriculumForListVo> queryCurriculums();
+
     PageTableForm<Map<String, Object>> queryCurriculumsForSchool(Curriculum curriculum, int pageNum, int pageSize);
 
     /**

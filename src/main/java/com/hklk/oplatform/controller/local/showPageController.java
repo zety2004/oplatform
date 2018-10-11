@@ -46,6 +46,13 @@ public class showPageController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/queryCurriculumForList")
+    public String queryCurriculum() {
+        List<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums();
+        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+    }
+
+    @ResponseBody
     @RequestMapping("/selectCurriculumById")
     public String selectCurriculumById(Integer id, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {

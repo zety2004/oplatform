@@ -41,6 +41,9 @@
             and cc.subject like CONCAT('%', #{subject}, '%')
         </if>
         order by id desc
+        <if test="status != null">
+            limit 0,20
+        </if>
     </select>
 
     <select id="queryCurriculumsForSchool" resultType="map"

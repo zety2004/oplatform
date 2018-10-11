@@ -37,6 +37,14 @@ public class CurriculumServiceImpl implements CurriculumService {
     }
 
     @Override
+    public List<CurriculumForListVo> queryCurriculums() {
+        Curriculum curriculum = new Curriculum();
+        curriculum.setStatus(1);
+        List<CurriculumForListVo> curriculumForListVos = curriculumMapper.queryCurriculums(curriculum);
+        return curriculumForListVos;
+    }
+
+    @Override
     public PageTableForm<Map<String, Object>> queryCurriculumsForSchool(Curriculum curriculum, int pageNum, int pageSize) {
         Page page = PageHelper.startPage(pageNum, pageSize, true);
         curriculumMapper.queryCurriculumsForSchool(curriculum);
