@@ -4,9 +4,20 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.URL;
@@ -25,6 +36,15 @@ import java.util.*;
 public class PayUtil {
     public static final String TIME = "yyyyMMddHHmmss";
 
+    /**
+     * 日志
+     *
+     * @return
+     */
+    public static Logger getLogger() {
+        Logger logger = LoggerFactory.getLogger("wxpay java sdk");
+        return logger;
+    }
 
     /**
      * 创建微信交易对象
@@ -39,23 +59,68 @@ public class PayUtil {
         return parameters;
     }
 
-    public static Map<String, String> xmlStr2Map(String xmlStr) {
-        Map<String, String> map = new HashMap<>();
-        Document doc;
+    public static Map<String, String> xmlStr2Map(String strXML) throws Exception {
         try {
-            doc = DocumentHelper.parseText(xmlStr);
-            Element root = doc.getRootElement();
-            List children = root.elements();
-            if (children != null && children.size() > 0) {
-                for (int i = 0; i < children.size(); i++) {
-                    Element child = (Element) children.get(i);
-                    map.put(child.getName(), child.getTextTrim());
+            Map<String, String> data = new HashMap<String, String>();
+            DocumentBuilder documentBuilder = WXPayXmlUtil.newDocumentBuilder();
+            InputStream stream = new ByteArrayInputStream(strXML.getBytes("UTF-8"));
+            org.w3c.dom.Document doc = documentBuilder.parse(stream);
+            doc.getDocumentElement().normalize();
+            NodeList nodeList = doc.getDocumentElement().getChildNodes();
+            for (int idx = 0; idx < nodeList.getLength(); ++idx) {
+                Node node = nodeList.item(idx);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    org.w3c.dom.Element element = (org.w3c.dom.Element) node;
+                    data.put(element.getNodeName(), element.getTextContent());
                 }
             }
-        } catch (DocumentException e) {
-            e.printStackTrace();
+            try {
+                stream.close();
+            } catch (Exception ex) {
+                // do nothing
+            }
+            return data;
+        } catch (Exception ex) {
+            getLogger().warn("Invalid XML, can not convert to map. Error message: {}. XML content: {}", ex.getMessage(), strXML);
+            throw ex;
         }
-        return map;
+    }
+
+    /**
+     * 将Map转换为XML格式的字符串
+     *
+     * @param data Map类型数据
+     * @return XML格式的字符串
+     * @throws Exception
+     */
+    public static String mapToXml(Map<String, Object> data) throws Exception {
+        org.w3c.dom.Document document = WXPayXmlUtil.newDocument();
+        org.w3c.dom.Element root = document.createElement("xml");
+        document.appendChild(root);
+        for (String key : data.keySet()) {
+            String value = String.valueOf(data.get(key));
+            if (value == null) {
+                value = "";
+            }
+            value = value.trim();
+            org.w3c.dom.Element filed = document.createElement(key);
+            filed.appendChild(document.createTextNode(value));
+            root.appendChild(filed);
+        }
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        DOMSource source = new DOMSource(document);
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        transformer.transform(source, result);
+        String output = writer.getBuffer().toString(); //.replaceAll("\n|\r", "");
+        try {
+            writer.close();
+        } catch (Exception ex) {
+        }
+        return output;
     }
 
 
@@ -177,11 +242,7 @@ public class PayUtil {
 
         List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(parameters.entrySet());
         // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
-        Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
-            public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
-                return (o1.getKey()).compareTo(o2.getKey());
-            }
-        });
+        Collections.sort(infoIds, Comparator.comparing(o -> (o.getKey())));
         // 构造签名键值对的格式
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Object> item : infoIds) {
@@ -199,38 +260,16 @@ public class PayUtil {
     }
 
     /**
-     * @param parameters 请求参数
-     * @return
-     * @Description：将请求参数转换为xml格式的string
-     */
-    public static String getRequestXml(Map<String, Object> parameters) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("<xml>");
-        Set es = parameters.entrySet();
-        Iterator it = es.iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            String k = (String) entry.getKey();
-            String v = String.valueOf(entry.getValue());
-            if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k)) {
-                sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");
-            } else {
-                sb.append("<" + k + ">" + v + "</" + k + ">");
-            }
-        }
-        sb.append("</xml>");
-        return sb.toString();
-    }
-
-    /**
      * @param return_code 返回编码
      * @param return_msg  返回信息
      * @return
      * @Description：返回给微信的参数
      */
-    public static String setXML(String return_code, String return_msg) {
-        return "<xml><return_code><![CDATA[" + return_code + "]]></return_code><return_msg><![CDATA[" + return_msg
-                + "]]></return_msg></xml>";
+    public static String setXML(String return_code, String return_msg) throws Exception {
+        Map<String, Object> data = new HashMap<>();
+        data.put("return_code", return_code);
+        data.put("return_msg", return_msg);
+        return mapToXml(data);
     }
 
     /**

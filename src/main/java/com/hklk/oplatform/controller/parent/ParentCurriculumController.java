@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.util.*;
@@ -187,7 +188,10 @@ public class ParentCurriculumController extends BaseController {
     @ResponseBody
     @RequestMapping("/wxPay")
     public String wxPay(String orderId, HttpServletRequest request,
-                        HttpServletResponse response, HttpSession session) {
+                        HttpServletResponse response, HttpSession session) throws Exception {
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
         Map<String, Object> order = studentChoiceService.selectByOrderId(orderId);
         if ((double) order.get("payMoney") == 0) {
             StudentChoice studentChoice = new StudentChoice();
@@ -209,7 +213,7 @@ public class ParentCurriculumController extends BaseController {
         String sign = PayUtil.getSign(parameters);
         parameters.put("sign", sign);
         // 封装请求参数结束
-        String requestXML = PayUtil.getRequestXml(parameters); // 获取xml结果
+        String requestXML = PayUtil.mapToXml(parameters); // 获取xml结果
 
         // 调用统一下单接口
         String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
@@ -318,7 +322,7 @@ public class ParentCurriculumController extends BaseController {
         String sign = PayUtil.createSign(packageParams);
         packageParams.put("sign", sign);
 
-        String XML = PayUtil.getRequestXml(packageParams);
+        String XML = PayUtil.mapToXml(packageParams);
 
         String result = ClientCustomSSL.doRefund(PropUtil.getProperty("returnUrl"), XML);
         Map<String, String> refundmap = PayUtil.xmlStr2Map(result);

@@ -8,6 +8,7 @@ import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.SchoolVo;
 import com.hklk.oplatform.service.*;
 import com.hklk.oplatform.util.JsonUtil;
+import com.hklk.oplatform.util.PayUtil;
 import comm.AbstractTestCase;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +94,14 @@ public class serviceTest extends AbstractTestCase {
     public void selectFeedBack() {
 
         PageTableForm<Map<String, Object>> queryFeedBackList = feedBackService.queryFeedBackList(0, 1, 10);
+    }
+
+    @Test
+    public void testMapToXml() throws Exception {
+        System.out.println(1111);
+        Map<String,Object> temp  = new HashMap<>();
+        temp.put("temp",1);
+        System.out.println(PayUtil.mapToXml(temp));
     }
 
     @Test
