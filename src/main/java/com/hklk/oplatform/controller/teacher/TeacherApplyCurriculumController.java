@@ -120,15 +120,7 @@ public class TeacherApplyCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
-        System.out.println("验证课程为null");
-        System.out.println(curriculum == null);
-        System.out.println("验证课程属性为null");
-        System.out.println(curriculum.getIsPublic());
-        System.out.println("验证登陆用户");
-        System.out.println(getLoginTeacher(request));
-        System.out.println("验证登陆属性");
-        System.out.println(getLoginTeacher(request).getTeacherId());
-        if (curriculum != null && curriculum.getIsPublic() == 0) {
+        if (curriculum != null && curriculum.getIsPublic() != null && curriculum.getIsPublic() == 0) {
             curriculum.setTeacherId(getLoginTeacher(request).getTeacherId());
         }
         PageTableForm<Map<String, Object>> curriculumPageTableForm = curriculumService.queryCurriculumsForSchool(curriculum, pageNum, pageSize);
