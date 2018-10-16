@@ -120,6 +120,7 @@ public class TeacherApplyCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
+        System.out.println(curriculum == null);
         if (curriculum != null && curriculum.getIsPublic() == 0) {
             curriculum.setTeacherId(getLoginTeacher(request).getTeacherId());
         }
