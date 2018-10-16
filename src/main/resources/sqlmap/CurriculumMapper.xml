@@ -76,8 +76,8 @@
             and cc.subject like CONCAT('%', #{subject}, '%')
         </if>
         <if test="teacherId != null">
-            and t.is_public = 0
-            and t.teacher_id = #{teacherId}
+            and cc.is_public = 0
+            and cc.teacher_id = #{teacherId}
         </if>
         order by id desc
     </select>
