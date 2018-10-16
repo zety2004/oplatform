@@ -120,8 +120,9 @@ public class TeacherApplyCurriculumController extends BaseController {
     @RequestMapping("/queryCurriculum")
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
-        if (curriculum != null && curriculum.getIsPublic() != null && curriculum.getIsPublic() == 0) {
-            curriculum.setTeacherId(getLoginTeacher(request).getTeacherId());
+        curriculum.setTeacherId(getLoginTeacher(request).getSchoolId());
+        if (curriculum.getIsPublic() != null && curriculum.getIsPublic() == 0) {
+            curriculum.setDes(getLoginTeacher(request).getTeacherId().toString());
         }
         PageTableForm<Map<String, Object>> curriculumPageTableForm = curriculumService.queryCurriculumsForSchool(curriculum, pageNum, pageSize);
         return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
