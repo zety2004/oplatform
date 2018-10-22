@@ -2,13 +2,17 @@ package com.hklk.oplatform.controller.school;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.hklk.oplatform.controller.BaseController;
-import com.hklk.oplatform.entity.table.*;
-import com.hklk.oplatform.entity.vo.*;
+import com.hklk.oplatform.entity.table.Curriculum;
+import com.hklk.oplatform.entity.table.ParentMessage;
+import com.hklk.oplatform.entity.table.SCApply;
+import com.hklk.oplatform.entity.table.TeacherMessage;
+import com.hklk.oplatform.entity.vo.CurriculumApplyVo;
+import com.hklk.oplatform.entity.vo.CurriculumChoiceVo;
+import com.hklk.oplatform.entity.vo.PageTableForm;
+import com.hklk.oplatform.entity.vo.StudentPay;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.*;
-import com.hklk.oplatform.util.SmsUtil;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,7 +63,7 @@ public class SchoolCurriculumController extends BaseController {
         //这里学校id放在老师id字段作为查询参数
         curriculum.setTeacherId(getLoginSchool(request).getSchoolId());
         PageTableForm<Map<String, Object>> curriculumPageTableForm = curriculumService.queryCurriculumsForSchool(curriculum, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+        return ResultUtils.successStr(curriculumPageTableForm);
     }
 
     /**
@@ -75,7 +79,7 @@ public class SchoolCurriculumController extends BaseController {
     public String selectCurriculumById(Integer id, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
         Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
+        return ResultUtils.successStr(curriculum);
     }
 
     /**
@@ -94,7 +98,7 @@ public class SchoolCurriculumController extends BaseController {
             status = 0;
         }
         List<CurriculumApplyVo> curriculumApplyVos = scApplyService.queryCurriculumApply(getLoginSchool(request).getSchoolId(), status);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumApplyVos);
+        return ResultUtils.successStr(curriculumApplyVos);
     }
 
     /**
@@ -110,7 +114,7 @@ public class SchoolCurriculumController extends BaseController {
     public String queryCurriculumApplyForExamine(int pageNum, HttpServletRequest request,
                                                  HttpServletResponse response, HttpSession session) {
         PageTableForm<Map<String, Object>> curriculumPageTableForm = scApplyService.queryCurriculumApplyForExamine(getLoginSchool(request).getSchoolId(), pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+        return ResultUtils.successStr(curriculumPageTableForm);
     }
 
     /**
@@ -132,7 +136,7 @@ public class SchoolCurriculumController extends BaseController {
         } else {
             curriculumChoiceVoPageTableForm = scApplyService.queryCurriculumChoiceForEnd(getLoginSchool(request).getSchoolId(), param, pageNum, pageSize);
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVoPageTableForm);
+        return ResultUtils.successStr(curriculumChoiceVoPageTableForm);
     }
 
 
@@ -154,14 +158,14 @@ public class SchoolCurriculumController extends BaseController {
         } else {
             sStudents = scApplyService.queryStudentBySCAIdForEnd(scaId);
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), sStudents);
+        return ResultUtils.successStr(sStudents);
     }
 
     @ResponseBody
     @RequestMapping("/verificationStudentNum")
     public String verificationStudentNum(Integer scaId) {
         int studentNum = sSyllabusService.selectCountStudentNumBySCId(scaId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), studentNum);
+        return ResultUtils.successStr(studentNum);
     }
 
     /**
@@ -182,12 +186,12 @@ public class SchoolCurriculumController extends BaseController {
             Map<String, Object> temp = scApplyService.selectByTeacherApplyForAuditing(Integer.valueOf(id));
             boolean isOp = (int) temp.get("status") != 0 && status != 0 && (int) temp.get("status") != -1 && status != -1;
             if (temp.get("operator_id") != null && isOp) {
-                return ToolUtil.buildResultStr(StatusCode.CHECK_OPERATOR, StatusCode.getStatusMsg(StatusCode.CHECK_OPERATOR));
+                return ResultUtils.warnStr(ResultCode.CHECK_OPERATOR);
             } else {
                 if (status == 0) {
                     int studentNum = sSyllabusService.selectCountStudentNumBySCId((int) temp.get("id"));
                     if (studentNum > 0) {
-                        return ToolUtil.buildResultStr(StatusCode.HAS_STUDENT, StatusCode.getStatusMsg(StatusCode.HAS_STUDENT));
+                        return ResultUtils.warnStr(ResultCode.HAS_STUDENT);
                     }
                 }
                 SCApply scApply = new SCApply();
@@ -241,7 +245,7 @@ public class SchoolCurriculumController extends BaseController {
                 teacherMessageService.insertSelective(teacherMessage);
             }
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
 
@@ -258,7 +262,7 @@ public class SchoolCurriculumController extends BaseController {
     public String addOrUpdateSyllabusAll(String param, HttpServletRequest request,
                                          HttpServletResponse response, HttpSession session) {
         sSyllabusService.delAndbatchSaveSyllabus(param, getLoginSchool(request).getSchoolId());
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -282,7 +286,7 @@ public class SchoolCurriculumController extends BaseController {
             }
             result.put("week" + i, temp);
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 
     /**
@@ -302,7 +306,7 @@ public class SchoolCurriculumController extends BaseController {
         for (int i = 0; i <= maxTimeType; i++) {
             result.put("timeType" + i, sSyllabusService.queryMapByTimeType(i, schoolId));
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 
     /**
@@ -320,6 +324,6 @@ public class SchoolCurriculumController extends BaseController {
         for (int i = 1; i < 6; i++) {
             result.put("week" + i, sSyllabusService.queryMapByTimeTypeForEnd(i, getLoginSchool(request).getSchoolId()));
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 }

@@ -10,10 +10,7 @@ import com.hklk.oplatform.entity.vo.SClassVo;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.SClassService;
 import com.hklk.oplatform.service.SStudentService;
-import com.hklk.oplatform.util.ExcelUtils;
-import com.hklk.oplatform.util.FileUtils;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +58,7 @@ public class EditClassAndStudentController extends BaseController {
     public String queryClasses(String param, int pageNum, HttpServletRequest request,
                                HttpServletResponse response, HttpSession session) {
         PageTableForm<SClassVo> pageTableForm = sClassService.queryClasses(param, getLoginSchool(request).getSchoolId(), null, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
+        return ResultUtils.successStr(pageTableForm);
     }
 
     /**
@@ -77,7 +74,7 @@ public class EditClassAndStudentController extends BaseController {
     public String queryClassesById(Integer id, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
         SClass pageTableForm = sClassService.selectByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
+        return ResultUtils.successStr(pageTableForm);
     }
 
     /**
@@ -96,12 +93,12 @@ public class EditClassAndStudentController extends BaseController {
         sClass.setSchoolId(schoolId);
         SClass temp = sClassService.selectByNameForValidate(sClass.getName(), schoolId);
         if (sClass.getId() == null && temp != null) {
-            return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
+            return ResultUtils.warnStr(ResultCode.CLASS_EX);
         } else if (sClass.getId() != null && temp != null && temp.getId().intValue() != sClass.getId().intValue()) {
-            return ToolUtil.buildResultStr(StatusCode.CLASS_EX, StatusCode.getStatusMsg(StatusCode.CLASS_EX));
+            return ResultUtils.warnStr(ResultCode.CLASS_EX);
         } else {
             sClassService.insertOrUpdateByPrimaryKeySelective(sClass);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -118,7 +115,7 @@ public class EditClassAndStudentController extends BaseController {
     public String delClass(Integer id, HttpServletRequest request,
                            HttpServletResponse response, HttpSession session) {
         sClassService.deleteByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -135,7 +132,7 @@ public class EditClassAndStudentController extends BaseController {
     public String queryStudentByClassId(String param, Integer classId, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
         List<SStudent> result = sStudentService.queryStudentByClassId(param, classId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 
     /**
@@ -151,7 +148,7 @@ public class EditClassAndStudentController extends BaseController {
     public String queryStudentById(Integer id, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
         SStudent sStudent = sStudentService.selectByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), sStudent);
+        return ResultUtils.successStr(sStudent);
     }
 
     /**
@@ -168,12 +165,12 @@ public class EditClassAndStudentController extends BaseController {
                                      HttpServletResponse response, HttpSession session) {
         SStudent temp = sStudentService.selectBySNumForValidate(getLoginSchool(request).getSchoolId(), sStudent.getsNum());
         if (sStudent.getId() == null && temp != null) {
-            return ToolUtil.buildResultStr(StatusCode.STUDENT_EX, StatusCode.getStatusMsg(StatusCode.STUDENT_EX));
+            return ResultUtils.warnStr(ResultCode.STUDENT_EX);
         } else if (sStudent.getId() != null && temp != null && temp.getId().intValue() != sStudent.getId().intValue()) {
-            return ToolUtil.buildResultStr(StatusCode.STUDENT_EX, StatusCode.getStatusMsg(StatusCode.STUDENT_EX));
+            return ResultUtils.warnStr(ResultCode.STUDENT_EX);
         } else {
             sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -190,7 +187,7 @@ public class EditClassAndStudentController extends BaseController {
     public String delStudent(Integer id, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
         sStudentService.deleteByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -219,7 +216,7 @@ public class EditClassAndStudentController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -236,7 +233,7 @@ public class EditClassAndStudentController extends BaseController {
         try {
             MultipartFile file = request.getFile("importExcel");// 与页面input的name相同
             if (FileUtils.getFilenameExtension(file.getOriginalFilename()).indexOf("xlsx") == -1 && FileUtils.getFilenameExtension(file.getOriginalFilename()).indexOf("xls") == -1) {
-                return ToolUtil.buildResultStr(StatusCode.FILE_IS_NOT_RIGHT, StatusCode.getStatusMsg(StatusCode.FILE_IS_NOT_RIGHT));
+                return ResultUtils.warnStr(ResultCode.FILE_IS_NOT_RIGHT);
             }
             String savePath = request.getSession().getServletContext().getRealPath("/")
                     + "/uploadTempDirectory/" + file.getOriginalFilename();
@@ -252,13 +249,13 @@ public class EditClassAndStudentController extends BaseController {
             result.put("total", sStudents.size());
             result.put("failList", errorInsert);
             if (index > 0) {
-                return ToolUtil.buildResultStr(StatusCode.IMPORTERROR_STUDENT, StatusCode.getStatusMsg(StatusCode.IMPORTERROR_STUDENT), result);
+                return ResultUtils.warnStr(ResultCode.IMPORTERROR_STUDENT, result);
             } else {
-                return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+                return ResultUtils.successStr(result);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+            return ResultUtils.warnStr(ResultCode.ERROR);
         }
     }
 }

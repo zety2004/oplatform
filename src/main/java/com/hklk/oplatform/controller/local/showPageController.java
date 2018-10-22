@@ -11,6 +11,7 @@ import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.ConsumablesService;
 import com.hklk.oplatform.service.CurriculumService;
 import com.hklk.oplatform.service.SCApplyService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +43,14 @@ public class showPageController extends BaseController {
                                   HttpServletResponse response, HttpSession session) {
         curriculum.setIsPublic(1);
         PageTableForm<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums(curriculum, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+        return ResultUtils.successStr(curriculumPageTableForm);
     }
 
     @ResponseBody
     @RequestMapping("/queryCurriculumForList")
     public String queryCurriculum() {
         List<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums();
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+        return ResultUtils.successStr(curriculumPageTableForm);
     }
 
     @ResponseBody
@@ -58,6 +59,6 @@ public class showPageController extends BaseController {
                                        HttpServletResponse response, HttpSession session) {
         Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(id);
         curriculum.put("enclosure", null);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
+        return ResultUtils.successStr(curriculum);
     }
 }

@@ -68,11 +68,11 @@ public class LoginUserController extends BaseController {
                 token = createToken(loginUser);
                 addTokenInCookie(token, request, response);
             }
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), token);
+            return ResultUtils.successStr(token);
         } else if (user != null && user.getState() != 1) {
-            return ToolUtil.buildResultStr(StatusCode.LOGIN_DISABLE, StatusCode.getStatusMsg(StatusCode.LOGIN_DISABLE));
+            return ResultUtils.warnStr(ResultCode.LOGIN_DISABLE);
         } else {
-            return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
+            return ResultUtils.warnStr(ResultCode.LOGIN_NAME_OR_PWD_ERROR);
         }
     }
 
@@ -109,7 +109,7 @@ public class LoginUserController extends BaseController {
                            HttpServletResponse response, HttpSession session) {
         String token = request.getHeader("Access-Toke");
         tokenManager.remove(tokenManager.userTokenKey, token);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
 

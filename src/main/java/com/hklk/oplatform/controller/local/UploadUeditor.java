@@ -64,7 +64,7 @@ public class UploadUeditor {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+            return ResultUtils.warnStr(ResultCode.UPLOAD_ERROR);
         }
     }
 

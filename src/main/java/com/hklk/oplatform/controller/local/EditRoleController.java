@@ -6,6 +6,7 @@ import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.RolePageService;
 import com.hklk.oplatform.service.RoleService;
 import com.hklk.oplatform.service.UserRoleService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,24 +41,24 @@ public class EditRoleController extends BaseController {
     public String queryRoles(HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
 
-            List<Role> roles = roleService.queryRoles();
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), roles);
+        List<Role> roles = roleService.queryRoles();
+        return ResultUtils.successStr(roles);
     }
 
     @ResponseBody
     @RequestMapping("/addRole")
     public String addRole(Role role, HttpServletRequest request,
                           HttpServletResponse response, HttpSession session) {
-            roleService.addRole(role);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        roleService.addRole(role);
+        return ResultUtils.successStr();
     }
 
     @ResponseBody
     @RequestMapping("/updateRole")
     public String updateRole(Role role, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
-            roleService.updateRole(role);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        roleService.updateRole(role);
+        return ResultUtils.successStr();
     }
 
 
@@ -65,8 +66,8 @@ public class EditRoleController extends BaseController {
     @RequestMapping("/deleteRole")
     public String deleteUser(int id, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
-            roleService.deleteRole(id);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        roleService.deleteRole(id);
+        return ResultUtils.successStr();
     }
 
     @ResponseBody
@@ -74,15 +75,15 @@ public class EditRoleController extends BaseController {
     public String queryRoleUser(int roleId, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {
         List<User> users = userRoleService.selectUserByRoleId(roleId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), users);
+        return ResultUtils.successStr(users);
     }
 
     @ResponseBody
     @RequestMapping("/addUserRole")
     public String addUserRole(UserRoleKey userRoleKey, HttpServletRequest request,
-                                HttpServletResponse response, HttpSession session) {
+                              HttpServletResponse response, HttpSession session) {
         userRoleService.addUserRole(userRoleKey);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     @ResponseBody
@@ -90,14 +91,14 @@ public class EditRoleController extends BaseController {
     public String queryRolePage(int roleId, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {
         List<PPage> PPages = rolePageService.selectPageByRoleId(roleId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), PPages);
+        return ResultUtils.successStr(PPages);
     }
 
     @ResponseBody
     @RequestMapping("/addRolePage")
     public String addRolePage(RolePage rolePage, HttpServletRequest request,
-                      HttpServletResponse response, HttpSession session) {
+                              HttpServletResponse response, HttpSession session) {
         rolePageService.addRolePage(rolePage);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

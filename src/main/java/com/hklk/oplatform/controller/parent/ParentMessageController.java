@@ -6,6 +6,7 @@ import com.hklk.oplatform.entity.table.TeacherMessage;
 import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
 import com.hklk.oplatform.service.ParentMessageService;
 import com.hklk.oplatform.service.TeacherMessageService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class ParentMessageController extends BaseController {
     @RequestMapping("/queryParentMessage")
     public String queryTeacherMessage(Integer isRead, HttpServletRequest request) {
         List<ParentMessage> teacherMessages = parentMessageService.queryParentMessage(getLoginParent(request).getStudentId(), isRead);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), teacherMessages);
+        return ResultUtils.successStr(teacherMessages);
     }
 
     /**
@@ -59,7 +60,7 @@ public class ParentMessageController extends BaseController {
     @RequestMapping("/updateMessageIsReadByTeacher")
     public String updateMessageIsReadByTeacher(HttpServletRequest request) {
         parentMessageService.updateIsReadByStudentId(getLoginParent(request).getStudentId());
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -74,7 +75,7 @@ public class ParentMessageController extends BaseController {
     @RequestMapping("/updateMessageIsReadById")
     public String updateMessageIsReadById(Integer id) {
         parentMessageService.updateIsReadById(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -89,6 +90,6 @@ public class ParentMessageController extends BaseController {
     @RequestMapping("/delMessageById")
     public String delMessageById(Integer id) {
         parentMessageService.deleteByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

@@ -24,28 +24,6 @@ public final class ToolUtil {
         return (ArrayList<Entry<String, Integer>>) entries;
     }
 
-    public static String buildResultStr(int statusCode, String statusMessage) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("resultCode", statusCode);
-        map.put("resultMsg", statusMessage);
-        return JsonUtil.toJson(map, dateFormate);
-    }
-
-    public static String buildResultStr(int statusCode, String statusMessage, Object obj) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("resultCode", statusCode);
-        map.put("resultMsg", statusMessage);
-        map.put("resultData", obj);
-        return JsonUtil.toJson(map, dateFormate);
-    }
-
-    public static String buildXhEditorStr(String statusCode, String url) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("err", statusCode);
-        map.put("msg", url);
-        return JsonUtil.toJson(map, dateFormate);
-    }
-
     //创建唯一标识
     public static String createId() {
         return createId(8);

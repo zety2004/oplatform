@@ -66,10 +66,10 @@ public class ParentCurriculumController extends BaseController {
             String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + FileUtils.getFilenameExtension(file.getOriginalFilename());
             OssUtil.uploadFile(fileKey, fileTemp);
             String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
+            return ResultUtils.successStr(accessToDomainNames);
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+            return ResultUtils.warnStr(ResultCode.UPLOAD_ERROR);
         }
     }
 
@@ -87,7 +87,7 @@ public class ParentCurriculumController extends BaseController {
     public String selectApplyCurriculumById(Integer scaId, HttpServletRequest request,
                                             HttpServletResponse response, HttpSession session) {
         Map<String, Object> curriculum = scApplyService.selectByApplyCurriculmForParentById(scaId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
+        return ResultUtils.successStr(curriculum);
     }
 
     /**
@@ -103,7 +103,7 @@ public class ParentCurriculumController extends BaseController {
                                              HttpServletResponse response, HttpSession session) {
         LoginParent loginParent = getLoginParent(request);
         Map<String, List<Map<String, Object>>> curriculumPageTableForm = scApplyService.queryHotCurriculumForParent(loginParent.getSchoolId(), null);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+        return ResultUtils.successStr(curriculumPageTableForm);
     }
 
     /**
@@ -124,7 +124,7 @@ public class ParentCurriculumController extends BaseController {
         } else {
             curriculumChoiceVos = scApplyService.queryAllCurriculumForParent(loginParent.getSchoolId(), loginParent.getGrade(), weekType);
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumChoiceVos);
+        return ResultUtils.successStr(curriculumChoiceVos);
     }
 
 
@@ -141,27 +141,27 @@ public class ParentCurriculumController extends BaseController {
         LoginParent loginParent = getLoginParent(request);
         //未绑定学生
         if (loginParent == null || loginParent.getStudentId() == null) {
-            return ToolUtil.buildResultStr(StatusCode.NO_BINDING_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_BINDING_STUDENT));
+            return ResultUtils.warnStr(ResultCode.NO_BINDING_STUDENT);
         }
         //验证该课程是否可以选择(查询该课程是否是该学校的)
         Integer isQualified = studentChoiceService.queryParentApplyForIsQualified(loginParent.getSchoolId(), loginParent.getGrade().toString(), scaId);
         if (isQualified == null || isQualified == 0) {
-            return ToolUtil.buildResultStr(StatusCode.STUDENT_IS_NO_QUALIFIED, StatusCode.getStatusMsg(StatusCode.STUDENT_IS_NO_QUALIFIED));
+            return ResultUtils.warnStr(ResultCode.STUDENT_IS_NO_QUALIFIED);
         }
         //验证课程是否在选课时间内
         Integer verificationTimeNum = studentChoiceService.queryParentApplyForVerificationTime(scaId);
         if (verificationTimeNum == 0) {
-            return ToolUtil.buildResultStr(StatusCode.PARENT_APPLY_CURR_FOR_VER_NUM, StatusCode.getStatusMsg(StatusCode.PARENT_APPLY_CURR_FOR_VER_NUM));
+            return ResultUtils.warnStr(ResultCode.PARENT_APPLY_CURR_FOR_VER_NUM);
         }
 
         int isApply = studentChoiceService.queryParentApplyForIsApply(scaId, loginParent.getStudentId());
         if (isApply > 0) {
-            return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您已经申请过该课程,或存在未支付订单！");
+            return ResultUtils.warnStr(ResultCode.BUY_CURR_FOR_PARENT, "您已经申请过该课程,或存在未支付订单！");
         }
 
         int isCollision = studentChoiceService.queryParentApplyForIsCollision(scaId, loginParent.getStudentId());
         if (isCollision > 0) {
-            return ToolUtil.buildResultStr(StatusCode.BUY_CURR_FOR_PARENT, "您申请的课程存在时间冲突！");
+            return ResultUtils.warnStr(ResultCode.BUY_CURR_FOR_PARENT, "您申请的课程存在时间冲突！");
         } else {
             Map<String, Object> objectMap = studentChoiceService.queryCurriculumForParentApply(scaId);
             String orderId = System.currentTimeMillis() + "";
@@ -180,7 +180,7 @@ public class ParentCurriculumController extends BaseController {
             }
             studentChoice.setCommodityName(objectMap.get("name").toString());
             studentChoiceService.insertSelective(studentChoice);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), orderId);
+            return ResultUtils.successStr(orderId);
         }
     }
 
@@ -198,7 +198,7 @@ public class ParentCurriculumController extends BaseController {
             studentChoice.setId((int) order.get("id"));
             studentChoice.setPayState(1);
             studentChoiceService.updateByPrimaryKeySelective(studentChoice);
-            return ToolUtil.buildResultStr(StatusCode.DONOT_NEED_PAY, "订单金额为0，无需支付!");
+            return ResultUtils.warnStr(ResultCode.DONOT_NEED_PAY);
         }
         Map<String, Object> parameters = PayUtil.getWXPrePayID();
         parameters.put("body", "好课乐课-课程选课");
@@ -219,9 +219,9 @@ public class ParentCurriculumController extends BaseController {
         String result = PayUtil.httpsRequest(PropUtil.getProperty("payUrl"), "POST", requestXML);
         Map<String, Object> parMap = PayUtil.startWXPay(result);
         if (parMap == null) {
-            return ToolUtil.buildResultStr(StatusCode.ERROR, "支付出现异常，请稍后重试!");
+            return ResultUtils.warnStr(ResultCode.ERROR, "支付出现异常，请稍后重试!");
         } else {
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), parMap);
+            return ResultUtils.successStr(parMap);
         }
     }
 
@@ -294,12 +294,12 @@ public class ParentCurriculumController extends BaseController {
         int isCanBeRefund = studentChoiceService.queryIsCanRefund((int) order.get("scaId"));
 
         if (isCanBeRefund != 1) {
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, "这条订单不满足退款条件哦。");
+            return ResultUtils.warnStr(ResultCode.ORDER_REPAY_FAIL);
         }
 
         if (Double.valueOf(order.get("payMoney").toString()).intValue() == 0) {
             this.updateRefundOrder(order);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, "取消报名成功");
+            return ResultUtils.successStr();
         }
         String out_trade_no = orderId;   //退款订单
         int all_total_fee = ((Double) ((double) order.get("payMoney") * 100)).intValue();
@@ -328,13 +328,13 @@ public class ParentCurriculumController extends BaseController {
         Map<String, String> refundmap = PayUtil.xmlStr2Map(result);
         if (refundmap.get("return_code").equals("SUCCESS")) {
             if (refundmap.get("result_code").equals("FAIL")) {
-                return ToolUtil.buildResultStr(10000, "退款失败:原因" + refundmap.get("err_code_des"));
+                return ResultUtils.warnStr(ResultCode.SYS_ERROR, "退款失败:原因" + refundmap.get("err_code_des"));
             } else {
                 this.updateRefundOrder(order);
-                return ToolUtil.buildResultStr(StatusCode.SUCCESS, "退款成功");
+                return ResultUtils.successStr();
             }
         } else {
-            return ToolUtil.buildResultStr(10000, "退款失败:原因" + refundmap.get("return_ms"));
+            return ResultUtils.warnStr(ResultCode.SYS_ERROR, "退款失败:原因" + refundmap.get("return_ms"));
         }
     }
 
@@ -422,7 +422,7 @@ public class ParentCurriculumController extends BaseController {
     public String queryMyCurriculum(Integer isEnd, HttpServletRequest request) {
         LoginParent loginParent = getLoginParent(request);
         List<Map<String, Object>> myCurriculum = studentChoiceService.queryMyCurriculumList(loginParent.getStudentId(), isEnd);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), myCurriculum);
+        return ResultUtils.successStr(myCurriculum);
     }
 
     /**
@@ -437,7 +437,7 @@ public class ParentCurriculumController extends BaseController {
     @RequestMapping("/delOrder")
     public String delOrder(Integer sccId) {
         studentChoiceService.deleteByPrimaryKey(sccId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -457,6 +457,6 @@ public class ParentCurriculumController extends BaseController {
         result.put("Wed", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 3));
         result.put("Thur", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 4));
         result.put("Fri", studentChoiceService.queryMyCurriculum(loginParent.getStudentId(), 5));
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 }

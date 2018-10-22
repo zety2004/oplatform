@@ -6,6 +6,7 @@ import com.hklk.oplatform.entity.table.ChannelCurriculum;
 import com.hklk.oplatform.entity.table.ChannelSchool;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.SchoolChannelService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class SchoolChannelController extends BaseController {
                 insertChannelCurriculumById(channel.getId(), curriculumIds);
             }
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     private void insertChannelCurriculumBySign(String sign, String curriculumIds) {
@@ -89,7 +90,7 @@ public class SchoolChannelController extends BaseController {
     @RequestMapping("/addChannelSchool")
     public String insertChannelSchool(ChannelSchool channelSchool) {
         schoolChannelService.insertChannelSchool(channelSchool);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -105,7 +106,7 @@ public class SchoolChannelController extends BaseController {
     @RequestMapping("/addChannelCurriculum")
     public String insertChannelCurriculum(int channelId, String curriculumIds) {
         if (curriculumIds == null) {
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         } else {
             Arrays.asList(curriculumIds.split(",")).forEach(curriculumId -> {
                 ChannelCurriculum channelCurriculum = new ChannelCurriculum();
@@ -113,7 +114,7 @@ public class SchoolChannelController extends BaseController {
                 channelCurriculum.setChannelId(channelId);
                 schoolChannelService.insertChannelCurriculum(channelCurriculum);
             });
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -129,7 +130,7 @@ public class SchoolChannelController extends BaseController {
     @RequestMapping("/queryChannels")
     public String queryChannels(String name, Integer status) {
         List<Map<String, Object>> result = schoolChannelService.queryChannels(name, status);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 
     /**
@@ -144,7 +145,7 @@ public class SchoolChannelController extends BaseController {
     @RequestMapping("/queryChannelCurriculumById")
     public String queryChannelCurriculumById(Integer id) {
         List<Map<String, Object>> result = schoolChannelService.queryChannelCurriculumById(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 
     /**
@@ -158,13 +159,13 @@ public class SchoolChannelController extends BaseController {
     @RequestMapping("/queryCurriculumAll")
     public String queryCurriculumAll(String name, String grade, String learningStyle, String subject) {
         List<Map<String, Object>> result = schoolChannelService.queryCurriculumAll(name, grade, learningStyle, subject);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 
     @ResponseBody
     @RequestMapping("/delChannel")
     public String delChannel(Integer id) {
         schoolChannelService.delChannel(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

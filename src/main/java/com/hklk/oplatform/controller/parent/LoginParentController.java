@@ -52,13 +52,13 @@ public class LoginParentController extends BaseController {
         String wxResult = HttpRequestUtils.httpGet("https://api.weixin.qq.com/sns/jscode2session?appid=" + PropUtil.getProperty("wxAppid") + "&secret=" + PropUtil.getProperty("wxSecret") + "&js_code=" + code + "&grant_type=authorization_code");
         Map<String, String> resultMap = JsonUtil.jsonToMapStr(wxResult);
         if (resultMap.get("errcode") != null) {
-            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+            return ResultUtils.warnStr(ResultCode.ERROR);
         } else {
             List<Map<String, Object>> student = sStudentService.queryStudentByPhoneNum(null, resultMap.get("openid"), null);
 
             if (student != null && student.size() != 0) {
                 List result = new ArrayList<Map<String, Object>>();
-                student.forEach(map->{
+                student.forEach(map -> {
                     LoginParent loginParent = new LoginParent((Integer) map.get("id"), (String) map.get("phone"), (String) map.get("childName"), (Integer) map.get("classId"), (String) map.get("className"), (Integer) map.get("schoolId"), (String) map.get("schoolName"), (Integer) map.get("grade"), (String) map.get("schoolLogo"), resultMap.get("openid"), resultMap.get("session_key"));
                     String token = createToken(loginParent);
                     Map<String, Object> stu = new HashMap<>();
@@ -69,11 +69,11 @@ public class LoginParentController extends BaseController {
                     stu.put("token", token);
                     result.add(stu);
                 });
-                return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+                return ResultUtils.successStr(result);
             } else {
                 LoginParent loginParent = new LoginParent(null, null, null, null, null, null, null, null, null, resultMap.get("openid"), resultMap.get("session_key"));
                 String token = createToken(loginParent);
-                return ToolUtil.buildResultStr(StatusCode.ERROR_MSG, StatusCode.getStatusMsg(StatusCode.ERROR_MSG), token);
+                return ResultUtils.warnStr(ResultCode.ERROR_MSG,token);
             }
         }
     }
@@ -94,7 +94,7 @@ public class LoginParentController extends BaseController {
 
         if (student != null && student.size() != 0) {
             if (student.get(0).get("wechatId") != null && !"".equals(student.get(0).get("wechatId"))) {
-                return ToolUtil.buildResultStr(StatusCode.STUDENT_WAS_BINDING, StatusCode.getStatusMsg(StatusCode.STUDENT_WAS_BINDING));
+                return ResultUtils.warnStr(ResultCode.ACCOUNT_WAS_BINDING);
             }
             List<Map<String, Object>> studentBinding = sStudentService.queryStudentByPhoneNum(phone, null, null);
             List<Map<String, Object>> result = new ArrayList<>();
@@ -113,9 +113,9 @@ public class LoginParentController extends BaseController {
                 sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
                 result.add(stu);
             }
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+            return ResultUtils.successStr(result);
         } else {
-            return ToolUtil.buildResultStr(StatusCode.NO_FOUND_STUDENT, StatusCode.getStatusMsg(StatusCode.NO_FOUND_STUDENT));
+            return ResultUtils.warnStr(ResultCode.NO_FOUND_STUDENT);
         }
     }
 
@@ -137,7 +137,7 @@ public class LoginParentController extends BaseController {
             sStudent.setWechatId("");
             sStudentService.insertOrUpdateByPrimaryKeySelective(sStudent);
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     private String createToken(LoginParent loginParent) {

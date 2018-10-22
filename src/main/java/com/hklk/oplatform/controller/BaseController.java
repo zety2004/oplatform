@@ -2,6 +2,8 @@ package com.hklk.oplatform.controller;
 
 import com.hklk.oplatform.comm.*;
 import com.hklk.oplatform.service.AuthenticationRpcService;
+import com.hklk.oplatform.util.ResultCode;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import com.hklk.oplatform.util.editor.DateEditor;
@@ -63,6 +65,6 @@ public abstract class BaseController {
     public String exception(Exception e, HttpServletRequest request) {
         e.printStackTrace();
         request.setAttribute("exception", e);
-        return ToolUtil.buildResultStr(StatusCode.SYS_ERROR, StatusCode.getStatusMsg(StatusCode.SYS_ERROR));
+        return ResultUtils.warnStr(ResultCode.SYS_ERROR);
     }
 }

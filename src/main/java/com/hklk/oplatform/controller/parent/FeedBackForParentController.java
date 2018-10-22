@@ -4,6 +4,7 @@ import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.FeedBack;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.FeedBackService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,6 @@ public class FeedBackForParentController extends BaseController {
         feedBack.setContent(content);
         feedBack.setCategory(category);
         feedBackService.insertSelective(feedBack);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

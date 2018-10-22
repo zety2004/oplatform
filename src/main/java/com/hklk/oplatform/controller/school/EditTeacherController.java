@@ -7,10 +7,7 @@ import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.DicService;
 import com.hklk.oplatform.service.STeacherService;
-import com.hklk.oplatform.util.ExcelUtils;
-import com.hklk.oplatform.util.FileUtils;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,7 +53,7 @@ public class EditTeacherController extends BaseController {
     public String queryTeachers(String param, int pageNum, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {
         PageTableForm<STeacher> pageTableForm = sTeacherService.queryTeacherBySchoolId(getLoginSchool(request).getSchoolId(), param, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
+        return ResultUtils.successStr(pageTableForm);
     }
 
     /**
@@ -73,7 +70,7 @@ public class EditTeacherController extends BaseController {
                                        HttpServletResponse response, HttpSession session) {
         sTeacher.setSchoolId(getLoginSchool(request).getSchoolId());
         STeacher result = sTeacherService.selectBySTeacher(sTeacher);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+        return ResultUtils.successStr(result);
     }
 
     /**
@@ -94,14 +91,14 @@ public class EditTeacherController extends BaseController {
 
         STeacher result = sTeacherService.selectBySTeacher(param);
         if (sTeacher.getId() == null && result != null) {
-            return ToolUtil.buildResultStr(StatusCode.TEACHER_EX, StatusCode.getStatusMsg(StatusCode.TEACHER_EX));
+            return ResultUtils.warnStr(ResultCode.TEACHER_EX);
         } else if (sTeacher.getId() != null && result != null && result.getId().intValue() != sTeacher.getId().intValue()) {
-            return ToolUtil.buildResultStr(StatusCode.TEACHER_EX, StatusCode.getStatusMsg(StatusCode.TEACHER_EX));
+            return ResultUtils.warnStr(ResultCode.TEACHER_EX);
         } else {
             sTeacher.setSchoolId(schoolId);
             sTeacher.setTag(sTeacherService.getTeacherTag().toString());
             sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -130,7 +127,7 @@ public class EditTeacherController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -146,7 +143,7 @@ public class EditTeacherController extends BaseController {
         try {
             MultipartFile file = request.getFile("importExcel");// 与页面input的name相同
             if (FileUtils.getFilenameExtension(file.getOriginalFilename()).indexOf("xlsx") == -1 && FileUtils.getFilenameExtension(file.getOriginalFilename()).indexOf("xls") == -1) {
-                return ToolUtil.buildResultStr(StatusCode.FILE_IS_NOT_RIGHT, StatusCode.getStatusMsg(StatusCode.FILE_IS_NOT_RIGHT));
+                return ResultUtils.warnStr(ResultCode.FILE_IS_NOT_RIGHT);
             }
             String savePath = request.getSession().getServletContext().getRealPath("/")
                     + "/uploadTempDirectory/" + file.getOriginalFilename();
@@ -162,13 +159,13 @@ public class EditTeacherController extends BaseController {
             result.put("total", sTeachers.size());
             result.put("failList", errorInsert);
             if (index > 0) {
-                return ToolUtil.buildResultStr(StatusCode.IMPORTERROR_STUDENT, StatusCode.getStatusMsg(StatusCode.IMPORTERROR_STUDENT), result);
+                return ResultUtils.warnStr(ResultCode.IMPORTERROR_STUDENT, result);
             } else {
-                return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+                return ResultUtils.successStr(result);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+            return ResultUtils.warnStr(ResultCode.ERROR);
         }
     }
 
@@ -181,7 +178,7 @@ public class EditTeacherController extends BaseController {
         sTeacher.setId(id);
         sTeacher.setPwd("93b1c7f49c7b917831a942fd90ffe0ca");
         sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -200,7 +197,7 @@ public class EditTeacherController extends BaseController {
         if (status == 0) {
             Integer count = sTeacherService.queryCurriculumByTeacherId(id);
             if (count > 0) {
-                return ToolUtil.buildResultStr(StatusCode.IS_APPLY_CURRICULUM, StatusCode.getStatusMsg(StatusCode.IS_APPLY_CURRICULUM));
+                return ResultUtils.warnStr(ResultCode.IS_APPLY_CURRICULUM);
             }
         }
 
@@ -208,7 +205,7 @@ public class EditTeacherController extends BaseController {
         param.setId(id);
         param.setStatus(status);
         sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -225,13 +222,13 @@ public class EditTeacherController extends BaseController {
                              HttpServletResponse response, HttpSession session) {
         Integer count = sTeacherService.queryCurriculumByTeacherId(id);
         if (count > 0) {
-            return ToolUtil.buildResultStr(StatusCode.IS_APPLY_CURRICULUM, StatusCode.getStatusMsg(StatusCode.IS_APPLY_CURRICULUM));
+            return ResultUtils.warnStr(ResultCode.IS_APPLY_CURRICULUM);
         }
 
         STeacher sTeacher = new STeacher();
         sTeacher.setId(id);
         sTeacher.setStatus(-1);
         sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

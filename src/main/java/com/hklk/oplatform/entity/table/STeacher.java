@@ -29,6 +29,7 @@ public class STeacher implements Serializable {
     private Date createTime;
 
     private String tag;
+    private String wechatId;
 
     private static final long serialVersionUID = 1L;
 
@@ -139,5 +140,13 @@ public class STeacher implements Serializable {
 
     public void setLoginNum(Integer loginNum) {
         this.loginNum = loginNum;
+    }
+
+    public String getWechatId() {
+        return wechatId;
+    }
+
+    public void setWechatId(String wechatId) {
+        this.wechatId = wechatId;
     }
 }

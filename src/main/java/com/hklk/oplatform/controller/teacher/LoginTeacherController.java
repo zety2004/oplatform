@@ -59,7 +59,7 @@ public class LoginTeacherController extends BaseController {
                                HttpServletResponse response, HttpSession session) {
         TeacherVo teacherVo = sTeacherService.loginTeacher(account, pwd);
         if (teacherVo != null && teacherVo.getStatus() == 1 && teacherVo.getSchoolStatus() == 1) {
-            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolName(), teacherVo.getSchoolLogo(), teacherVo.getHeadIco(), teacherVo.getIntroduction(), teacherVo.getTag());
+            LoginTeacher loginTeacher = new LoginTeacher(teacherVo.getId(), teacherVo.getPhone(), teacherVo.getNickname(), "", teacherVo.getSchoolId(), teacherVo.getSchoolName(), teacherVo.getSchoolLogo(), teacherVo.getHeadIco(), teacherVo.getIntroduction(), teacherVo.getTag(), null, null);
             String token = createToken(loginTeacher);
 
             Map<String, String> result = new HashMap<>();
@@ -84,14 +84,14 @@ public class LoginTeacherController extends BaseController {
             sTeacher.setLoginNum(teacherVo.getLoginNum() + 1);
             sTeacherService.insertOrUpdateByPrimaryKeySelective(sTeacher);
 
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+            return ResultUtils.successStr(result);
         } else if (teacherVo != null && teacherVo.getSchoolStatus() != 1) {
             System.out.println(1);
-            return ToolUtil.buildResultStr(StatusCode.SCHOOL_STATUS, StatusCode.getStatusMsg(StatusCode.SCHOOL_STATUS));
+            return ResultUtils.warnStr(ResultCode.SCHOOL_STATUS);
         } else if (teacherVo != null && teacherVo.getStatus() != 1) {
-            return ToolUtil.buildResultStr(StatusCode.LOGIN_DISABLE, StatusCode.getStatusMsg(StatusCode.LOGIN_DISABLE));
+            return ResultUtils.warnStr(ResultCode.LOGIN_DISABLE);
         } else {
-            return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
+            return ResultUtils.warnStr(ResultCode.LOGIN_NAME_OR_PWD_ERROR);
         }
     }
 
@@ -110,21 +110,21 @@ public class LoginTeacherController extends BaseController {
                                         HttpServletResponse response, HttpSession session) {
         LoginTeacher loginTeacher = getLoginTeacher(request);
         if (loginTeacher == null) {
-            return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
+            return ResultUtils.warnStr(ResultCode.SSO_TOKEN_ERROR);
         }
         STeacher sTeacher = new STeacher();
         sTeacher.setId(loginTeacher.getTeacherId());
         STeacher temp = sTeacherService.selectBySTeacher(sTeacher);
         if (temp == null) {
-            return ToolUtil.buildResultStr(StatusCode.USER_UNFIND, StatusCode.getStatusMsg(StatusCode.USER_UNFIND));
+            return ResultUtils.warnStr(ResultCode.USER_UNFIND);
         } else if (temp != null && temp.getPwd().equals(PasswordProvider.encrypt(oldPassword))) {
             STeacher param = new STeacher();
             param.setId(loginTeacher.getTeacherId());
             param.setPwd(PasswordProvider.encrypt(newPassword));
             sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         } else {
-            return ToolUtil.buildResultStr(StatusCode.PASSWORD_ERROR, StatusCode.getStatusMsg(StatusCode.PASSWORD_ERROR));
+            return ResultUtils.warnStr(ResultCode.PASSWORD_ERROR);
         }
     }
 
@@ -144,7 +144,7 @@ public class LoginTeacherController extends BaseController {
                                      HttpServletResponse response, HttpSession session) {
         LoginTeacher loginTeacher = getLoginTeacher(request);
         if (loginTeacher == null) {
-            return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
+            return ResultUtils.warnStr(ResultCode.SSO_TOKEN_ERROR);
         }
         STeacher param = new STeacher();
         param.setId(loginTeacher.getTeacherId());
@@ -153,7 +153,7 @@ public class LoginTeacherController extends BaseController {
         param.setIntroduction(remark);
         param.setTag(tag);
         sTeacherService.insertOrUpdateByPrimaryKeySelective(param);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -168,7 +168,7 @@ public class LoginTeacherController extends BaseController {
                            HttpServletResponse response, HttpSession session) {
         String token = request.getHeader("Access-Toke");
         tokenManager.remove(tokenManager.teacherTokenKey, token);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -187,10 +187,10 @@ public class LoginTeacherController extends BaseController {
         sTeacher.setPhone(account);
         STeacher result = sTeacherService.selectBySTeacher(sTeacher);
         if (result == null) {
-            return ToolUtil.buildResultStr(StatusCode.TEACHER_IS_NOT_EX, StatusCode.getStatusMsg(StatusCode.TEACHER_IS_NOT_EX));
+            return ResultUtils.warnStr(ResultCode.TEACHER_IS_NOT_EX);
         } else {
             SchoolAdmin schoolAdmin = schoolAdminService.querySchoolAdminsBySchoolId(result.getSchoolId()).get(0);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), schoolAdmin.getAccount());
+            return ResultUtils.successStr(schoolAdmin.getAccount());
         }
 
     }

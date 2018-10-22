@@ -1,8 +1,6 @@
 package com.hklk.oplatform.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class StatusCode {
@@ -75,7 +73,7 @@ public class StatusCode {
     //您输入的手机号和学生学号不符！
     public final static int NO_FOUND_STUDENT = 1024;
     //该学生已经被绑定！
-    public final static int STUDENT_WAS_BINDING = 1025;
+    public final static int ACCOUNT_WAS_BINDING = 1025;
     //申请课程失败！
     public final static int BUY_CURR_FOR_PARENT = 1026;
     //订单金额为0，无需支付!
@@ -127,7 +125,7 @@ public class StatusCode {
         map.put(INSERT_ERROR_FOR_IS_APPLY, "添加失败，您已申报过该课程！");
         map.put(ERROR_MSG, "您的账号暂未绑定，请先绑定用户！");
         map.put(NO_FOUND_STUDENT, "您输入的手机号和学生学号不符！");
-        map.put(STUDENT_WAS_BINDING, "该学生已经被绑定！");
+        map.put(ACCOUNT_WAS_BINDING, "该学生已经被绑定！");
         map.put(DONOT_NEED_PAY, "订单金额为0，无需支付！");
 
         map.put(NO_BINDING_STUDENT, "您的账号尚未绑定学生，无法报名！");

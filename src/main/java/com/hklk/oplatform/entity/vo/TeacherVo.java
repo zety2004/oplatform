@@ -31,6 +31,8 @@ public class TeacherVo implements Serializable {
 
     private Integer loginNum;
 
+    private String wechatId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -145,5 +147,13 @@ public class TeacherVo implements Serializable {
 
     public void setLoginNum(Integer loginNum) {
         this.loginNum = loginNum;
+    }
+
+    public String getWechatId() {
+        return wechatId;
+    }
+
+    public void setWechatId(String wechatId) {
+        this.wechatId = wechatId;
     }
 }

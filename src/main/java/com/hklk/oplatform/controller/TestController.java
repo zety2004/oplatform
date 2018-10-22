@@ -68,10 +68,10 @@ public class TestController extends BaseController {
             String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + request.getParameter("type");
             OssUtil.uploadFile(fileKey, fileTemp);
             String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
+            return ResultUtils.successStr(accessToDomainNames);
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+            return ResultUtils.warnStr(ResultCode.UPLOAD_ERROR);
         }
     }
 
@@ -100,7 +100,7 @@ public class TestController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -120,10 +120,10 @@ public class TestController extends BaseController {
             param.put("reason", "申请人数不足");
             param.put("person", "杨主任");
             SmsUtil.sendSms(phoneNum, templateCode, param);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+            return ResultUtils.warnStr(ResultCode.UPLOAD_ERROR);
         }
     }
 
@@ -152,7 +152,7 @@ public class TestController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
 
@@ -170,10 +170,10 @@ public class TestController extends BaseController {
             String[] fieldNames = {"sNum", "fullName", "sex", "parentName", "parentPhone"};
             List<SStudent> sStudents = ExcelUtils.importExcel(fileTemp, SStudent.class, fieldNames, 1, 0, 0);
 
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.ERROR, StatusCode.getStatusMsg(StatusCode.ERROR));
+            return ResultUtils.warnStr(ResultCode.ERROR);
         }
     }
 

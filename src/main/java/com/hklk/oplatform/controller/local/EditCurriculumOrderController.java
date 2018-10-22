@@ -8,9 +8,7 @@ import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.entity.vo.StudentPay;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.SCApplyService;
-import com.hklk.oplatform.util.ExcelUtils;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +51,7 @@ public class EditCurriculumOrderController extends BaseController {
     public String queryCurriculumOrder(String queryParam, Integer isHandle, Integer ishc, int pageNum, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
         PageTableForm<CurriculumOrderVo> curriculumPageTableForm = scApplyService.queryCurriculumOrder(queryParam, isHandle, ishc, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+        return ResultUtils.successStr(curriculumPageTableForm);
     }
 
 
@@ -85,7 +83,7 @@ public class EditCurriculumOrderController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -103,14 +101,14 @@ public class EditCurriculumOrderController extends BaseController {
                                         HttpServletResponse response, HttpSession session) {
         SCApply temp = scApplyService.selectByPrimaryKey(id);
         if (temp.getOrderOpUserId() != null) {
-            return ToolUtil.buildResultStr(StatusCode.ORDER_IS_HANDLE, StatusCode.getStatusMsg(StatusCode.ORDER_IS_HANDLE));
+            return ResultUtils.warnStr(ResultCode.ORDER_IS_HANDLE);
         } else {
             SCApply scApply = new SCApply();
             scApply.setId(id);
             scApply.setOrderOpUserId(getLoginUser(request).getUserId());
             scApply.setOrderRemark(remark);
             scApplyService.updateByPrimaryKeySelective(scApply);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -127,6 +125,6 @@ public class EditCurriculumOrderController extends BaseController {
     public String queryOrderPlayFor(Integer scaId, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
         List<StudentPay> studentPays = scApplyService.queryStudentBySCAId(scaId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), studentPays);
+        return ResultUtils.successStr(studentPays);
     }
 }

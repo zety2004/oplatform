@@ -10,6 +10,8 @@ import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.SchoolAdminService;
 import com.hklk.oplatform.service.SchoolChannelService;
 import com.hklk.oplatform.service.SchoolService;
+import com.hklk.oplatform.util.ResultCode;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +56,7 @@ public class EditSchoolController extends BaseController {
     public String querySchool(String param, int pageNum, HttpServletRequest request,
                               HttpServletResponse response, HttpSession session) {
         PageTableForm<SchoolVo> schoolPageTableForm = schoolService.querySchools(param, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), schoolPageTableForm);
+        return ResultUtils.successStr(schoolPageTableForm);
     }
 
     /**
@@ -70,7 +72,7 @@ public class EditSchoolController extends BaseController {
     public String selectSchoolById(int id, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
         Map<String, Object> school = schoolService.selectByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), school);
+        return ResultUtils.successStr(school);
     }
 
     /**
@@ -87,9 +89,9 @@ public class EditSchoolController extends BaseController {
                                      HttpServletResponse response, HttpSession session) {
         School tmp = schoolService.selectSchoolByName(school.getName());
         if (tmp != null) {
-            return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
+            return ResultUtils.warnStr(ResultCode.SCHOOLNAME_EX);
         } else {
-            return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_UNEX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_UNEX));
+            return ResultUtils.warnStr(ResultCode.SCHOOLNAME_UNEX);
         }
     }
 
@@ -107,7 +109,7 @@ public class EditSchoolController extends BaseController {
                             HttpServletResponse response, HttpSession session) {
         School tmp = schoolService.selectSchoolByName(school.getName());
         if (tmp != null) {
-            return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
+            return ResultUtils.warnStr(ResultCode.SCHOOLNAME_EX);
         } else {
             String sign = ToolUtil.createId(32);
             school.setSign(sign);
@@ -115,7 +117,7 @@ public class EditSchoolController extends BaseController {
             if (channelId != null) {
                 insertSchoolChannel(sign, channelId, null);
             }
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -146,13 +148,13 @@ public class EditSchoolController extends BaseController {
                                HttpServletResponse response, HttpSession session) {
         School tmp = schoolService.selectSchoolByName(school.getName());
         if (tmp != null && tmp.getId() != school.getId()) {
-            return ToolUtil.buildResultStr(StatusCode.SCHOOLNAME_EX, StatusCode.getStatusMsg(StatusCode.SCHOOLNAME_EX));
+            return ResultUtils.warnStr(ResultCode.SCHOOLNAME_EX);
         } else {
             schoolService.updateByPrimaryKeySelective(school);
             if (channelId != null) {
                 insertSchoolChannel(null, channelId, school.getId());
             }
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -172,7 +174,7 @@ public class EditSchoolController extends BaseController {
         school.setId(id);
         school.setStatus(-1);
         schoolService.updateByPrimaryKeySelective(school);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -188,7 +190,7 @@ public class EditSchoolController extends BaseController {
     public String querySchoolAdmin(int schoolId, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
         schoolAdminService.querySchoolAdminsBySchoolId(schoolId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -204,7 +206,7 @@ public class EditSchoolController extends BaseController {
     public String selectSchoolAdminById(int id, HttpServletRequest request,
                                         HttpServletResponse response, HttpSession session) {
         SchoolAdmin schoolAdmin = schoolAdminService.selectByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), schoolAdmin);
+        return ResultUtils.successStr(schoolAdmin);
     }
 
     /**
@@ -221,14 +223,14 @@ public class EditSchoolController extends BaseController {
                                  HttpServletResponse response, HttpSession session) {
         int tmp = schoolAdminService.querySchoolAdminsForCount(schoolAdmin.getSchoolId());
         if (tmp >= 10) {
-            return ToolUtil.buildResultStr(StatusCode.ADMIN_NUM_VALIDATE, StatusCode.getStatusMsg(StatusCode.ADMIN_NUM_VALIDATE));
+            return ResultUtils.warnStr(ResultCode.ADMIN_NUM_VALIDATE);
         } else {
             SchoolAdmin tmpAdmin = schoolAdminService.querySchoolAdminsByName(schoolAdmin.getAccount());
             if (tmpAdmin != null) {
-                return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, "手机号已存在!");
+                return ResultUtils.warnStr(ResultCode.ADDUSER_USERNAME_EX, "手机号已存在!");
             }
             schoolAdminService.insertSelective(schoolAdmin);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -246,10 +248,10 @@ public class EditSchoolController extends BaseController {
                                     HttpServletResponse response, HttpSession session) {
         SchoolAdmin tmpAdmin = schoolAdminService.querySchoolAdminsByName(schoolAdmin.getAccount());
         if (tmpAdmin != null && tmpAdmin.getId() != schoolAdmin.getId()) {
-            return ToolUtil.buildResultStr(StatusCode.ADDUSER_USERNAME_EX, StatusCode.getStatusMsg(StatusCode.ADDUSER_USERNAME_EX));
+            return ResultUtils.warnStr(ResultCode.ADDUSER_USERNAME_EX);
         }
         schoolAdminService.updateByPrimaryKeySelective(schoolAdmin);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -269,7 +271,7 @@ public class EditSchoolController extends BaseController {
         schoolAdmin.setPwd("93b1c7f49c7b917831a942fd90ffe0ca");
 
         schoolAdminService.updateByPrimaryKeySelective(schoolAdmin);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
 
@@ -286,6 +288,6 @@ public class EditSchoolController extends BaseController {
     public String deleteSchoolAdmin(Integer id, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
         schoolAdminService.deleteByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

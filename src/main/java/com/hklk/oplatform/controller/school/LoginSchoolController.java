@@ -8,9 +8,7 @@ import com.hklk.oplatform.entity.vo.SchoolAdminVo;
 import com.hklk.oplatform.provider.IdProvider;
 import com.hklk.oplatform.provider.PasswordProvider;
 import com.hklk.oplatform.service.SchoolAdminService;
-import com.hklk.oplatform.util.SmsUtil;
-import com.hklk.oplatform.util.StatusCode;
-import com.hklk.oplatform.util.ToolUtil;
+import com.hklk.oplatform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,13 +71,13 @@ public class LoginSchoolController extends BaseController {
             loginNum.setLoginNum(schoolAdmin.getLoginNum() + 1);
             schoolAdminService.updateByPrimaryKeySelective(loginNum);
 
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), result);
+            return ResultUtils.successStr(result);
         } else if (schoolAdmin != null && schoolAdmin.getSchoolStatus() != 1) {
-            return ToolUtil.buildResultStr(StatusCode.SCHOOL_STATUS, StatusCode.getStatusMsg(StatusCode.SCHOOL_STATUS));
+            return ResultUtils.warnStr(ResultCode.SCHOOL_STATUS);
         } else if (schoolAdmin != null && schoolAdmin.getStatus() != 1) {
-            return ToolUtil.buildResultStr(StatusCode.LOGIN_DISABLE, StatusCode.getStatusMsg(StatusCode.LOGIN_DISABLE));
+            return ResultUtils.warnStr(ResultCode.LOGIN_DISABLE);
         } else {
-            return ToolUtil.buildResultStr(StatusCode.LOGIN_NAME_OR_PWD_ERROR, StatusCode.getStatusMsg(StatusCode.LOGIN_NAME_OR_PWD_ERROR));
+            return ResultUtils.warnStr(ResultCode.LOGIN_NAME_OR_PWD_ERROR);
         }
     }
 
@@ -98,19 +96,19 @@ public class LoginSchoolController extends BaseController {
                                             HttpServletResponse response, HttpSession session) {
         LoginSchool loginSchool = getLoginSchool(request);
         if (loginSchool == null) {
-            return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
+            return ResultUtils.warnStr(ResultCode.SSO_TOKEN_ERROR);
         }
         SchoolAdmin temp = schoolAdminService.selectByPrimaryKey(loginSchool.getSchoolAdminId());
         if (temp == null) {
-            return ToolUtil.buildResultStr(StatusCode.USER_UNFIND, StatusCode.getStatusMsg(StatusCode.USER_UNFIND));
+            return ResultUtils.warnStr(ResultCode.USER_UNFIND);
         } else if (temp != null && temp.getPwd().equals(PasswordProvider.encrypt(oldPassword))) {
             SchoolAdmin param = new SchoolAdmin();
             param.setId(loginSchool.getSchoolAdminId());
             param.setPwd(PasswordProvider.encrypt(newPassword));
             schoolAdminService.updateByPrimaryKeySelective(param);
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         } else {
-            return ToolUtil.buildResultStr(StatusCode.PASSWORD_ERROR, StatusCode.getStatusMsg(StatusCode.PASSWORD_ERROR));
+            return ResultUtils.warnStr(ResultCode.PASSWORD_ERROR);
         }
     }
 
@@ -128,9 +126,9 @@ public class LoginSchoolController extends BaseController {
                                             HttpServletResponse response, HttpSession session) {
         SchoolAdmin param = schoolAdminService.querySchoolAdminsByName(account);
         if (param == null) {
-            return ToolUtil.buildResultStr(StatusCode.USER_UNFIND, StatusCode.getStatusMsg(StatusCode.USER_UNFIND));
+            return ResultUtils.warnStr(ResultCode.USER_UNFIND);
         } else {
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+            return ResultUtils.successStr();
         }
     }
 
@@ -148,13 +146,13 @@ public class LoginSchoolController extends BaseController {
                                        HttpServletResponse response, HttpSession session) {
         LoginSchool loginSchool = getLoginSchool(request);
         if (loginSchool == null) {
-            return ToolUtil.buildResultStr(StatusCode.SSO_TOKEN_ERROR, StatusCode.getStatusMsg(StatusCode.SSO_TOKEN_ERROR));
+            return ResultUtils.warnStr(ResultCode.SSO_TOKEN_ERROR);
         }
         SchoolAdmin param = new SchoolAdmin();
         param.setId(loginSchool.getSchoolAdminId());
         param.setNickname(nickName);
         schoolAdminService.updateByPrimaryKeySelective(param);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -170,7 +168,7 @@ public class LoginSchoolController extends BaseController {
                            HttpServletResponse response, HttpSession session) {
         String token = request.getHeader("Access-Toke");
         tokenManager.remove(tokenManager.schoolTokenKey, token);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     private String createToken(LoginSchool loginSchool) {

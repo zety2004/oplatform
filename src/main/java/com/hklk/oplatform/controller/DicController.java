@@ -1,6 +1,7 @@
 package com.hklk.oplatform.controller;
 
 import com.hklk.oplatform.service.DicService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,6 @@ public class DicController extends BaseController {
     public String queryDices(String typeCode, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
         List<Map<String, Object>> dicList = dicService.queryForList(typeCode);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), dicList);
+        return ResultUtils.successStr(dicList);
     }
 }

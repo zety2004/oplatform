@@ -5,6 +5,7 @@ import com.hklk.oplatform.entity.table.FeedBack;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.FeedBackService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class ShowFeedBackController extends BaseController {
     public String queryFeedBack(Integer sign, int pageNum, HttpServletRequest request,
                                 HttpServletResponse response, HttpSession session) {
         PageTableForm<Map<String, Object>> pageTableForm = feedBackService.queryFeedBackList(sign, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), pageTableForm);
+        return ResultUtils.successStr( pageTableForm);
     }
     /**
      * 2018/7/4 18:04
@@ -60,6 +61,6 @@ public class ShowFeedBackController extends BaseController {
         feedBack.setId(id);
         feedBack.setSign(sign);
         feedBackService.updateByPrimaryKeySelective(feedBack);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

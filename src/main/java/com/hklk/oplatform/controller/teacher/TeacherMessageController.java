@@ -5,6 +5,7 @@ import com.hklk.oplatform.entity.table.TeacherMessage;
 import com.hklk.oplatform.entity.vo.PageTableForm;
 import com.hklk.oplatform.filter.repo.TeacherLoginRepository;
 import com.hklk.oplatform.service.TeacherMessageService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class TeacherMessageController extends BaseController {
             pageNum = 1;
         }
         PageTableForm<TeacherMessage> teacherMessages = teacherMessageService.queryTeacherMessage(getLoginTeacher(request).getTeacherId(), isRead, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), teacherMessages);
+        return ResultUtils.successStr(teacherMessages);
     }
 
     /**
@@ -62,7 +63,7 @@ public class TeacherMessageController extends BaseController {
     public String updateMessageIsReadByTeacher(HttpServletRequest request,
                                                HttpServletResponse response, HttpSession session) {
         teacherMessageService.updateIsReadByTeacherId(getLoginTeacher(request).getTeacherId());
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -77,6 +78,6 @@ public class TeacherMessageController extends BaseController {
     public String updateMessageIsReadById(Integer id, HttpServletRequest request,
                                           HttpServletResponse response, HttpSession session) {
         teacherMessageService.updateIsReadById(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

@@ -4,6 +4,7 @@ import com.hklk.oplatform.controller.BaseController;
 import com.hklk.oplatform.entity.table.FeedBack;
 import com.hklk.oplatform.filter.repo.SchoolLoginRepository;
 import com.hklk.oplatform.service.FeedBackService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *  学校反馈接口
+ * 学校反馈接口
  *
  * @author 曹良峰
  * @since 1.0
@@ -31,10 +32,11 @@ public class FeedBackController extends BaseController {
     /**
      * 2018/7/4 16:08
      * 添加反馈信息
-     * @param content   内容
-     * @param category  类型
-     * @author 曹良峰
+     *
+     * @param content  内容
+     * @param category 类型
      * @return code ：200 成功
+     * @author 曹良峰
      */
     @ResponseBody
     @RequestMapping("/addFeedBack")
@@ -46,6 +48,6 @@ public class FeedBackController extends BaseController {
         feedBack.setContent(content);
         feedBack.setCategory(category);
         feedBackService.insertSelective(feedBack);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 }

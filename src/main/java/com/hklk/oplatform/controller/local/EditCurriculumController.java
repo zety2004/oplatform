@@ -62,7 +62,7 @@ public class EditCurriculumController extends BaseController {
     public String queryCurriculum(Curriculum curriculum, int pageNum, HttpServletRequest request,
                                   HttpServletResponse response, HttpSession session) {
         PageTableForm<CurriculumForListVo> curriculumPageTableForm = curriculumService.queryCurriculums(curriculum, pageNum, pageSize);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculumPageTableForm);
+        return ResultUtils.successStr(curriculumPageTableForm);
     }
 
     /**
@@ -78,7 +78,7 @@ public class EditCurriculumController extends BaseController {
     public String selectCurriculumById(Integer id, HttpServletRequest request,
                                        HttpServletResponse response, HttpSession session) {
         Map<String, Object> curriculum = curriculumService.selectByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), curriculum);
+        return ResultUtils.successStr(curriculum);
     }
 
     /**
@@ -104,7 +104,7 @@ public class EditCurriculumController extends BaseController {
         } else {
             returnMessage = id;
         }
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), returnMessage);
+        return ResultUtils.successStr(returnMessage);
     }
 
     /**
@@ -121,7 +121,7 @@ public class EditCurriculumController extends BaseController {
                                    HttpServletResponse response, HttpSession session) {
         CurriculumInsertVo curriculumInsertVo = new CurriculumInsertVo(curriculum);
         curriculumService.updateCurriculum(curriculumInsertVo);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -138,16 +138,16 @@ public class EditCurriculumController extends BaseController {
         try {
             MultipartFile file = request.getFile("file");// 与页面input的name相同
             String savePath = request.getSession().getServletContext().getRealPath("/")
-                    + "/uploadTempDirectory/" + System.currentTimeMillis()+ "." + request.getParameter("type");
+                    + "/uploadTempDirectory/" + System.currentTimeMillis() + "." + request.getParameter("type");
             File fileTemp = new File(savePath);
             file.transferTo(fileTemp);
             String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + request.getParameter("type");
             OssUtil.uploadFile(fileKey, fileTemp);
             String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
+            return ResultUtils.successStr(accessToDomainNames);
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+            return ResultUtils.warnStr(ResultCode.UPLOAD_ERROR);
         }
     }
 
@@ -172,10 +172,10 @@ public class EditCurriculumController extends BaseController {
             String fileKey = "KCGX" + PasswordProvider.getMd5ByFile(fileTemp) + "." + FileUtils.getFilenameExtension(file.getOriginalFilename());
             OssUtil.uploadFile(fileKey, fileTemp);
             String accessToDomainNames = PropUtil.getProperty("ossAccessToDomainNames") + "/" + fileKey;
-            return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), accessToDomainNames);
+            return ResultUtils.successStr(accessToDomainNames);
         } catch (Exception e) {
             e.printStackTrace();
-            return ToolUtil.buildResultStr(StatusCode.UPLOAD_ERROR, StatusCode.getStatusMsg(StatusCode.UPLOAD_ERROR));
+            return ResultUtils.warnStr(ResultCode.UPLOAD_ERROR);
         }
     }
 
@@ -192,7 +192,7 @@ public class EditCurriculumController extends BaseController {
     public String deleteCurriculum(Integer id, HttpServletRequest request,
                                    HttpServletResponse response, HttpSession session) {
         curriculumService.deleteCurriculum(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -208,7 +208,7 @@ public class EditCurriculumController extends BaseController {
     public String queryConsumablesByCurId(Integer curId, HttpServletRequest request,
                                           HttpServletResponse response, HttpSession session) {
         List<Consumables> consumablesList = consumablesService.queryConsumablesByCurId(curId);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), consumablesList);
+        return ResultUtils.successStr(consumablesList);
     }
 
     /**
@@ -224,7 +224,7 @@ public class EditCurriculumController extends BaseController {
     public String addConsumables(Consumables consumables, HttpServletRequest request,
                                  HttpServletResponse response, HttpSession session) {
         consumablesService.insertSelective(consumables);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -240,7 +240,7 @@ public class EditCurriculumController extends BaseController {
     public String updateConsumables(Consumables consumables, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
         consumablesService.updateByPrimaryKeySelective(consumables);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -256,7 +256,7 @@ public class EditCurriculumController extends BaseController {
     public String deleteConsumables(Integer id, HttpServletRequest request,
                                     HttpServletResponse response, HttpSession session) {
         consumablesService.deleteByPrimaryKey(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
 }

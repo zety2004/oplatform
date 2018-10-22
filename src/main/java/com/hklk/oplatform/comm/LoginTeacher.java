@@ -28,10 +28,15 @@ public class LoginTeacher implements Serializable {
 
     private String tag;
 
+    private String openid;
+
+    private String session_key;
+
+
     public LoginTeacher() {
     }
 
-    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId, String schoolName, String schoolLogo, String headIco, String remark, String tag) {
+    public LoginTeacher(Integer teacherId, String account, String nickName, String rolePage, Integer schoolId, String schoolName, String schoolLogo, String headIco, String remark, String tag, String openid, String session_key) {
         super();
         this.teacherId = teacherId;
         this.account = account;
@@ -43,6 +48,8 @@ public class LoginTeacher implements Serializable {
         this.headIco = headIco;
         this.remark = remark;
         this.tag = tag;
+        this.openid = openid;
+        this.session_key = session_key;
     }
 
     public Integer getTeacherId() {
@@ -140,5 +147,21 @@ public class LoginTeacher implements Serializable {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
+
+    public String getSession_key() {
+        return session_key;
+    }
+
+    public void setSession_key(String session_key) {
+        this.session_key = session_key;
     }
 }

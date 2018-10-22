@@ -5,6 +5,7 @@ import com.hklk.oplatform.entity.table.PPage;
 import com.hklk.oplatform.filter.repo.LocalLoginRepository;
 import com.hklk.oplatform.service.PageService;
 import com.hklk.oplatform.service.RolePageService;
+import com.hklk.oplatform.util.ResultUtils;
 import com.hklk.oplatform.util.StatusCode;
 import com.hklk.oplatform.util.ToolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class EditPageController extends BaseController {
     public String queryPages(HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
         List<PPage> roles = pageService.queryPages();
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS), roles);
+        return ResultUtils.successStr(roles);
     }
 
     /**
@@ -60,7 +61,7 @@ public class EditPageController extends BaseController {
     public String addPages(PPage PPage, HttpServletRequest request,
                            HttpServletResponse response, HttpSession session) {
         pageService.addPage(PPage);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -75,7 +76,7 @@ public class EditPageController extends BaseController {
     public String updatePage(PPage PPage, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
         pageService.updatePage(PPage);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
     /**
@@ -90,7 +91,7 @@ public class EditPageController extends BaseController {
     public String deletePage(int id, HttpServletRequest request,
                              HttpServletResponse response, HttpSession session) {
         pageService.deletePage(id);
-        return ToolUtil.buildResultStr(StatusCode.SUCCESS, StatusCode.getStatusMsg(StatusCode.SUCCESS));
+        return ResultUtils.successStr();
     }
 
 }
